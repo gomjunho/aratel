@@ -56,6 +56,8 @@ Rails.application.routes.draw do
       get "club_deals", to: "/club_deals#api_index"
       post "club_deals/:id/order", to: "/club_deals#api_order", as: :order_api_v1_club_deal
       post "concierge/reservations", to: "/concierges#api_create_reservation"
+
+      get "insights/transactions", to: "/insights#api_transactions"
     end
   end
 
@@ -78,4 +80,6 @@ Rails.application.routes.draw do
   resource :concierge, only: [:show] do
     resources :reservations, controller: "concierges", only: [:create]
   end
+
+  resource :insight, only: [:show]
 end
