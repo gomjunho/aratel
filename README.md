@@ -20,7 +20,7 @@
 
 2. **Toxic Signal이 제거된 고해상도 정보 네트워크 형성**
    * 투기성 노이즈, 허위 매물, 비방성 리뷰를 24시간 AI 및 운영 정화 시스템으로 차단
-   * 실실소유주 간의 정밀한 주거 경험, 재건축/단지 현안, 절세 및 고급 투자 노하우 공유
+   * 실실소유주 간의 정밀한 주거 경험, 재건축/단지 현안, 절세 및 고급 투자 노하 노하우 공유
 
 3. **인증-소통-소비 가치 사슬의 선순환 생태계 조성**
    * 단지 커뮤니티 활동 및 유익 정보 공유를 통해 획득한 포인트(Aratel Point)를 수입 브랜드 '클럽 딜' 및 VIP 컨시어지 서비스와 연동하여 압도적인 사용자 락인(Lock-in) 창출
@@ -64,7 +64,84 @@
 
 ---
 
-## 🔗 5. 관련 문서
+## 🧪 5. 테스트 및 실행 가이드 (Testing & Execution Guide)
+
+### 5-1. 📊 자동화 테스트 실행 (TDD & 100% Coverage)
+
+```bash
+# 1. Backend API 테스트 (Rails Minitest & SimpleCov 100% Coverage)
+cd backend
+bin/rails test
+
+# 2. Web App 테스트 (Rails Web Minitest & SimpleCov 100% Coverage)
+cd web
+bin/rails test
+
+# 3. Mobile App 테스트 (Flutter Widget & Unit Tests + Coverage)
+cd mobile
+flutter test --coverage
+```
+
+---
+
+### 5-2. 🌐 웹 애플리케이션 (Rails Web) 로컬 테스트 방법
+
+```bash
+# 1) 백엔드 API 서버 실행 (포트 3000)
+cd backend
+bin/rails db:prepare
+bin/rails server -p 3000
+
+# 2) 새로운 터미널 탭에서 웹 서버 실행 (포트 3001)
+cd web
+bin/rails db:prepare
+bin/rails server -p 3001
+```
+
+* **자산 인증 현황 대시보드**: `http://localhost:3001/verifications`
+* **VVIP 자산 증빙 서류 제출**: `http://localhost:3001/tier_evidences/new`
+* **어드민 서류 심사 대기열**: `http://localhost:3001/admin/verifications`
+
+---
+
+### 5-3. 📱 모바일 앱 (Flutter) 실기기 (iOS / Android) 테스트 방법
+
+#### 🍏 iOS 아이폰 실기기 테스트
+1. Mac에 케이블 연결 후 아이폰에서 **'이 컴퓨터 신뢰'** 승인.
+2. 아이폰 `설정` ➔ `개인정보 보호 및 보안` ➔ `개발자 모드` **켜기** 및 재부팅.
+3. Xcode 서명 설정:
+   ```bash
+   cd mobile && open ios/Runner.xcworkspace
+   ```
+   * Xcode ➔ `Runner` ➔ `Signing & Capabilities` ➔ `Team` 선택 (개인 Apple ID 계정).
+4. 앱 실행:
+   ```bash
+   cd mobile
+   flutter devices
+   flutter run -d <아이폰_디바이스_ID>
+   ```
+
+#### 🤖 Android 안드로이드 폰 실기기 테스트
+1. 안드로이드 폰 `설정` ➔ `휴대전화 정보` ➔ `소프트웨어 정보` ➔ `빌드번호` 7회 터치 (개발자 옵션 활성화).
+2. `설정` ➔ `개발자 옵션` ➔ **`USB 디버깅` 켜기** 및 팝업 승인.
+3. 앱 실행:
+   ```bash
+   cd mobile
+   flutter devices
+   flutter run -d <안드로이드_디바이스_ID>
+   ```
+
+#### 💡 실기기 ➔ Mac 로컬 백엔드 API 연동
+* **Mac IP 주소 확인**: `ipconfig getifaddr en0` (예: `192.168.0.15`)
+* **백엔드 외부 바인딩 실행**: `cd backend && bin/rails server -b 0.0.0.0 -p 3000`
+* 동일한 Wi-Fi 환경에서 `http://192.168.0.15:3000`으로 백엔드 통신.
+
+---
+
+## 🔗 6. 관련 문서
 
 * [arch.docx](file:///Users/zion/Projects/aratel/arch.docx) : 정보 구조 및 서비스 설계안
 * [flow.docx](file:///Users/zion/Projects/aratel/flow.docx) : 인증-소통-소비 3대 가치 사슬 기반 상세 사용자 플로우 기획서
+* [ISSUES.md](file:///Users/zion/Projects/aratel/ISSUES.md) : 프로젝트 전체 18개 백로그 이슈 목록
+* [CONTRIBUTING.md](file:///Users/zion/Projects/aratel/CONTRIBUTING.md) : TDD, 100% Coverage & Gitmoji 개발 가이드라인
+* [AGENT.md](file:///Users/zion/Projects/aratel/AGENT.md) : AI 에이전트 영구 메모리 지침서
