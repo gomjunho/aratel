@@ -1,0 +1,69 @@
+<div class="admin-details-container">
+  <div class="card">
+    <h2>서류 심사 상세 정보 | Verification Submission Review</h2>
+    <% item = @tier_evidence || @delegation %>
+    <% if @tier_evidence %>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <label>제출 ID:</label>
+          <span><%= @tier_evidence.submission_id %></span>
+        </div>
+        <div class="detail-item">
+          <label>신청자:</label>
+          <span><%= @tier_evidence.user.name %> (<%= @tier_evidence.user.phone_number %>)</span>
+        </div>
+        <div class="detail-item">
+          <label>증빙 유형:</label>
+          <span><%= @tier_evidence.evidence_type %></span>
+        </div>
+        <div class="detail-item">
+          <label>목표 등급:</label>
+          <span class="tier-tag"><%= @tier_evidence.target_tier %></span>
+        </div>
+        <div class="detail-item">
+          <label>현재 상태:</label>
+          <span class="status-tag status-<%= @tier_evidence.status.downcase %>"><%= @tier_evidence.status %></span>
+        </div>
+        <div class="detail-item">
+          <label>서류 URL:</label>
+          <a href="<%= @tier_evidence.document_url %>" target="_blank" class="link-preview">📄 <%= @tier_evidence.document_url %></a>
+        </div>
+        <div class="detail-item">
+          <label>인스타그램:</label>
+          <span><%= @tier_evidence.instagram_handle.presence || "없음" %></span>
+        </div>
+        <div class="detail-item">
+          <label>추천인 코드:</label>
+          <span><%= @tier_evidence.referral_code.presence || "없음" %></span>
+        </div>
+      </div>
+
+      <% if @tier_evidence.status == "UNDER_REVIEW" %>
+        <div class="admin-action-box mt-4">
+          <h3>어드민 심사 처리</h3>
+          <%= form_with url: approve_tier_evidence_admin_verification_path(@tier_evidence), method: :post, local: true do |f| %>
+            <div class="form-group">
+              <%= f.label :admin_notes, "승인/심사 의견" %>
+              <%= f.text_area :admin_notes, value: "자산 검증 완료, Target Tier 부여", class: "form-control", rows: 2 %>
+            </div>
+            <%= f.submit "승인 처리", class: "btn btn-success" %>
+          <% end %>
+
+          <hr class="my-3">
+
+          <%= form_with url: reject_tier_evidence_admin_verification_path(@tier_evidence), method: :post, local: true do |f| %>
+            <div class="form-group">
+              <%= f.label :admin_notes, "반려 사유" %>
+              <%= f.text_area :admin_notes, value: "증빙 서류 보완 필요", class: "form-control", rows: 2 %>
+            </div>
+            <%= f.submit "반려 처리", class: "btn btn-danger" %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <div class="actions mt-4">
+      <%= link_to "대기열 목록으로 돌아가기", admin_verifications_path, class: "btn btn-outline" %>
+    </div>
+  </div>
+</div>

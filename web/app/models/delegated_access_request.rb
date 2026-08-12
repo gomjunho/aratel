@@ -1,6 +1,9 @@
 class DelegatedAccessRequest < ApplicationRecord
   belongs_to :user
 
+  validates :relationship, presence: true
+  validates :document_url, presence: true
+
   before_validation :generate_delegation_id, on: :create
   before_validation :set_defaults, on: :create
 

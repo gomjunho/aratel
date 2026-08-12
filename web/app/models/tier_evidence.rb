@@ -1,6 +1,9 @@
 class TierEvidence < ApplicationRecord
   belongs_to :user
 
+  validates :evidence_type, presence: true
+  validates :document_url, presence: true
+
   before_validation :generate_submission_id, on: :create
   before_validation :set_defaults, on: :create
 

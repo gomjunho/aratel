@@ -1,0 +1,181 @@
+<div class="dashboard-header">
+  <h1>인증 및 멤버십 대시보드 | ARATEL Verification</h1>
+  <p class="subtitle">대한민국 상위 0.1% VVIP 전용 주거 자산 인증 및 등급 관리 시스템</p>
+</div>
+
+<div class="grid grid-2">
+  <!-- Tier & Badges Card -->
+  <div class="card tier-card tier-<%= @user.tier.downcase %>">
+    <div class="tier-header">
+      <span class="tier-label">MEMBERSHIP TIER</span>
+      <h2 class="tier-title"><%= @user.tier %></h2>
+    </div>
+
+    <div class="badges-section">
+      <h3>보유 뱃지 (Badges)</h3>
+      <div class="badge-list">
+        <% @user.badges.each do |b| %>
+          <span class="badge badge-<%= b.downcase %>"><%= b %></span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="property-info">
+      <h3>인증 자산 정보</h3>
+      <% if @user.complex_name.present? %>
+        <p class="property-detail"><strong>단지명:</strong> <%= @user.complex_name %></p>
+        <p class="property-detail"><strong>동/호수:</strong> <%= @user.building_number %> <%= @user.unit_number %></p>
+        <p class="property-detail"><strong>소유 지분:</strong> <%= @user.ownership_percentage %>%</p>
+      <% else %>
+        <p class="text-muted">등록된 등기 자산이 없습니다. 아래 등기부 연동을 진행해주세요.</p>
+      <% end %>
+    </div>
+
+    <div class="security-profile">
+      <h3>보안 프로필 (Security Profile)</h3>
+      <div class="security-flags">
+        <span class="security-tag <%= @user.screen_capture_prevented ? 'active' : '' %>">
+          🔒 화면 캡처 방지: <%= @user.screen_capture_prevented ? 'ON' : 'OFF' %>
+        </span>
+        <span class="security-tag <%= @user.privacy_masked ? 'active' : '' %>">
+          👁️ 개인정보 마스킹: <%= @user.privacy_masked ? 'ON' : 'OFF' %>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions & Submissions -->
+  <div class="card-stack">
+    <!-- Identity Auth Form -->
+    <div class="card">
+      <h3>1. 휴대폰 본인확인 (Identity Verification)</h3>
+      <%= form_with url: identity_verify_verification_path, method: :post, local: true do |f| %>
+        <div class="form-group">
+          <%= f.label :name, "이름" %>
+          <%= f.text_field :name, value: @user.name, class: "form-control", required: true %>
+        </div>
+        <div class="form-group">
+          <%= f.label :phone_number, "휴대폰 번호" %>
+          <%= f.text_field :phone_number, value: @user.phone_number, class: "form-control", required: true %>
+        </div>
+        <div class="form-group">
+          <%= f.label :birth_date, "생년월일 (YYYYMMDD)" %>
+          <%= f.text_field :birth_date, value: @user.birth_date, class: "form-control", required: true %>
+        </div>
+        <%= f.submit "본인확인 진행", class: "btn btn-primary" %>
+      <% end %>
+      <% if @user.verification_token.present? %>
+        <div class="token-info">
+          <p><strong>인증 토큰:</strong> <code><%= @user.verification_token %></code></p>
+          <p><strong>마스킹 이름:</strong> <%= @user.masked_name %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Trust API Sync Form -->
+    <div class="card">
+      <h3>2. 1분 자동 등기부 연동 (Trust API Sync)</h3>
+      <%= form_with url: trust_api_sync_verification_path, method: :post, local: true do |f| %>
+        <%= hidden_field_tag :verification_token, @user.verification_token || "ver_tok_sample" %>
+        <div class="form-group">
+          <%= label_tag :complex_name, "단지명" %>
+          <%= text_field_tag :complex_name, @user.complex_name || "디에이치 방배", class: "form-control", required: true %>
+        </div>
+        <div class="form-group">
+          <%= label_tag :building_number, "동" %>
+          <%= text_field_tag :building_number, @user.building_number || "101동", class: "form-control", required: true %>
+        </div>
+        <div class="form-group">
+          <%= label_tag :unit_number, "호수" %>
+          <%= text_field_tag :unit_number, @user.unit_number || "1502호", class: "form-control", required: true %>
+        </div>
+        <%= submit_tag "등기부 자동 연동", class: "btn btn-accent" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-2 mt-4">
+  <!-- Delegated Access Form & History -->
+  <div class="card">
+    <h3>3. 대리인 및 가족 권한 위임 신청</h3>
+    <%= form_with model: DelegatedAccessRequest.new, url: delegated_accesses_path, local: true do |f| %>
+      <div class="form-group">
+        <%= f.label :relationship, "관계 (FAMILY / AGENT)" %>
+        <%= f.select :relationship, [["가족 (FAMILY)", "FAMILY"], ["대리인 (AGENT)", "AGENT"]], {}, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :document_url, "증빙 서류 URL" %>
+        <%= f.text_field :document_url, placeholder: "https://storage.aratel.com/docs/family_rel.pdf", class: "form-control", required: true %>
+      </div>
+      <%= f.submit "위임 신청 제출", class: "btn btn-secondary" %>
+    <% end %>
+
+    <h4 class="mt-3">내 위임 신청 내역</h4>
+    <% if @delegated_access_requests.any? %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>관계</th>
+            <th>상태</th>
+            <th>신청일</th>
+            <th>작업</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @delegated_access_requests.each do |req| %>
+            <tr>
+              <td><%= req.delegation_id %></td>
+              <td><%= req.relationship %></td>
+              <td><span class="status-tag status-<%= req.status.downcase %>"><%= req.status %></span></td>
+              <td><%= req.requested_at&.strftime("%Y-%m-%d %H:%M") %></td>
+              <td>
+                <% if req.status == "PENDING_OWNER_APPROVAL" %>
+                  <%= button_to "승인", approve_delegated_access_path(req, approved: true), method: :post, class: "btn btn-xs btn-success" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-muted">신청된 위임 내역이 없습니다.</p>
+    <% end %>
+  </div>
+
+  <!-- VVIP Tier Evidence Submissions List -->
+  <div class="card">
+    <div class="card-header-flex">
+      <h3>4. VVIP 자산 증빙 제출 내역</h3>
+      <%= link_to "새 증빙 제출", new_tier_evidence_path, class: "btn btn-sm btn-gold" %>
+    </div>
+
+    <% if @tier_evidences.any? %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>제출 ID</th>
+            <th>증빙 유형</th>
+            <th>목표 등급</th>
+            <th>상태</th>
+            <th>상세</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @tier_evidences.each do |ev| %>
+            <tr>
+              <td><%= ev.submission_id %></td>
+              <td><%= ev.evidence_type %></td>
+              <td><strong><%= ev.target_tier %></strong></td>
+              <td><span class="status-tag status-<%= ev.status.downcase %>"><%= ev.status %></span></td>
+              <td><%= link_to "보기", tier_evidence_path(ev), class: "btn btn-xs btn-outline" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-muted">제출된 자산 증빙 내역이 없습니다. Diamond/Platinum 등급 산정을 위해 증빙 자료를 제출하세요.</p>
+    <% end %>
+  </div>
+</div>

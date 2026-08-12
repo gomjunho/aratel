@@ -1,0 +1,59 @@
+<div class="details-container">
+  <div class="card">
+    <h2>증빙 제출 상세 정보 | Evidence Details</h2>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <label>제출 ID:</label>
+        <span><%= @tier_evidence.submission_id %></span>
+      </div>
+      <div class="detail-item">
+        <label>신청 유저:</label>
+        <span><%= @tier_evidence.user.name %> (<%= @tier_evidence.user.masked_name %>)</span>
+      </div>
+      <div class="detail-item">
+        <label>증빙 유형:</label>
+        <span><%= @tier_evidence.evidence_type %></span>
+      </div>
+      <div class="detail-item">
+        <label>목표 등급:</label>
+        <span class="tier-tag"><%= @tier_evidence.target_tier %></span>
+      </div>
+      <div class="detail-item">
+        <label>심사 상태:</label>
+        <span class="status-tag status-<%= @tier_evidence.status.downcase %>"><%= @tier_evidence.status %></span>
+      </div>
+      <div class="detail-item">
+        <label>서류 URL:</label>
+        <a href="<%= @tier_evidence.document_url %>" target="_blank" class="link"><%= @tier_evidence.document_url %></a>
+      </div>
+      <div class="detail-item">
+        <label>인스타그램:</label>
+        <span><%= @tier_evidence.instagram_handle.presence || "미입력" %></span>
+      </div>
+      <div class="detail-item">
+        <label>추천인 코드:</label>
+        <span><%= @tier_evidence.referral_code.presence || "미입력" %></span>
+      </div>
+      <div class="detail-item">
+        <label>제출 일시:</label>
+        <span><%= @tier_evidence.submitted_at&.strftime("%Y-%m-%d %H:%M:%S") %></span>
+      </div>
+      <% if @tier_evidence.reviewed_at.present? %>
+        <div class="detail-item">
+          <label>심사 완료일:</label>
+          <span><%= @tier_evidence.reviewed_at.strftime("%Y-%m-%d %H:%M:%S") %></span>
+        </div>
+      <% end %>
+      <% if @tier_evidence.admin_notes.present? %>
+        <div class="detail-item full-width">
+          <label>관리자 심사 의견:</label>
+          <p class="admin-notes-box"><%= @tier_evidence.admin_notes %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="actions mt-4">
+      <%= link_to "대시보드로 돌아가기", verification_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+</div>
