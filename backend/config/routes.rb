@@ -34,6 +34,9 @@ Rails.application.routes.draw do
         get "flat_maps", to: "flat_maps#index"
         post "simulations", to: "simulations#create"
       end
+
+      get "club_deals", to: "club_deals#index"
+      post "club_deals/:id/order", to: "club_deals#order"
     end
   end
 end

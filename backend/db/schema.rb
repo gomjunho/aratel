@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_13_000003) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_13_000004) do
   create_table "atelier_simulations", force: :cascade do |t|
     t.string "simulation_id", null: false
     t.string "flat_map_id", null: false
@@ -20,6 +20,33 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_000003) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["simulation_id"], name: "index_atelier_simulations_on_simulation_id", unique: true
+  end
+
+  create_table "club_deal_orders", force: :cascade do |t|
+    t.string "order_id", null: false
+    t.string "club_deal_id", null: false
+    t.integer "used_points", null: false
+    t.integer "cash_amount", null: false
+    t.string "status", default: "ORDER_PLACED"
+    t.integer "remaining_points", default: 450000
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_club_deal_orders_on_order_id", unique: true
+  end
+
+  create_table "club_deals", force: :cascade do |t|
+    t.string "deal_id", null: false
+    t.string "brand", null: false
+    t.string "item_name", null: false
+    t.integer "original_price", null: false
+    t.integer "deal_price", null: false
+    t.integer "point_discount_limit", default: 1000000
+    t.integer "min_participants", default: 5
+    t.integer "current_participants", default: 3
+    t.string "status", default: "OPEN"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["deal_id"], name: "index_club_deals_on_deal_id", unique: true
   end
 
   create_table "delegated_accesses", force: :cascade do |t|
