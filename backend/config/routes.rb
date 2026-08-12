@@ -21,6 +21,10 @@ Rails.application.routes.draw do
       namespace :home do
         get "welcome", to: "welcomes#show"
       end
+
+      namespace :ai do
+        post "agent_dialogue", to: "agent_dialogues#create"
+      end
     end
   end
 end
