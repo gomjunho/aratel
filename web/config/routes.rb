@@ -46,10 +46,15 @@ Rails.application.routes.draw do
 
       get "home/welcome", to: "/homes#api_welcome"
       post "ai/agent_dialogue", to: "/homes#api_agent_dialogue"
+
+      get "lounge/posts", to: "/lounge_posts#api_index"
+      post "lounge/posts", to: "/lounge_posts#api_create"
     end
   end
 
   resource :home, only: [:show] do
     post :agent_dialogue
   end
+
+  resources :lounge_posts, only: [:index, :new, :create]
 end

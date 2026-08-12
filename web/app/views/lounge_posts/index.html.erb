@@ -1,0 +1,39 @@
+<div class="lounge-container" style="padding: 24px; max-width: 1000px; margin: 0 auto; font-family: sans-serif;">
+  <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <div>
+      <h1 style="font-size: 28px; font-weight: 700; color: #1a202c;">🔐 익명 라운지 피드</h1>
+      <p style="color: #718096; font-size: 15px;">검증된 자산가 및 입주민 전용 암호화 커뮤니티</p>
+    </div>
+    <%= link_to "+ 게시글 작성", new_lounge_post_path, style: "padding: 10px 18px; background: #2b6cb0; color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600;" %>
+  </header>
+
+  <% if notice.present? %>
+    <div style="background: #e6fffa; border-left: 4px solid #319795; padding: 12px; margin-bottom: 20px; border-radius: 4px; color: #234e52;">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <div class="posts-list" style="display: flex; flex-direction: column; gap: 16px;">
+    <% @posts.each do |post| %>
+      <article style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-weight: 600; color: #2d3748;"><%= post.anonymous_nickname %></span>
+            <span style="font-size: 12px; background: #ebf8ff; color: #2b6cb0; padding: 2px 8px; border-radius: 12px; font-weight: 600;"><%= post.verified_badge %></span>
+            <span style="font-size: 12px; background: #faf5ff; color: #6b46c1; padding: 2px 8px; border-radius: 12px; font-weight: 600;"><%= post.tier %></span>
+          </div>
+          <span style="font-size: 12px; color: #a0aec0;"><%= post.complex_name %> • 신뢰도 <%= post.trust_score %>점</span>
+        </div>
+
+        <h3 style="font-size: 18px; font-weight: 700; color: #2d3748; margin-bottom: 8px;"><%= post.title %></h3>
+        <p style="color: #4a5568; line-height: 1.6; margin-bottom: 12px;"><%= post.content_encrypted %></p>
+
+        <% if post.is_diamond_weighted %>
+          <div style="display: inline-block; font-size: 12px; color: #d69e2e; background: #fefcbf; padding: 4px 10px; border-radius: 6px; font-weight: 600;">
+            💎 Diamond Weighted Post Highlight
+          </div>
+        <% end %>
+      </article>
+    <% end %>
+  </div>
+</div>

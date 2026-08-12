@@ -1,0 +1,23 @@
+<div class="lounge-new-container" style="padding: 24px; max-width: 800px; margin: 0 auto; font-family: sans-serif;">
+  <header style="margin-bottom: 24px;">
+    <h1 style="font-size: 26px; font-weight: 700; color: #1a202c;">✍️ 라운지 게시글 작성</h1>
+    <p style="color: #718096;">작성한 게시글은 암호화 처리되며, 작성 시 50P가 자동 적립됩니다.</p>
+  </header>
+
+  <%= form_with model: @lounge_post, url: lounge_posts_path, local: true do |f| %>
+    <div style="margin-bottom: 16px;">
+      <%= f.label :title, "제목", style: "display: block; margin-bottom: 6px; font-weight: 600;" %>
+      <%= f.text_field :title, placeholder: "제목을 입력하세요", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" %>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <%= f.label :content, "내용", style: "display: block; margin-bottom: 6px; font-weight: 600;" %>
+      <%= f.text_area :content, rows: 6, placeholder: "내용을 작성하세요 (클린 시그널 검증 적용)", style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" %>
+    </div>
+
+    <div style="display: flex; gap: 12px;">
+      <%= f.submit "게시글 작성하기", style: "padding: 10px 24px; background: #2b6cb0; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;" %>
+      <%= link_to "취소", lounge_posts_path, style: "padding: 10px 18px; background: #edf2f7; color: #4a5568; text-decoration: none; border-radius: 6px;" %>
+    </div>
+  <% end %>
+</div>
