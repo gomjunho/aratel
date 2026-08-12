@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_13_000004) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_13_000005) do
   create_table "atelier_simulations", force: :cascade do |t|
     t.string "simulation_id", null: false
     t.string "flat_map_id", null: false
@@ -47,6 +47,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_000004) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["deal_id"], name: "index_club_deals_on_deal_id", unique: true
+  end
+
+  create_table "concierge_reservations", force: :cascade do |t|
+    t.string "reservation_id", null: false
+    t.string "service_type", null: false
+    t.string "preferred_date"
+    t.text "notes"
+    t.string "status", default: "CONFIRMED"
+    t.string "assigned_consultant"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reservation_id"], name: "index_concierge_reservations_on_reservation_id", unique: true
   end
 
   create_table "delegated_accesses", force: :cascade do |t|

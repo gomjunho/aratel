@@ -37,6 +37,10 @@ Rails.application.routes.draw do
 
       get "club_deals", to: "club_deals#index"
       post "club_deals/:id/order", to: "club_deals#order"
+
+      namespace :concierge do
+        post "reservations", to: "reservations#create"
+      end
     end
   end
 end
