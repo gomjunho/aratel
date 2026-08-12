@@ -1,9 +1,3 @@
-/* ActiveAdmin Stylesheet */
+/* ActiveAdmin Standard Stylesheet */
 @import "active_admin/mixins";
 @import "active_admin/base";
-
-body.active_admin {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #0f141c;
-  color: #e2e8f0;
-}

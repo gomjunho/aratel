@@ -1,0 +1,8 @@
+# AdminUser fixtures
+one:
+  email: "admin_one@example.com"
+  encrypted_password: "$2a$12$D23MhNstzT5X7w4R4eR2Ie.Z4a8vFq2.X6V6r0qj.Y3f5g"
+
+two:
+  email: "admin_two@example.com"
+  encrypted_password: "$2a$12$D23MhNstzT5X7w4R4eR2Ie.Z4a8vFq2.X6V6r0qj.Y3f5g"

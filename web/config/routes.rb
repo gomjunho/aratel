@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :admin_users, ActiveAdmin::Devise.config
   get "up" => "rails/health#show", as: :rails_health_check
 
   root "homes#show"

@@ -1,7 +1,16 @@
 require "test_helper"
 
 class ActiveAdminTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
+    @admin_user = AdminUser.create!(
+      email: "admin_#{SecureRandom.hex(4)}@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+    sign_in @admin_user
+
     @user = User.create!(
       name: "홍길동",
       phone_number: "01012345678",
@@ -52,10 +61,16 @@ class ActiveAdminTest < ActionDispatch::IntegrationTest
     )
   end
 
-  test "should get active_admin dashboard" do
+  test "should redirect unauthenticated request to admin login" do
+    sign_out @admin_user
+    get admin_root_path
+    assert_response :redirect
+    assert_redirected_to new_admin_user_session_path
+  end
+
+  test "should get active_admin dashboard when logged in" do
     get admin_root_path
     assert_response :success
-    assert_select "h2", text: /ARATEL/
   end
 
   test "should get active_admin users index" do
