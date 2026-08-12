@@ -1,0 +1,2 @@
+class ArtDocent < ApplicationRecord
+end

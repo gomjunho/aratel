@@ -43,6 +43,13 @@ Rails.application.routes.draw do
       namespace :users do
         get "me/tier", to: "/verifications#api_me_tier"
       end
+
+      get "home/welcome", to: "/homes#api_welcome"
+      post "ai/agent_dialogue", to: "/homes#api_agent_dialogue"
     end
+  end
+
+  resource :home, only: [:show] do
+    post :agent_dialogue
   end
 end
