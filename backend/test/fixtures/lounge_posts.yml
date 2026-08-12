@@ -1,0 +1,15 @@
+one:
+  post_id: "post_7001"
+  title: "2026 하반기 종합소득세 및 증여 절세 노하우"
+  content: "증여 절세 노하우에 대한 게시글입니다."
+  anonymous_nickname: "은밀한 자산가 42"
+  verified_badge: "VERIFIED_OWNER"
+  tier: "DIAMOND"
+  complex_name: "디에이치 방배"
+  content_encrypted: "EncryptedBodyPayload..."
+  is_diamond_weighted: true
+  trust_score: 98
+  clean_signal_verified: true
+  earned_points: 50
+  status: "PUBLISHED"
+  created_at: 2026-08-13 01:50:00 UTC

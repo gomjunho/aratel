@@ -25,6 +25,10 @@ Rails.application.routes.draw do
       namespace :ai do
         post "agent_dialogue", to: "agent_dialogues#create"
       end
+
+      namespace :lounge do
+        resources :posts, only: [:index, :create]
+      end
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_13_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_13_000002) do
   create_table "delegated_accesses", force: :cascade do |t|
     t.string "delegation_id", null: false
     t.string "relationship", null: false
@@ -35,6 +35,25 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_000001) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["verification_token"], name: "index_identity_verifications_on_verification_token", unique: true
+  end
+
+  create_table "lounge_posts", force: :cascade do |t|
+    t.string "post_id", null: false
+    t.string "title", null: false
+    t.text "content", null: false
+    t.string "anonymous_nickname", default: "은밀한 자산가 42"
+    t.string "verified_badge", default: "VERIFIED_OWNER"
+    t.string "tier", default: "DIAMOND"
+    t.string "complex_name", default: "디에이치 방배"
+    t.text "content_encrypted", default: "EncryptedBodyPayload..."
+    t.boolean "is_diamond_weighted", default: true
+    t.integer "trust_score", default: 98
+    t.boolean "clean_signal_verified", default: true
+    t.integer "earned_points", default: 50
+    t.string "status", default: "PUBLISHED"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_lounge_posts_on_post_id", unique: true
   end
 
   create_table "tier_evidences", force: :cascade do |t|
