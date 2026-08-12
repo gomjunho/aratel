@@ -1,0 +1,46 @@
+<div class="atelier-container" style="padding: 24px; max-width: 1000px; margin: 0 auto; font-family: sans-serif;">
+  <header style="margin-bottom: 24px;">
+    <h1 style="font-size: 28px; font-weight: 700; color: #1a202c;">🛋️ AI 아뜰리에 3D 시뮬레이션</h1>
+    <p style="color: #718096;">우리 집 3D 평면도에 명품 가구를 직접 배치해보고 클럽 딜 특가를 확인하세요.</p>
+  </header>
+
+  <!-- 3D Flat Map View Container -->
+  <div style="background: #1a202c; color: #fff; padding: 24px; border-radius: 12px; margin-bottom: 32px; text-align: center;">
+    <h3 style="font-size: 18px; margin-bottom: 12px; color: #e2e8f0;">3D 평면도 뷰어 (DH 방배 84A)</h3>
+    <div style="background: #2d3748; height: 260px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;">
+      <p style="color: #a0aec0; font-size: 14px;">GLTF Model Location: <%= @flat_map_url %></p>
+      <button style="padding: 8px 16px; background: #4299e1; border: none; color: #fff; border-radius: 6px; font-weight: 600;">🎮 3D 뷰어 인터랙션 렌더링 중</button>
+    </div>
+  </div>
+
+  <% if @simulation_result.present? %>
+    <div style="background: #feebc8; border-left: 4px solid #d69e2e; padding: 16px; margin-bottom: 24px; border-radius: 6px;">
+      <h4 style="font-size: 16px; color: #744210; font-weight: 700; margin-bottom: 6px;">🎉 시뮬레이션 생성 완료!</h4>
+      <p style="color: #975a16; margin-bottom: 4px;">시뮬레이션 ID: <strong><%= @simulation_result[:simulation_id] %></strong></p>
+      <% if @simulation_result[:club_deal_triggered] %>
+        <p style="color: #975a16;">연동 클럽 딜 ID: <strong><%= @simulation_result[:club_deal_id] %></strong> (클럽 딜 전용 할인가 적용 대상)</p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Furniture Catalog Section -->
+  <section style="margin-bottom: 32px;">
+    <h2 style="font-size: 20px; font-weight: 700; color: #2d3748; margin-bottom: 16px;">✨ 명품 가구 카탈로그 & 시뮬레이션</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      <% (@furniture_catalog || []).each do |item| %>
+        <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+          <span style="font-size: 12px; font-weight: 700; color: #805ad5; text-transform: uppercase;"><%= item.brand %></span>
+          <h3 style="font-size: 18px; font-weight: 700; color: #1a202c; margin: 4px 0 8px 0;"><%= item.name %></h3>
+          <p style="color: #2b6cb0; font-weight: 700; font-size: 16px; margin-bottom: 8px;"><%= number_with_delimiter(item.price) %>원</p>
+          <p style="font-size: 13px; color: #718096; margin-bottom: 16px;">재고 수량: <%= item.stock %>개</p>
+
+          <%= form_with url: simulate_atelier_path, method: :post, local: true do |f| %>
+            <%= f.hidden_field :flat_map_id, value: "flat_84a" %>
+            <%= f.hidden_field :furniture_id, value: item.furniture_id %>
+            <%= f.submit "3D 평면도에 배치해보기", style: "width: 100%; padding: 10px; background: #319795; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+</div>

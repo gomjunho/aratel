@@ -49,6 +49,9 @@ Rails.application.routes.draw do
 
       get "lounge/posts", to: "/lounge_posts#api_index"
       post "lounge/posts", to: "/lounge_posts#api_create"
+
+      get "atelier/flat_maps", to: "/ateliers#api_flat_maps"
+      post "atelier/simulations", to: "/ateliers#api_create_simulation"
     end
   end
 
@@ -57,4 +60,8 @@ Rails.application.routes.draw do
   end
 
   resources :lounge_posts, only: [:index, :new, :create]
+
+  resource :atelier, only: [:show] do
+    post :simulate
+  end
 end
