@@ -29,6 +29,11 @@ Rails.application.routes.draw do
       namespace :lounge do
         resources :posts, only: [:index, :create]
       end
+
+      namespace :atelier do
+        get "flat_maps", to: "flat_maps#index"
+        post "simulations", to: "simulations#create"
+      end
     end
   end
 end

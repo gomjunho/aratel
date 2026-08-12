@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_13_000002) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_13_000003) do
+  create_table "atelier_simulations", force: :cascade do |t|
+    t.string "simulation_id", null: false
+    t.string "flat_map_id", null: false
+    t.text "placed_items"
+    t.boolean "club_deal_triggered", default: true
+    t.string "club_deal_id", default: "deal_552"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["simulation_id"], name: "index_atelier_simulations_on_simulation_id", unique: true
+  end
+
   create_table "delegated_accesses", force: :cascade do |t|
     t.string "delegation_id", null: false
     t.string "relationship", null: false
