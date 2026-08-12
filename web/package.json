@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@activeadmin/activeadmin": "^3.5.2"
+  }
+}
