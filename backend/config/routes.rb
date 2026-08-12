@@ -6,6 +6,10 @@ Rails.application.routes.draw do
       namespace :auth do
         post "identity_verify", to: "identity_verifications#create"
       end
+
+      namespace :verification do
+        post "trust_api_sync", to: "trust_api_syncs#create"
+      end
     end
   end
 end
