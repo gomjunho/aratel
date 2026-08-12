@@ -1,0 +1,28 @@
+<div class="club-deals-container" style="padding: 24px; max-width: 1000px; margin: 0 auto; font-family: sans-serif;">
+  <header style="margin-bottom: 24px;">
+    <h1 style="font-size: 28px; font-weight: 700; color: #1a202c;">🏷️ 수입 브랜드 '클럽 딜 (Club Deal)'</h1>
+    <p style="color: #718096;">ARATEL VVIP 전용 직수입 명품 공동 오더 혜택</p>
+  </header>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+    <% (@club_deals || []).each do |deal| %>
+      <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <span style="font-size: 13px; font-weight: 700; color: #805ad5;"><%= deal.brand %></span>
+        <h3 style="font-size: 20px; font-weight: 700; color: #2d3748; margin: 6px 0 12px 0;"><%= deal.item_name %></h3>
+
+        <div style="margin-bottom: 16px;">
+          <span style="text-decoration: line-through; color: #a0aec0; font-size: 14px; margin-right: 8px;"><%= number_with_delimiter(deal.original_price) %>원</span>
+          <span style="font-size: 22px; font-weight: 800; color: #e53e3e;"><%= number_with_delimiter(deal.deal_price) %>원</span>
+        </div>
+
+        <div style="background: #f7fafc; padding: 12px; border-radius: 8px; font-size: 13px; color: #4a5568; margin-bottom: 16px;">
+          <div>포인트 차감 한도: <strong>최대 <%= number_with_delimiter(deal.point_discount_limit) %>P</strong></div>
+          <div>현재 참여 인원: <strong><%= deal.current_participants %> / <%= deal.min_participants %>명</strong></div>
+          <div>상태: <span style="font-weight: 700; color: #38a169;"><%= deal.status %></span></div>
+        </div>
+
+        <%= link_to "클럽 딜 상세보기 & 주문", club_deal_path(deal.deal_id), style: "display: block; text-align: center; padding: 10px; background: #2b6cb0; color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600;" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="club-deal-detail-container" style="padding: 24px; max-width: 800px; margin: 0 auto; font-family: sans-serif;">
+  <header style="margin-bottom: 24px;">
+    <%= link_to "← 클럽 딜 목록으로 돌아가기", club_deals_path, style: "color: #4299e1; text-decoration: none; font-size: 14px; font-weight: 600;" %>
+    <h2 style="font-size: 26px; font-weight: 700; color: #1a202c; margin-top: 12px;"><%= @club_deal.item_name %></h2>
+    <p style="color: #805ad5; font-size: 16px; font-weight: 600;"><%= @club_deal.brand %></p>
+  </header>
+
+  <% if notice.present? %>
+    <div style="background: #e6fffa; border-left: 4px solid #319795; padding: 16px; margin-bottom: 24px; border-radius: 6px; color: #234e52;">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #edf2f7; padding-bottom: 16px; margin-bottom: 16px;">
+      <div>
+        <div style="text-decoration: line-through; color: #a0aec0; font-size: 14px;">시중가 <%= number_with_delimiter(@club_deal.original_price) %>원</div>
+        <div style="font-size: 24px; font-weight: 800; color: #e53e3e;">클럽딜가 <%= number_with_delimiter(@club_deal.deal_price) %>원</div>
+      </div>
+      <div style="text-align: right;">
+        <span style="font-size: 13px; background: #ebf8ff; color: #2b6cb0; padding: 4px 12px; border-radius: 12px; font-weight: 600;">성공 상태: <%= @club_deal.status %></span>
+        <div style="font-size: 13px; color: #718096; margin-top: 4px;"><%= @club_deal.current_participants %> / <%= @club_deal.min_participants %>명 달성</div>
+      </div>
+    </div>
+
+    <!-- Order Form Section -->
+    <h3 style="font-size: 18px; font-weight: 700; color: #2d3748; margin-bottom: 16px;">🛍️ 프라이빗 공동 오더 참여</h3>
+    <%= form_with url: order_club_deal_path(@club_deal.deal_id), method: :post, local: true do |f| %>
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 6px; font-weight: 600;">사용할 포인트 (최대 <%= number_with_delimiter(@club_deal.point_discount_limit) %>P)</label>
+        <%= f.number_field :used_points, value: 500000, max: @club_deal.point_discount_limit, style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" %>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 6px; font-weight: 600;">현금/카드 결제금액</label>
+        <%= f.number_field :cash_amount, value: @club_deal.deal_price - 500000, style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" %>
+      </div>
+
+      <%= f.submit "클럽 딜 오더 신청하기", style: "width: 100%; padding: 12px; background: #2b6cb0; color: #fff; border: none; border-radius: 6px; font-size: 16px; font-weight: 700; cursor: pointer;" %>
+    <% end %>
+  </div>
+</div>

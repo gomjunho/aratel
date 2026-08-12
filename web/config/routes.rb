@@ -52,6 +52,10 @@ Rails.application.routes.draw do
 
       get "atelier/flat_maps", to: "/ateliers#api_flat_maps"
       post "atelier/simulations", to: "/ateliers#api_create_simulation"
+
+      get "club_deals", to: "/club_deals#api_index"
+      post "club_deals/:id/order", to: "/club_deals#api_order", as: :order_api_v1_club_deal
+      post "concierge/reservations", to: "/concierges#api_create_reservation"
     end
   end
 
@@ -63,5 +67,15 @@ Rails.application.routes.draw do
 
   resource :atelier, only: [:show] do
     post :simulate
+  end
+
+  resources :club_deals, only: [:index, :show] do
+    member do
+      post :order
+    end
+  end
+
+  resource :concierge, only: [:show] do
+    resources :reservations, controller: "concierges", only: [:create]
   end
 end
