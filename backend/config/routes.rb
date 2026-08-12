@@ -41,6 +41,10 @@ Rails.application.routes.draw do
       namespace :concierge do
         post "reservations", to: "reservations#create"
       end
+
+      namespace :insights do
+        get "transactions", to: "transactions#index"
+      end
     end
   end
 end
