@@ -90,22 +90,22 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Banner / Card
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF1E222B), Color(0xFF2A2F3D)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+              // Banner / Card
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF1E222B), Color(0xFF2A2F3D)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
                 ),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAlignment.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
