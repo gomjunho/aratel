@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'screens/verification_screen.dart';
+import 'screens/lounge_screen.dart';
+import 'screens/atelier_screen.dart';
+import 'screens/concierge_screen.dart';
+import 'screens/insights_screen.dart';
+import 'screens/ai_agent_dialogue_overlay.dart';
 
 void main() {
   runApp(const AratelApp());
@@ -46,7 +51,20 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     LoungeScreen(),
     AtelierScreen(),
     ConciergeScreen(),
+    InsightsScreen(),
   ];
+
+  void _openAiAgentOverlay() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => const FractionallySizedBox(
+        heightFactor: 0.75,
+        child: AiAgentDialogueOverlay(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +73,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         index: _currentIndex,
         children: _screens,
       ),
+      floatingActionButton: _currentIndex == 0
+          ? FloatingActionButton.extended(
+              key: const Key('ai_agent_fab'),
+              backgroundColor: const Color(0xFFD4AF37),
+              onPressed: _openAiAgentOverlay,
+              icon: const Icon(Icons.smart_toy_outlined, color: Colors.black),
+              label: const Text('AI 에이전트', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            )
+          : null,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
@@ -68,6 +95,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.forum_rounded), label: '라운지'),
           BottomNavigationBarItem(icon: Icon(Icons.view_in_ar_rounded), label: 'AI아뜰리에'),
           BottomNavigationBarItem(icon: Icon(Icons.room_service_rounded), label: '컨시어지'),
+          BottomNavigationBarItem(icon: Icon(Icons.analytics_rounded), label: '인사이트'),
         ],
       ),
     );
@@ -93,20 +121,19 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-              // Banner / Card
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF1E222B), Color(0xFF2A2F3D)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF1E222B), Color(0xFF2A2F3D)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -163,42 +190,6 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class LoungeScreen extends StatelessWidget {
-  const LoungeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('하이엔드 암호화 라운지'), backgroundColor: const Color(0xFF161920)),
-      body: const Center(child: Text('검증된 실소유주 전용 24시간 익명 소통 라운지', style: TextStyle(color: Colors.grey))),
-    );
-  }
-}
-
-class AtelierScreen extends StatelessWidget {
-  const AtelierScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('AI 아뜰리에 (3D 인테리어)'), backgroundColor: const Color(0xFF161920)),
-      body: const Center(child: Text('평면도 기반 수입 리빙 브랜드 가상 배치 & 클럽 딜', style: TextStyle(color: Colors.grey))),
-    );
-  }
-}
-
-class ConciergeScreen extends StatelessWidget {
-  const ConciergeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('VIP 컨시어지'), backgroundColor: const Color(0xFF161920)),
-      body: const Center(child: Text('자산관리, 하이엔드 주거 방역, 문화 예약 컨시어지', style: TextStyle(color: Colors.grey))),
     );
   }
 }
