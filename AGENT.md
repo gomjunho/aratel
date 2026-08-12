@@ -16,19 +16,21 @@ This file serves as persistent memory and instructions for AI Agents (Antigravit
 * If coverage drops below 100%, write additional tests immediately.
 * Do not bypass, lower, or comment out coverage checks (`SimpleCov.minimum_coverage 100`).
 
-### 3. Gitmoji Commit Convention MUST BE USED FOR ALL COMMITS
-* **EVERY** `git commit` message MUST begin with a valid Gitmoji.
-* Standard mappings to use:
-  * `:sparkles: feat: ...` (New features)
-  * `:white_check_mark: test: ...` (Tests)
-  * `:bug: fix: ...` (Bug fixes)
-  * `:recycle: refactor: ...` (Refactoring)
-  * `:memo: docs: ...` (Documentation)
-  * `:green_heart: ci: ...` (CI/CD workflows)
-  * `:building_construction: scaffold: ...` (Scaffolding/Architecture)
-  * `:wrench: config: ...` (Configuration changes)
-  * `:lock: security: ...` (Security implementations)
-  * `:palette: style: ...` (UI/UX Styling)
+### 3. Gitmoji Commit Convention MUST USE ACTUAL UNICODE EMOJIS (NOT Shortcodes)
+* **EVERY** `git commit` message MUST begin with a valid actual unicode emoji character (e.g. `✨`, `📝`, `🐛`, `✅`).
+* **DO NOT** use text shortcodes like `:sparkles:` or `:memo:`. Always use the literal emoji symbol!
+* Standard emoji mappings:
+  * `✨ feat: ...` (New features)
+  * `✅ test: ...` (Tests)
+  * `🐛 fix: ...` (Bug fixes)
+  * `♻️ refactor: ...` (Refactoring)
+  * `📝 docs: ...` (Documentation)
+  * `💚 ci: ...` (CI/CD workflows)
+  * `🏗️ scaffold: ...` (Scaffolding/Architecture)
+  * `🔧 config: ...` (Configuration changes)
+  * `🔒 security: ...` (Security implementations)
+  * `🎨 style: ...` (UI/UX Styling)
+  * `🧠 memory: ...` (AI Agent Memory/Context updates)
 
 ---
 

@@ -8,5 +8,5 @@
    - Always maintain 100% code coverage across `backend`, `web`, and `mobile`.
    - Never remove assertions or lower coverage thresholds.
 
-3. **Gitmoji Commits Mandatory**:
-   - EVERY git commit message MUST include an appropriate Gitmoji prefix (e.g. `:sparkles: feat: ...`, `:memo: docs: ...`, `:white_check_mark: test: ...`, `:green_heart: ci: ...`).
+3. **Unicode Emoji Commits Mandatory**:
+   - EVERY git commit message MUST start with a real unicode emoji character (e.g. ✨, ✅, 🐛, 📝, 🧠, ♻️, 💚), NOT text shortcodes like `:sparkles:`.
