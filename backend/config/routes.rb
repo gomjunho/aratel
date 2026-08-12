@@ -17,6 +17,10 @@ Rails.application.routes.draw do
       namespace :users do
         get "me/tier", to: "tiers#show"
       end
+
+      namespace :home do
+        get "welcome", to: "welcomes#show"
+      end
     end
   end
 end
