@@ -1,17 +1,166 @@
 // Sass variable overrides must be declared before loading up Active Admin's styles.
-//
-// To view the variables that Active Admin provides, take a look at
-// `app/assets/stylesheets/active_admin/mixins/_variables.scss` in the
-// Active Admin source.
-//
-// For example, to change the sidebar width:
-// $sidebar-width: 242px;
-
-// Active Admin's got SASS!
 @import "active_admin/mixins";
 @import "active_admin/base";
 
-// Overriding any non-variable Sass must be done after the fact.
-// For example, to change the default status-tag color:
-//
-//   .status_tag { background: #6090DB; }
+/* Modern ActiveAdmin UI Overrides matching Active Admin Demo Sign In */
+body.logged_out {
+  background-color: #f8fafc !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+
+  #login {
+    width: 440px !important;
+    margin: 60px auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+
+    h2 {
+      background: none !important;
+      color: #0f172a !important;
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      padding: 0 0 20px 0 !important;
+      border-bottom: none !important;
+      text-shadow: none !important;
+      box-shadow: none !important;
+    }
+
+    form {
+      background: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01) !important;
+      padding: 32px !important;
+
+      fieldset.inputs {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 0 20px 0 !important;
+
+        ol {
+          padding: 0 !important;
+
+          li {
+            padding: 0 0 16px 0 !important;
+
+            label {
+              display: block !important;
+              float: none !important;
+              width: 100% !important;
+              font-size: 14px !important;
+              font-weight: 600 !important;
+              color: #1e293b !important;
+              margin-bottom: 6px !important;
+              text-align: left !important;
+            }
+
+            input[type="email"], input[type="password"], input[type="text"] {
+              width: 100% !important;
+              box-sizing: border-box !important;
+              padding: 10px 14px !important;
+              border: 1px solid #cbd5e1 !important;
+              border-radius: 8px !important;
+              font-size: 15px !important;
+              background-color: #f8fafc !important;
+              color: #0f172a !important;
+              outline: none !important;
+              transition: all 0.2s ease !important;
+
+              &:focus {
+                border-color: #2563eb !important;
+                background-color: #ffffff !important;
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+              }
+            }
+
+            &.boolean {
+              label {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                font-weight: 400 !important;
+                color: #334155 !important;
+                cursor: pointer !important;
+
+                input[type="checkbox"] {
+                  width: 16px !important;
+                  height: 16px !important;
+                  border-radius: 4px !important;
+                  border: 1px solid #cbd5e1 !important;
+                  margin: 0 !important;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      fieldset.actions {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+
+        ol {
+          padding: 0 !important;
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 16px !important;
+
+          li.action {
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+
+            input[type="submit"] {
+              width: 100% !important;
+              background: #2563eb !important;
+              color: #ffffff !important;
+              border: none !important;
+              border-radius: 8px !important;
+              padding: 12px 20px !important;
+              font-size: 15px !important;
+              font-weight: 600 !important;
+              cursor: pointer !important;
+              box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2) !important;
+              transition: background-color 0.2s ease !important;
+              text-shadow: none !important;
+
+              &:hover {
+                background: #1d4ed8 !important;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    a {
+      display: inline-block !important;
+      margin-top: 12px !important;
+      color: #2563eb !important;
+      font-size: 14px !important;
+      text-decoration: underline !important;
+
+      &:hover {
+        color: #1d4ed8 !important;
+      }
+    }
+  }
+
+  .flash {
+    max-width: 440px !important;
+    margin: 20px auto 0 auto !important;
+    padding: 14px 18px !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+
+    &.flash_alert, &.flash_warning, &.flash_notice {
+      background-color: #fef9c3 !important;
+      border: 1px solid #fde047 !important;
+      color: #854d0e !important;
+    }
+  }
+}
