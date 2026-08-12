@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 
       namespace :verification do
         post "trust_api_sync", to: "trust_api_syncs#create"
+        post "delegated_access", to: "delegated_accesses#create"
+        post "delegated_access/:id/approve", to: "delegated_accesses#approve"
       end
     end
   end
