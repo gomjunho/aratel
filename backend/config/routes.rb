@@ -13,6 +13,10 @@ Rails.application.routes.draw do
         post "delegated_access/:id/approve", to: "delegated_accesses#approve"
         post "tier_evidence", to: "tier_evidences#create"
       end
+
+      namespace :users do
+        get "me/tier", to: "tiers#show"
+      end
     end
   end
 end

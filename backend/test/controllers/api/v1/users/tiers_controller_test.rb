@@ -27,7 +27,19 @@ class Api::V1::Users::TiersControllerTest < ActionDispatch::IntegrationTest
     assert_equal true, json["security_profile"]["privacy_masked"]
   end
 
-  test "GET /api/v1/users/me/tier without header falls back to default user" do
+  test "GET /api/v1/users/me/tier with query param user_id" do
+    user = User.create!(user_id: "usr_2002", name: "김철수", tier: "GOLD")
+    get "/api/v1/users/me/tier", params: { user_id: "usr_2002" }, as: :json
+
+    assert_response :success
+    json = JSON.parse(response.body)
+    assert_equal "usr_2002", json["user_id"]
+    assert_equal "GOLD", json["tier"]
+  end
+
+  test "GET /api/v1/users/me/tier creates default user if none exists" do
+    User.destroy_all
+
     get "/api/v1/users/me/tier", as: :json
 
     assert_response :success
