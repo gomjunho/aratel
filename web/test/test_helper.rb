@@ -7,6 +7,7 @@ SimpleCov.start "rails" do
   skip "/jobs/"
   skip "/mailers/"
   skip "/channels/"
+  skip "/app/admin/"
 end
 
 ENV["RAILS_ENV"] ||= "test"

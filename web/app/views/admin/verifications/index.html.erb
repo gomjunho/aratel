@@ -1,105 +1,79 @@
 <div class="admin-header">
-  <h1>관리자 인증 심사 대기열 | Admin Verification Queue</h1>
-  <p class="subtitle">VVIP 자산 증빙 수동 심사, 서류 확인, 멤버십 등급 및 권한 위임 승인 관리자 포털</p>
+  <h1>⚙️ 관리자 인증 심사 대기열</h1>
+  <p class="subtitle">VVIP 자산 증빙 서류 및 가족/대리인 권한 위임 수동 검증 센터</p>
 
-  <div class="filter-bar">
-    <%= link_to "전체 보기", admin_verifications_path, class: "filter-chip #{'active' if @status.blank?}" %>
-    <%= link_to "심사 대기중 (UNDER_REVIEW)", admin_verifications_path(status: "UNDER_REVIEW"), class: "filter-chip #{'active' if @status == 'UNDER_REVIEW'}" %>
-    <%= link_to "위임 대기중 (PENDING)", admin_verifications_path(status: "PENDING_OWNER_APPROVAL"), class: "filter-chip #{'active' if @status == 'PENDING_OWNER_APPROVAL'}" %>
-    <%= link_to "승인 완료 (VERIFIED/APPROVED)", admin_verifications_path(status: "VERIFIED"), class: "filter-chip #{'active' if @status == 'VERIFIED'}" %>
-    <%= link_to "반려 처리 (REJECTED)", admin_verifications_path(status: "REJECTED"), class: "filter-chip #{'active' if @status == 'REJECTED'}" %>
+  <div class="filter-bar mt-3">
+    <a href="<%= admin_verifications_path %>" class="filter-chip <%= 'active' if @status_filter.blank? %>">전체 보기</a>
+    <a href="<%= admin_verifications_path(status: 'UNDER_REVIEW') %>" class="filter-chip <%= 'active' if @status_filter == 'UNDER_REVIEW' %>">심사 대기 중</a>
+    <a href="<%= admin_verifications_path(status: 'APPROVED') %>" class="filter-chip <%= 'active' if @status_filter == 'APPROVED' %>">승인됨</a>
+    <a href="<%= admin_verifications_path(status: 'REJECTED') %>" class="filter-chip <%= 'active' if @status_filter == 'REJECTED' %>">반려됨</a>
   </div>
 </div>
 
-<!-- VVIP Tier Evidence Submissions Queue -->
-<div class="card mt-4">
-  <h2>1. VVIP 자산 증빙 심사 대기열 (<%= @tier_evidences.count %>건)</h2>
-  <% if @tier_evidences.any? %>
-    <table class="table table-admin">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>신청자</th>
-          <th>증빙 유형</th>
-          <th>목표 등급</th>
-          <th>서류 Preview</th>
-          <th>신청일</th>
-          <th>상태</th>
-          <th>관리자 심사 액션</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @tier_evidences.each do |ev| %>
+<div class="grid grid-2 mt-4">
+  <!-- 자산 증빙 서류 심사 -->
+  <div class="card">
+    <h2>📄 VVIP 자산 증빙 서류 대기열</h2>
+    <% if @tier_evidences.empty? %>
+      <p class="text-muted">해당하는 자산 증빙 서류가 없습니다.</p>
+    <% else %>
+      <table class="table">
+        <thead>
           <tr>
-            <td><code><%= ev.submission_id %></code></td>
-            <td><strong><%= ev.user.name %></strong> (<%= ev.user.phone_number %>)</td>
-            <td><%= ev.evidence_type %></td>
-            <td><span class="tier-badge tier-<%= ev.target_tier.downcase %>"><%= ev.target_tier %></span></td>
-            <td><a href="<%= ev.document_url %>" target="_blank" class="link-preview">📄 서류 확인</a></td>
-            <td><%= ev.submitted_at&.strftime("%Y-%m-%d %H:%M") %></td>
-            <td><span class="status-tag status-<%= ev.status.downcase %>"><%= ev.status %></span></td>
-            <td class="action-cell">
-              <%= link_to "상세보기", admin_verification_path(ev), class: "btn btn-xs btn-outline" %>
-              <% if ev.status == "UNDER_REVIEW" %>
-                <%= form_with url: approve_tier_evidence_admin_verification_path(ev), method: :post, local: true, class: "inline-form" do |f| %>
-                  <%= f.hidden_field :admin_notes, value: "자산 및 소득 서류 승인 완료" %>
-                  <%= f.submit "승인", class: "btn btn-xs btn-success" %>
-                <% end %>
-                <%= form_with url: reject_tier_evidence_admin_verification_path(ev), method: :post, local: true, class: "inline-form" do |f| %>
-                  <%= f.hidden_field :admin_notes, value: "서류 식별 불가 및 증빙 미흡" %>
-                  <%= f.submit "반려", class: "btn btn-xs btn-danger" %>
-                <% end %>
-              <% end %>
-            </td>
+            <th>회원명</th>
+            <th>서류 유형</th>
+            <th>목표 등급</th>
+            <th>상태</th>
+            <th>관리</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <p class="text-muted p-3">해당되는 자산 증빙 대기열 항목이 없습니다.</p>
-  <% end %>
-</div>
+        </thead>
+        <tbody>
+          <% @tier_evidences.each do |evidence| %>
+            <tr>
+              <td><%= evidence.user.name %></td>
+              <td><%= evidence.evidence_type %></td>
+              <td><span class="badge badge-gold_emblem"><%= evidence.target_tier %></span></td>
+              <td><span class="status-tag status-<%= evidence.status.downcase %>"><%= evidence.status %></span></td>
+              <td>
+                <a href="<%= admin_verification_path(evidence) %>" class="btn btn-xs btn-outline">상세 심사 ➔</a>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
 
-<!-- Delegated Access Requests Queue -->
-<div class="card mt-4">
-  <h2>2. 권한 위임 심사 대기열 (<%= @delegations.count %>건)</h2>
-  <% if @delegations.any? %>
-    <table class="table table-admin">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>신청자</th>
-          <th>위임 관계</th>
-          <th>서류 Preview</th>
-          <th>신청일</th>
-          <th>상태</th>
-          <th>관리자 심사 액션</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @delegations.each do |del| %>
+  <!-- 권한 위임 심사 -->
+  <div class="card">
+    <h2>👥 대리인 및 가족 위임 대기열</h2>
+    <% if @delegations.empty? %>
+      <p class="text-muted">해당하는 권한 위임 신청이 없습니다.</p>
+    <% else %>
+      <table class="table">
+        <thead>
           <tr>
-            <td><code><%= del.delegation_id %></code></td>
-            <td><strong><%= del.user.name %></strong></td>
-            <td><%= del.relationship %></td>
-            <td><a href="<%= del.document_url %>" target="_blank" class="link-preview">📄 서류 확인</a></td>
-            <td><%= del.requested_at&.strftime("%Y-%m-%d %H:%M") %></td>
-            <td><span class="status-tag status-<%= del.status.downcase %>"><%= del.status %></span></td>
-            <td class="action-cell">
-              <% if del.status == "PENDING_OWNER_APPROVAL" %>
-                <%= form_with url: approve_delegation_admin_verification_path(del), method: :post, local: true, class: "inline-form" do |f| %>
-                  <%= f.submit "승인", class: "btn btn-xs btn-success" %>
-                <% end %>
-                <%= form_with url: reject_delegation_admin_verification_path(del), method: :post, local: true, class: "inline-form" do |f| %>
-                  <%= f.submit "거절", class: "btn btn-xs btn-danger" %>
-                <% end %>
-              <% end %>
-            </td>
+            <th>신청자</th>
+            <th>관계</th>
+            <th>증명서</th>
+            <th>상태</th>
+            <th>관리</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-  <% else %>
-    <p class="text-muted p-3">해당되는 권한 위임 대기열 항목이 없습니다.</p>
-  <% end %>
+        </thead>
+        <tbody>
+          <% @delegations.each do |delegation| %>
+            <tr>
+              <td><%= delegation.user.name %></td>
+              <td><%= delegation.relationship %></td>
+              <td><a href="<%= delegation.document_url %>" target="_blank" class="link-preview">증명서 보기 🔗</a></td>
+              <td><span class="status-tag status-<%= delegation.status.downcase %>"><%= delegation.status %></span></td>
+              <td>
+                <a href="<%= admin_verification_path(delegation, type: 'delegation') %>" class="btn btn-xs btn-outline">상세 심사 ➔</a>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
 </div>

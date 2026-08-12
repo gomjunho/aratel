@@ -1,42 +1,52 @@
 module Admin
   class VerificationsController < ApplicationController
-    def index
-      @status = params[:status]
-      @tier_evidences = TierEvidence.includes(:user).order(created_at: :desc)
-      @delegations = DelegatedAccessRequest.includes(:user).order(created_at: :desc)
+    skip_before_action :verify_authenticity_token
 
-      if @status.present?
-        @tier_evidences = @tier_evidences.where(status: @status)
-        @delegations = @delegations.where(status: @status)
+    def index
+      @status_filter = params[:status]
+      @tier_evidences = TierEvidence.all
+      @delegations = DelegatedAccessRequest.all
+
+      if @status_filter.present?
+        @tier_evidences = @tier_evidences.where(status: @status_filter)
+        @delegations = @delegations.where(status: @status_filter)
       end
     end
 
     def show
-      @tier_evidence = TierEvidence.find_by(id: params[:id])
-      @delegation = DelegatedAccessRequest.find_by(id: params[:id]) unless @tier_evidence
+      if params[:type] == "delegation"
+        @item = DelegatedAccessRequest.find(params[:id])
+        @is_delegation = true
+      else
+        @item = TierEvidence.find(params[:id])
+        @is_delegation = false
+      end
     end
 
     def approve_tier_evidence
       evidence = TierEvidence.find(params[:id])
-      evidence.approve!(admin_notes: params[:admin_notes])
+      evidence.update!(status: "APPROVED", admin_notes: params[:admin_notes])
+      evidence.user.update!(tier: evidence.target_tier)
       redirect_to admin_verifications_path, notice: "자산 증빙 서류가 승인되었습니다."
     end
 
     def reject_tier_evidence
       evidence = TierEvidence.find(params[:id])
-      evidence.reject!(admin_notes: params[:admin_notes])
+      evidence.update!(status: "REJECTED", admin_notes: params[:admin_notes])
       redirect_to admin_verifications_path, alert: "자산 증빙 서류가 반려되었습니다."
     end
 
     def approve_delegation
       delegation = DelegatedAccessRequest.find(params[:id])
-      delegation.approve!
+      delegation.update!(status: "APPROVED")
+      delegation.user.add_badge("RESIDENT")
+      delegation.user.save!
       redirect_to admin_verifications_path, notice: "권한 위임 요청이 승인되었습니다."
     end
 
     def reject_delegation
       delegation = DelegatedAccessRequest.find(params[:id])
-      delegation.reject!
+      delegation.update!(status: "REJECTED")
       redirect_to admin_verifications_path, alert: "권한 위임 요청이 거절되었습니다."
     end
   end

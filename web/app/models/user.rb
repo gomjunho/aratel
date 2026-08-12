@@ -6,6 +6,14 @@ class User < ApplicationRecord
 
   after_initialize :set_defaults, if: :new_record?
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["badge", "badges_list", "birth_date", "building_number", "complex_name", "created_at", "id", "name", "ownership_percentage", "phone_number", "privacy_masked", "screen_capture_prevented", "tier", "unit_number", "updated_at", "verification_token", "verified_identity_at"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["tier_evidences", "delegated_access_requests"]
+  end
+
   def set_defaults
     self.tier ||= "BRONZE"
     self.badge ||= "UNVERIFIED"

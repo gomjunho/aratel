@@ -3,30 +3,35 @@ class DelegatedAccessRequest < ApplicationRecord
 
   validates :relationship, presence: true
   validates :document_url, presence: true
+  validates :delegation_id, presence: true
 
-  before_validation :generate_delegation_id, on: :create
-  before_validation :set_defaults, on: :create
-
-  def generate_delegation_id
-    self.delegation_id ||= "del_#{rand(1000..9999)}"
-  end
+  before_validation :set_defaults, if: :new_record?
 
   def set_defaults
+    self.delegation_id ||= "del_#{SecureRandom.hex(4)}"
     self.status ||= "PENDING_OWNER_APPROVAL"
     self.requested_at ||= Time.current
   end
 
   def approve!
-    update!(
-      status: "APPROVED",
-      granted_badge: "RESIDENT",
-      role: "RESIDENT"
-    )
+    self.status = "APPROVED"
+    self.granted_badge = "RESIDENT"
+    self.role = "RESIDENT"
     user.add_badge("RESIDENT")
     user.save!
+    save!
   end
 
   def reject!
-    update!(status: "REJECTED")
+    self.status = "REJECTED"
+    save!
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "delegation_id", "document_url", "id", "relationship", "role", "granted_badge", "status", "updated_at", "user_id"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["user"]
   end
 end

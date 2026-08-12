@@ -34,13 +34,13 @@ class Admin::VerificationsControllerTest < ActionDispatch::IntegrationTest
   test "should show verification item details in admin" do
     get admin_verification_url(@evidence)
     assert_response :success
-    assert_select "h2", text: /서류 심사 상세 정보|Verification Submission Review/
+    assert_select "h1", text: /서류 심사 상세 정보|Verification Submission Review/
   end
 
   test "should show delegation item details in admin" do
-    get admin_verification_url(@delegation)
+    get admin_verification_url(@delegation, type: "delegation")
     assert_response :success
-    assert_select "h2", text: /서류 심사 상세 정보|Verification Submission Review/
+    assert_select "h1", text: /서류 심사 상세 정보|Verification Submission Review/
   end
 
   test "should approve tier evidence in admin" do

@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :delegated_accesses, only: [:create] do
     member do
       post :approve
+      post :reject
     end
   end
 
@@ -37,6 +38,7 @@ Rails.application.routes.draw do
         post :trust_api_sync, to: "/verifications#api_trust_api_sync"
         post :delegated_access, to: "/delegated_accesses#api_create"
         post "delegated_access/:id/approve", to: "/delegated_accesses#api_approve"
+        post "delegated_access/:id/reject", to: "/delegated_accesses#api_approve"
         post :tier_evidence, to: "/tier_evidences#api_create"
       end
 
@@ -82,4 +84,7 @@ Rails.application.routes.draw do
   end
 
   resource :insight, only: [:show]
+
+  # ActiveAdmin Dashboard & Resources
+  ActiveAdmin.routes(self)
 end
