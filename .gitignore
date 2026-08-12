@@ -6,21 +6,25 @@
 /pkg/
 /spec/reports/
 /spec/examples.txt
-/test/tmp/
-/test/version_tmp/
-/tmp/
+
+# Ignore tmp and log across all subdirectories
+tmp/
+**/tmp/
+log/
+**/log/
+*.log
 
 # Ruby & Rails
-*.log
-/log/
-/tmp/
 /db/*.sqlite3
 /db/*.sqlite3-journal
 /db/*.sqlite3-shm
 /db/*.sqlite3-wal
 /storage/
+**/storage/
 /.bundle/
+**/.bundle/
 /vendor/bundle
+**/vendor/bundle
 
 # Flutter & Dart
 .dart_tool/
@@ -30,6 +34,7 @@
 .pub-cache/
 .pub/
 build/
+coverage/
 
 # IDE / OS
 .DS_Store
