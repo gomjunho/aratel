@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "ARATEL - VVIP Verification & Tier Governance" %></title>
+    <title><%= content_for(:title) || "ARATEL - VVIP Digital Estate & High-End Curation" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -24,9 +24,14 @@
         <a href="/" class="logo">ARATEL <span>아라뜰</span></a>
       </div>
       <div class="nav-links">
-        <a href="<%= verification_path %>" class="nav-item">인증 대시보드</a>
-        <a href="<%= new_tier_evidence_path %>" class="nav-item">자산 증빙 제출</a>
-        <a href="<%= admin_verifications_path %>" class="nav-item nav-admin">어드민 심사 대기열</a>
+        <a href="<%= home_path %>" class="nav-item">🏠 웰컴 홈</a>
+        <a href="<%= verification_path %>" class="nav-item">🔐 자산 인증</a>
+        <a href="<%= lounge_posts_path %>" class="nav-item">💬 익명 라운지</a>
+        <a href="<%= atelier_path %>" class="nav-item">🛋️ AI 아뜰리에</a>
+        <a href="<%= club_deals_path %>" class="nav-item">🏷️ 클럽 딜</a>
+        <a href="<%= concierge_path %>" class="nav-item">🛎️ VIP 컨시어지</a>
+        <a href="<%= insight_path %>" class="nav-item">📊 실거래 인사이트</a>
+        <a href="<%= admin_verifications_path %>" class="nav-item nav-admin">⚙️ 어드민 심사</a>
       </div>
     </nav>
 

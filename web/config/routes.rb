@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
-  root "verifications#show"
+  root "homes#show"
 
   resource :verification, only: [:show] do
     post :identity_verify
