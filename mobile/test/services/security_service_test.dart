@@ -39,7 +39,7 @@ void main() {
 
     test('maskPhoneNumber utility', () {
       expect(securityService.maskPhoneNumber('01012345678'), '010-****-5678');
-      expect(securityService.maskPhoneNumber('010-1234-5678'), '010-****-5678');
+      expect(securityService.maskPhoneNumber('0212345678'), '021-***-5678');
       expect(securityService.maskPhoneNumber('123'), '123');
     });
 
@@ -47,6 +47,7 @@ void main() {
       expect(securityService.maskUnitNumber('1502호'), '****호');
       expect(securityService.maskUnitNumber('101동 1502호'), '101동 ****호');
       expect(securityService.maskUnitNumber('1502'), '****');
+      expect(securityService.maskUnitNumber('A-B'), 'A-B');
     });
   });
 }

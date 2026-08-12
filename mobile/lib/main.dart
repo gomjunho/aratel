@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/verification_screen.dart';
 
 void main() {
   runApp(const AratelApp());
@@ -162,18 +163,6 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class VerificationScreen extends StatelessWidget {
-  const VerificationScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('자산 인증 센터'), backgroundColor: const Color(0xFF161920)),
-      body: const Center(child: Text('1분 자동 등기 API 연동 및 VVIP 자산 인증', style: TextStyle(color: Colors.grey))),
     );
   }
 }
