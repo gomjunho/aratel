@@ -32,9 +32,7 @@ module Api
         private
 
         def post_params
-          params.require(:post).permit(:title, :content)
-        rescue ActionController::ParameterMissing
-          params.permit(:title, :content)
+          params[:post].present? ? params.require(:post).permit(:title, :content) : params.permit(:title, :content)
         end
       end
     end

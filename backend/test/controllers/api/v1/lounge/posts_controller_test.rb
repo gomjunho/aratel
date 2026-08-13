@@ -38,6 +38,24 @@ class Api::V1::Lounge::PostsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "PUBLISHED", json["status"]
   end
 
+  test "POST /api/v1/lounge/posts with authenticated user params" do
+    user = User.create!(user_id: "usr_lounge_99", name: "라운지유저", tier: "DIAMOND", complex_name: "디에이치 방배")
+    token = AuthService.encode(user_id: user.user_id, tier: user.tier)
+
+    post "/api/v1/lounge/posts", params: {
+      post: {
+        title: "인증 유저 게시글",
+        content: "내용입니다."
+      }
+    }, headers: {
+      "Authorization" => "Bearer #{token}"
+    }, as: :json
+
+    assert_response :created
+    json = JSON.parse(response.body)
+    assert json["id"].start_with?("post_")
+  end
+
   test "POST /api/v1/lounge/posts with invalid params returns 422" do
     post "/api/v1/lounge/posts", params: {
       title: "",
