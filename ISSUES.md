@@ -1,6 +1,6 @@
 # 📋 ARATEL (아라뜰) 프로젝트 구현 이슈 목록 (Issue Backlog)
 
-본 문서는 `arch.docx` 및 `flow.docx` 기획서를 바탕으로 **ARATEL** 플랫폼 구축에 필요한 핵심 기능 및 정식 릴리즈 전 보안/성능/운용/UX 고도화 백로그 이슈(총 31개)를 정리한 목록입니다.
+본 문서는 `arch.docx` 및 `flow.docx` 기획서를 바탕으로 **ARATEL** 플랫폼 구축에 필요한 핵심 기능 및 정식 릴리즈 전 보안/성능/운용/UI/UX 고도화 백로그 이슈(총 36개)를 정리한 목록입니다.
 
 ---
 
@@ -122,66 +122,51 @@
 
 ## 🚀 Epic 7: 프로덕트 정식 출시 전 보안·성능·운용·UX 고도화 (Pre-Launch Production Readiness)
 
-### [#23] Sec: API Rate Limiting, CORS Policy & Devise Token Security Hardening
-* **카테고리**: `Backend`, `Infrastructure`
-* **라벨**: `security`, `pre-launch`, `backend`
-* **점검 내용**:
-  * [ ] Rack::Attack 모듈 적용을 통한 DDoS 및 브루트포스 로그인 시도 차단 (`/api/v1/auth/identity_verify` 5회/분 제한)
-  * [ ] Production CORS 화이트리스트 IP/도메인 엄격 제한
-  * [ ] Devise JWT Secret Key 및 ActiveAdmin Auth 세션 보안 쿠키 `SameSite=Strict`, `HttpOnly` 강제화
+### [#23] Sec: API Rate Limiting, CORS Policy & Devise Token Security Hardening [✅ 완료]
+### [#24] Sec: Zero-Knowledge Payload Sanitization & Admin PII Privacy Masking Audit [✅ 완료]
+### [#25] Perf: Cloud Database Indexing & High-Frequency API Redis Caching Layer [✅ 완료]
+### [#26] Perf: 3D GLTF Asset Compression & WebP Audio Asset CDN Optimization Pipeline [✅ 완료]
+### [#27] Ops: Sentry Error Tracking & Real-Time Performance APM Telemetry Setup [✅ 완료]
+### [#28] Ops: GitHub Actions Multi-Stack CI/CD Pipeline & Automated Staging Deployment [✅ 완료]
+### [#29] UX: Holographic Scan Animation & Multi-Step Progress Tracker for Trust API Sync [✅ 완료]
+### [#30] UX: Interactive Voice Waveform Visualizer & One-Tap Suggestion Chips for AI Agent [✅ 완료]
+### [#31] Design: Dynamic Gyroscope Holographic Depth Badge Shader & Glow Scatter Plot [✅ 완료]
 
-### [#24] Sec: Zero-Knowledge Payload Sanitization & Admin PII Privacy Masking Audit
-* **카테고리**: `Backend`, `Web`, `Mobile`
-* **라벨**: `security`, `privacy`, `pre-launch`
-* **점검 내용**:
-  * [ ] 영지식 암호화 라운지 페이로드 내 XSS/SQL Injection 방지 스크럽 검증
-  * [ ] 백오피스 어드민 화면 내 개인식별정보(주민번호 앞자리, 전화번호, 동호수) 자동 마스킹 필터 전면 점검
+---
 
-### [#25] Perf: Cloud Database Indexing & High-Frequency API Redis Caching Layer
-* **카테고리**: `Backend`, `Database`
-* **라벨**: `performance`, `database`, `pre-launch`
-* **점검 내용**:
-  * [ ] `community_posts(board_type, complex_name, created_at)` 및 `lounge_posts(created_at)` 복합 인덱스 검증
-  * [ ] 실시간 커뮤니티 시설 혼잡도 및 웰컴 홈 데이터 Redis Caching(TTL 30초) 적용으로 DB 부하 90% 감소
+## 🎨 Epic 8: UI & User Flow 출시 전 감성·UX 완결성 고도화 (Pre-Launch UI & User Flow Polish)
 
-### [#26] Perf: 3D GLTF Asset Compression & WebP Audio Asset CDN Optimization Pipeline
-* **카테고리**: `Web`, `Mobile`, `Infrastructure`
-* **라벨**: `performance`, `cdn`, `pre-launch`
-* **점검 내용**:
-  * [ ] 3D 아뜰리에 용 GLTF/GLB 가구 파일 Draco 압축(용량 70% 감소) 적용
-  * [ ] 조경 오디오 도슨트 MP3 ➔ WebP/AAC 코덱 변환 및 Cloudflare CDN 캐싱 설정
-
-### [#27] Ops: Sentry Error Tracking & Real-Time Performance APM Telemetry Setup
-* **카테고리**: `Backend`, `Web`, `Mobile`
-* **라벨**: `devops`, `monitoring`, `pre-launch`
-* **점검 내용**:
-  * [ ] Rails API 및 Flutter 앱 Sentry SDK 연동하여 런타임 예외 실시간 트래킹
-  * [ ] 서버 CPU, Memory, DB Connection Pool 모니터링 대시보드(Datadog/Prometheus) 구축
-
-### [#28] Ops: GitHub Actions Multi-Stack CI/CD Pipeline & Automated Staging Deployment
-* **카테고리**: `Infrastructure`, `DevOps`
-* **라벨**: `ci/cd`, `automation`, `pre-launch`
-* **점검 내용**:
-  * [ ] GitHub Push 시 Backend, Web, Mobile 테스트 스위트 병렬 실행 CI 파이프라인 구축
-  * [ ] Main 브랜치 머지 시 스테이징 서버(AWS ECS / Vercel / TestFlight) 자동 배포 CD 구축
-
-### [#29] UX: Holographic Scan Animation & Multi-Step Progress Tracker for Trust API Sync
+### [#32] UI/UX: 소유권 자동 인증 및 자산 증빙 마법사(Wizard) 다단계 상태 트래커
 * **카테고리**: `Web`, `Mobile`
-* **라벨**: `UX`, `enhancement`, `pre-launch`
+* **라벨**: `UI/UX`, `user-flow`, `verification`
 * **점검 내용**:
-  * [ ] 1분 등기부 연동 대기 시간(3~10초) 동안 홀로그램 데이터 스캐닝 인터랙션 효과 적용
-  * [ ] "본인인증 ➔ 대법원 등기 조회 ➔ 소유권 무결성 검증 완료" 3단계 라이브 프로그래스 바 적용
+  * [ ] 1분 본인인증 ➔ 실시간 등기부 조회 ➔ VVIP 자산 증빙 제출 흐름 간 다단계 마법사(Step Wizard) 프로그래스 바 연동
+  * [ ] 등기부 조회 실패 시 사용자 대응 가이드 툴팁 및 1-Tap 재시도 UX 제공
 
-### [#30] UX: Interactive Voice Waveform Visualizer & One-Tap Suggestion Chips for AI Agent
+### [#33] UI/UX: 커뮤니티 서브 탭 필터 칩, Pull-to-Refresh & 스켈레톤 쉬머 로딩 UX
 * **카테고리**: `Web`, `Mobile`
-* **라벨**: `AI`, `UX`, `pre-launch`
+* **라벨**: `UI/UX`, `user-flow`, `community`
 * **점검 내용**:
-  * [ ] AI 에이전트 대화 모달 내 추천 질문 칩 ("라운지 조식 2명 예약", "피트니스 혼잡도") 1-Tap 클릭 입력
-  * [ ] 자연어 입력/음성 재생 시 하단 오디오 웨이브폼(Audio Waveform) 모션 연동
+  * [ ] 전체 피드 / 단지 게시판 / 익명 라운지 탭 전환 시 부드러운 필터 칩(Filter Pills) 애니메이션
+  * [ ] 모바일 Pull-to-Refresh 및 웹/앱 데이터 로딩 시 카드 스켈레톤(Skeleton Shimmer) 로딩 UI 제공
 
-### [#31] Design: Dynamic Gyroscope Holographic Depth Badge Shader & Glow Scatter Plot
+### [#34] UI/UX: 3D 아뜰리에 카메라스위처 & 클럽딜 주문 단계별 스테퍼 (Stepper)
 * **카테고리**: `Web`, `Mobile`
-* **라벨**: `design`, `UI`, `pre-launch`
+* **라벨**: `UI/UX`, `3D`, `club-deal`
 * **점검 내용**:
-  * [ ] 모바일 자이로스코프 센서 및 웹 마우스 호버 반응형 Diamond Black 뱃지 입체 빛 반사 쉐이더 적용
-  * [ ] 실거래 인사이트 산점도 차트 내 프리미엄 발광(Glow Particles) 렌더링 적용
+  * [ ] 2D Top-Down ↔ 3D 오비트 조작 시 Smooth Camera Transition 애니메이션 적용
+  * [ ] 클럽 딜 공동 오더 진행 상태(모집 중 ➔ 주문 완료 ➔ 배송 준비 ➔ 배송 완료) 4단계 시각적 스테퍼 모달 구현
+
+### [#35] UI/UX: 아실 실거래가 층수 산점도 Zoom 줌 슬라이더 & 공급 독성 가스 게이지 메터
+* **카테고리**: `Web`, `Mobile`
+* **라벨**: `UI/UX`, `chart`, `insights`
+* **점검 내용**:
+  * [ ] 층수별 실거래 산점도 차트에 층수 핀치 줌 & 층수 범위(Range Slider) 필터 컨트롤러 연동
+  * [ ] 입주 예정 물량 위험도('공급 독성 가스') 게이지 메터(Gauge Meter) 비주얼 라이브 시각화
+
+### [#36] UI/UX: 조경 오디오 도슨트 플로팅 플레이어 & 야간 커뮤니티 시설 운영시간 처리
+* **카테고리**: `Web`, `Mobile`
+* **라벨**: `UI/UX`, `welcome-home`, `player`
+* **점검 내용**:
+  * [ ] 조경 아트 도슨트 재배 시 하단 미니 오디오 플로팅 플레이어(Floating Audio Widget) 렌더링
+  * [ ] 심야 시간대 피트니스/사우나 시설 미운영 시 "운영 준비 중" 상태 카드 및 운영 시간 가이드 UI 적용
