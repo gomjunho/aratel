@@ -1,43 +1,129 @@
-<div class="atelier-container" style="padding: 24px; max-width: 1000px; margin: 0 auto; font-family: sans-serif;">
-  <header style="margin-bottom: 24px;">
-    <h1 style="font-size: 28px; font-weight: 700; color: #1a202c;">🛋️ AI 아뜰리에 3D 시뮬레이션</h1>
-    <p style="color: #718096;">우리 집 3D 평면도에 명품 가구를 직접 배치해보고 클럽 딜 특가를 확인하세요.</p>
+<div class="atelier-container" style="padding: 24px; max-width: 1040px; margin: 0 auto; font-family: 'Noto Sans KR', sans-serif;">
+  <!-- Unified Title Banner -->
+  <header style="margin-bottom: 24px; border-bottom: 2px solid var(--complex-primary, #2563eb); padding-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <h1 style="font-size: 28px; font-weight: 700; color: #fff;">🛋️ 3D 아뜰리에 & VVIP 클럽 딜</h1>
+      <p style="color: #94a3b8; font-size: 15px; margin-top: 4px;">공간 공간 측정 📐 ➔ 3D 평면도 배치 🛋️ ➔ 럭셔리 클럽 딜 특가 구매 🏷️ 원스톱 통합 서비스</p>
+    </div>
+    <span style="background: var(--complex-primary, #2563eb); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;">
+      🏢 <%= current_user.complex_name %> 전용 서비스
+    </span>
   </header>
 
-  <!-- 3D Flat Map View Container -->
-  <div style="background: #1a202c; color: #fff; padding: 24px; border-radius: 12px; margin-bottom: 32px; text-align: center;">
-    <h3 style="font-size: 18px; margin-bottom: 12px; color: #e2e8f0;">3D 평면도 뷰어 (DH 방배 84A)</h3>
-    <div style="background: #2d3748; height: 260px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;">
-      <p style="color: #a0aec0; font-size: 14px;">GLTF Model Location: <%= @flat_map_url %></p>
-      <button style="padding: 8px 16px; background: #4299e1; border: none; color: #fff; border-radius: 6px; font-weight: 600;">🎮 3D 뷰어 인터랙션 렌더링 중</button>
+  <!-- Process Steps Bar -->
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px;">
+    <div style="background: #0f172a; border: 1px solid #334155; padding: 16px; border-radius: 12px; text-align: center;">
+      <span style="color: #38bdf8; font-size: 13px; font-weight: 700; text-transform: uppercase;">1단계</span>
+      <h3 style="color: #fff; font-size: 16px; font-weight: 700; margin-top: 4px;">📐 공간 측정 & 평면도</h3>
+      <p style="color: #94a3b8; font-size: 12px; margin-top: 4px;">우리 집 방별 권장 가구 사이즈 측정</p>
+    </div>
+    <div style="background: #0f172a; border: 1px solid #334155; padding: 16px; border-radius: 12px; text-align: center;">
+      <span style="color: #a855f7; font-size: 13px; font-weight: 700; text-transform: uppercase;">2단계</span>
+      <h3 style="color: #fff; font-size: 16px; font-weight: 700; margin-top: 4px;">🛋️ 명품 가구 3D 배치</h3>
+      <p style="color: #94a3b8; font-size: 12px; margin-top: 4px;">하이엔드 디자인 가구 실시간 시뮬레이션</p>
+    </div>
+    <div style="background: #0f172a; border: 1px solid #334155; padding: 16px; border-radius: 12px; text-align: center;">
+      <span style="color: #fbbf24; font-size: 13px; font-weight: 700; text-transform: uppercase;">3단계</span>
+      <h3 style="color: #fff; font-size: 16px; font-weight: 700; margin-top: 4px;">🏷️ 클럽 딜 포인트 결제</h3>
+      <p style="color: #94a3b8; font-size: 12px; margin-top: 4px;">입주민 공동구매 최저가 & 포인트 할인</p>
     </div>
   </div>
 
+  <!-- STEP 1: Space Measurements Section -->
+  <section style="margin-bottom: 32px; background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 style="font-size: 20px; font-weight: 700; color: #fff;">📐 STEP 1. 공간 규격 & 평면도 레이아웃 (<%= current_user.complex_name %> 84A)</h2>
+      <span style="color: #38bdf8; font-size: 13px; font-weight: 600;">실시간 공간 측정 완료</span>
+    </div>
+
+    <!-- Measured Rooms Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+      <% (@space_measurements || []).each do |room| %>
+        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px;">
+          <h4 style="color: #fbbf24; font-size: 15px; font-weight: 700;"><%= room[:name] %></h4>
+          <p style="color: #fff; font-size: 16px; font-weight: 800; margin-top: 6px;">공간 실측 규격: <%= room[:dimensions] %></p>
+          <p style="color: #94a3b8; font-size: 13px; margin-top: 4px;">추천 배치 권장 가구: <%= room[:max_furniture_size] %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- 3D Viewer Interactive Container -->
+    <div style="background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 24px; text-align: center;">
+      <h3 style="font-size: 17px; margin-bottom: 8px; color: #f8fafc;">🎮 3D 인터랙티브 평면도 뷰어</h3>
+      <p style="color: #64748b; font-size: 13px; margin-bottom: 16px;">gltf Model Source: <%= @flat_map_url %></p>
+      <div style="background: #0f172a; border: 1px dashed #334155; height: 180px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
+        <span style="font-size: 32px;">🛋️ ➔ 📐</span>
+        <span style="color: #38bdf8; font-weight: 700; font-size: 15px;">3D 공간 객체 및 명품 가구 배치 엔진 활성화</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Simulation Result Banner -->
   <% if @simulation_result.present? %>
-    <div style="background: #feebc8; border-left: 4px solid #d69e2e; padding: 16px; margin-bottom: 24px; border-radius: 6px;">
-      <h4 style="font-size: 16px; color: #744210; font-weight: 700; margin-bottom: 6px;">🎉 시뮬레이션 생성 완료!</h4>
-      <p style="color: #975a16; margin-bottom: 4px;">시뮬레이션 ID: <strong><%= @simulation_result[:simulation_id] %></strong></p>
+    <div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 20px; margin-bottom: 32px; border-radius: 12px;">
+      <h4 style="font-size: 18px; color: #fef08a; font-weight: 700; margin-bottom: 6px;">🎉 STEP 2 완료! 3D 가구 배치가 반영되었습니다.</h4>
+      <p style="color: #fef9c3; margin-bottom: 4px;">시뮬레이션 번호: <strong><%= @simulation_result[:simulation_id] %></strong></p>
       <% if @simulation_result[:club_deal_triggered] %>
-        <p style="color: #975a16;">연동 클럽 딜 ID: <strong><%= @simulation_result[:club_deal_id] %></strong> (클럽 딜 전용 할인가 적용 대상)</p>
+        <p style="color: #fef08a; font-weight: 700; margin-top: 8px;">
+          🏷️ 아래 STEP 3 클럽 딜 특가 구매 연동이 활성화되었습니다! (할인 한도 100만원 적용)
+        </p>
       <% end %>
     </div>
   <% end %>
 
-  <!-- Furniture Catalog Section -->
-  <section style="margin-bottom: 32px;">
-    <h2 style="font-size: 20px; font-weight: 700; color: #2d3748; margin-bottom: 16px;">✨ 명품 가구 카탈로그 & 시뮬레이션</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+  <!-- STEP 2: Furniture Selection & Placement Section -->
+  <section style="margin-bottom: 36px;">
+    <h2 style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 16px;">🛋️ STEP 2. 명품 가구 카탈로그 선택 & 3D 평면도 배치</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
       <% (@furniture_catalog || []).each do |item| %>
-        <div style="border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-          <span style="font-size: 12px; font-weight: 700; color: #805ad5; text-transform: uppercase;"><%= item.brand %></span>
-          <h3 style="font-size: 18px; font-weight: 700; color: #1a202c; margin: 4px 0 8px 0;"><%= item.name %></h3>
-          <p style="color: #2b6cb0; font-weight: 700; font-size: 16px; margin-bottom: 8px;"><%= number_with_delimiter(item.price) %>원</p>
-          <p style="font-size: 13px; color: #718096; margin-bottom: 16px;">재고 수량: <%= item.stock %>개</p>
+        <div style="border: 1px solid #334155; border-radius: 12px; padding: 20px; background: #0f172a;">
+          <span style="font-size: 12px; font-weight: 700; color: #a855f7; text-transform: uppercase;"><%= item.brand %></span>
+          <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin: 4px 0 8px 0;"><%= item.name %></h3>
+          <p style="color: #38bdf8; font-weight: 800; font-size: 18px; margin-bottom: 4px;"><%= number_with_delimiter(item.price) %>원</p>
+          <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">남은 수량: <%= item.stock %>개 | 권장 설치: 거실 / 마스터룸</p>
 
           <%= form_with url: simulate_atelier_path, method: :post, local: true do |f| %>
             <%= f.hidden_field :flat_map_id, value: "flat_84a" %>
             <%= f.hidden_field :furniture_id, value: item.furniture_id %>
-            <%= f.submit "3D 평면도에 배치해보기", style: "width: 100%; padding: 10px; background: #319795; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;" %>
+            <%= f.submit "🛋️ 3D 평면도에 배치해보기", style: "width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <!-- STEP 3: VVIP Club Deal Procurement Section -->
+  <section style="background: #0f172a; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 14px; padding: 28px;">
+    <h2 style="font-size: 20px; font-weight: 700; color: #fbbf24; margin-bottom: 8px;">🏷️ STEP 3. VVIP 클럽 딜 특가 구매 & 포인트 할인 결제</h2>
+    <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 24px;">3D 시뮬레이션 배치 완료 후 연동된 입주민 단독 특별 공구가 혜택입니다.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+      <% (@club_deals || []).each do |deal| %>
+        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px;">
+          <span style="background: #d4af37; color: #000; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px;">VVIP CLUB DEAL</span>
+          <h3 style="font-size: 19px; font-weight: 700; color: #fff; margin: 8px 0 12px 0;"><%= deal.item_name %></h3>
+
+          <div style="margin-bottom: 16px;">
+            <p style="color: #64748b; font-size: 14px; text-decoration: line-through;">정상 소비자가: <%= number_with_delimiter(deal.original_price) %>원</p>
+            <p style="color: #fbbf24; font-size: 22px; font-weight: 900;">입주민 특가: <%= number_with_delimiter(deal.deal_price) %>원</p>
+            <p style="color: #38bdf8; font-size: 13px; margin-top: 4px;">포인트 최대 차감 할인: <%= number_with_delimiter(deal.point_discount_limit) %> P</p>
+          </div>
+
+          <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; color: #cbd5e1;">
+            👥 공구 달성 현황: <strong><%= deal.current_participants %>명 / 최소 <%= deal.min_participants %>명</strong> (상태: <%= deal.status %>)
+          </div>
+
+          <%= form_with url: order_club_deal_atelier_path, method: :post, local: true do |f| %>
+            <%= f.hidden_field :deal_id, value: deal.deal_id %>
+            <div style="margin-bottom: 12px;">
+              <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">사용 보유 포인트 (P)</label>
+              <%= f.number_field :used_points, value: 500000, max: deal.point_discount_limit, style: "width: 100%; padding: 10px; background: #090d16; border: 1px solid #334155; border-radius: 6px; color: #fff; box-sizing: border-box;" %>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">최종 결제 금액 (원)</label>
+              <%= f.number_field :cash_amount, value: deal.deal_price - 500000, style: "width: 100%; padding: 10px; background: #090d16; border: 1px solid #334155; border-radius: 6px; color: #fff; box-sizing: border-box;" %>
+            </div>
+            <%= f.submit "💳 클럽 딜 특가 주문하기", style: "width: 100%; padding: 14px; background: #d4af37; color: #000; border: none; border-radius: 8px; font-weight: 800; font-size: 15px; cursor: pointer;" %>
           <% end %>
         </div>
       <% end %>

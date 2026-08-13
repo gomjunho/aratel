@@ -12,21 +12,33 @@ class AteliersControllerTest < ActionDispatch::IntegrationTest
       price: 18500000,
       stock: 3
     )
+    @deal = ClubDeal.create!(
+      deal_id: "deal_552",
+      brand: "B&B Italia",
+      item_name: "Camaleonda Sofa VVIP Club Deal",
+      original_price: 18500000,
+      deal_price: 14200000,
+      point_discount_limit: 1000000,
+      min_participants: 5,
+      current_participants: 3,
+      status: "OPEN"
+    )
   end
 
-  test "should get atelier 3D simulation view" do
+  test "should get unified atelier 3D simulation and club deal view" do
     get atelier_path
     assert_response :success
-    assert_select "h1", text: /AI 아뜰리에 3D 시뮬레이션/
+    assert_select "h1", text: /3D 아뜰리에 & VVIP 클럽 딜/
     assert_select "div", text: /B&B Italia/
-    assert_select "div", text: /Camaleonda Sofa/
+    assert_select "h3", text: /Camaleonda Sofa/
   end
 
-  test "should get atelier show view when catalog is empty" do
+  test "should get atelier show view when catalog and club deals are empty" do
     FurnitureCatalog.destroy_all
+    ClubDeal.destroy_all
     get atelier_path
     assert_response :success
-    assert_select "div", text: /Camaleonda Sofa/
+    assert_select "h3", text: /Camaleonda Sofa/
   end
 
   test "should create simulation via web" do
@@ -36,6 +48,15 @@ class AteliersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "sim_"
     assert_includes response.body, "deal_552"
+  end
+
+  test "should order club deal via web" do
+    assert_difference("ClubDealOrder.count", 1) do
+      post order_club_deal_atelier_path, params: { deal_id: "deal_552", used_points: 500000, cash_amount: 13700000 }
+    end
+    assert_redirected_to atelier_path
+    follow_redirect!
+    assert_select ".alert-success", text: /클럽 딜 주문/
   end
 
   test "should return api flat maps and catalog" do

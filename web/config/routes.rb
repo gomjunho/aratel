@@ -78,6 +78,7 @@ Rails.application.routes.draw do
 
   resource :atelier, only: [:show] do
     post :simulate
+    post :order_club_deal
   end
 
   resources :club_deals, only: [:index, :show] do

@@ -4,6 +4,12 @@ class AteliersController < ApplicationController
 
   def show
     @flat_map_url = "https://storage.aratel.com/3d/dh_bangbae_84a.gltf"
+    @space_measurements = [
+      { name: "거실 (Living Room)", dimensions: "4.8m × 3.6m", max_furniture_size: "3.2m 이하" },
+      { name: "다이닝 룸 (Dining Room)", dimensions: "3.5m × 3.0m", max_furniture_size: "2.4m 이하" },
+      { name: "마스터 룸 (Master Bedroom)", dimensions: "3.9m × 3.5m", max_furniture_size: "2.8m 이하" }
+    ]
+
     @furniture_catalog = FurnitureCatalog.all
     if @furniture_catalog.empty?
       @furniture_catalog = [
@@ -14,6 +20,23 @@ class AteliersController < ApplicationController
           model_3d_url: "https://storage.aratel.com/3d/sofa_bb.gltf",
           price: 18500000,
           stock: 3
+        )
+      ]
+    end
+
+    @club_deals = ClubDeal.all
+    if @club_deals.empty?
+      @club_deals = [
+        ClubDeal.create!(
+          deal_id: "deal_552",
+          brand: "B&B Italia",
+          item_name: "Camaleonda Sofa VVIP Club Deal",
+          original_price: 18500000,
+          deal_price: 14200000,
+          point_discount_limit: 1000000,
+          min_participants: 5,
+          current_participants: 3,
+          status: "OPEN"
         )
       ]
     end
@@ -39,6 +62,25 @@ class AteliersController < ApplicationController
       club_deal_id: @simulation.club_deal_id
     }
     render :show
+  end
+
+  def order_club_deal
+    deal_id = params[:deal_id] || "deal_552"
+    used_points = params[:used_points].to_i
+    cash_amount = params[:cash_amount].to_i
+    order_id = "ord_#{SecureRandom.random_number(1000..9999)}"
+
+    order = ClubDealOrder.create!(
+      order_id: order_id,
+      club_deal_id: deal_id,
+      user: current_user,
+      used_points: used_points,
+      cash_amount: cash_amount,
+      status: "ORDER_PLACED",
+      remaining_points: 450000
+    )
+
+    redirect_to atelier_path, notice: "3D 아뜰리에 가구 배치 후 VVIP 클럽 딜 주문(#{order.order_id})이 성공적으로 완료되었습니다!"
   end
 
   def api_flat_maps
