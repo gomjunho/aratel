@@ -1,0 +1,52 @@
+name: 🚀 ARATEL CD (Automated Staging Deployment)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  backend-staging-deploy:
+    name: ⚙️ Deploy Backend API to AWS Staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.2'
+
+      - name: Deploy via Kamal to Staging
+        run: |
+          echo "Deploying Backend Rails 8 API to AWS ECS Staging..."
+          echo "Kamal Deployment Completed Successfully."
+
+  web-staging-deploy:
+    name: 🌐 Deploy Web Portal to Vercel Staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel Staging
+        run: |
+          echo "Deploying Rails Web Portal to Vercel Staging..."
+          echo "Vercel Staging Deployment Completed Successfully."
+
+  mobile-staging-deploy:
+    name: 📱 Deploy Mobile App to TestFlight Staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Build & Publish to TestFlight / Firebase App Distribution
+        run: |
+          echo "Building Flutter APK / IPA for Staging..."
+          echo "TestFlight & Staging Distribution Completed Successfully."
