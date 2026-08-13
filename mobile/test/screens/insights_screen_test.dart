@@ -38,7 +38,9 @@ void main() {
 
       // Loading state
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      await tester.pumpAndSettle();
+      // Use pump instead of pumpAndSettle to avoid infinite AnimationController loop
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(milliseconds: 100));
 
       // Check header and content
       expect(find.text('실거래가 & 공급 물량 인사이트'), findsOneWidget);
@@ -66,7 +68,9 @@ void main() {
         ),
       );
 
-      await tester.pumpAndSettle();
+      // Use pump instead of pumpAndSettle to avoid infinite AnimationController loop
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(milliseconds: 100));
       expect(find.textContaining('인사이트 데이터를 불러올 수 없습니다'), findsOneWidget);
       expect(find.byType(ElevatedButton), findsOneWidget);
     });

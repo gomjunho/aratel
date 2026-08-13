@@ -18,7 +18,7 @@ void main() {
 
     // Tap on VVIP Curation tab
     await tester.tap(find.byIcon(Icons.diamond_rounded));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 500));
     expect(find.text('💎 VVIP 큐레이션 Hub'), findsOneWidget);
 
     // Tap on Insights tab
@@ -28,7 +28,7 @@ void main() {
 
     // Tap on Profile tab
     await tester.tap(find.byIcon(Icons.person_rounded));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 500));
     expect(find.text('👤 내 정보 및 자산 인증'), findsOneWidget);
   });
 }

@@ -63,7 +63,7 @@ class AteliersControllerTest < ActionDispatch::IntegrationTest
     get api_v1_atelier_flat_maps_path
     assert_response :success
     json = JSON.parse(response.body)
-    assert_equal "https://storage.aratel.com/3d/dh_bangbae_84a.gltf", json["flat_map_url"]
+    assert_equal "https://cdn.aratel.com/3d/dh_bangbae_84a_draco.glb", json["flat_map_url"]
     assert_kind_of Array, json["furniture_catalog"]
     assert_equal "furn_101", json["furniture_catalog"].first["id"]
   end

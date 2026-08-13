@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../models/insights_models.dart';
 import '../services/insights_service.dart';
@@ -11,8 +12,9 @@ class InsightsScreen extends StatefulWidget {
   State<InsightsScreen> createState() => _InsightsScreenState();
 }
 
-class _InsightsScreenState extends State<InsightsScreen> {
+class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProviderStateMixin {
   late final InsightsService _service;
+  late final AnimationController _glowController;
   bool _isLoading = true;
   String? _errorMessage;
   InsightsResponse? _data;
@@ -21,7 +23,17 @@ class _InsightsScreenState extends State<InsightsScreen> {
   void initState() {
     super.initState();
     _service = widget.insightsService ?? InsightsService();
+    _glowController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    )..repeat(reverse: true);
     _fetchInsights();
+  }
+
+  @override
+  void dispose() {
+    _glowController.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchInsights() async {
@@ -166,17 +178,25 @@ class _InsightsScreenState extends State<InsightsScreen> {
           // Asil Scatter Chart Container
           const Text('아실 층수별 실거래가 산점도', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          Container(
-            height: 180,
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF161920),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: CustomPaint(
-              painter: _ScatterChartPainter(transactions: data.transactions),
-            ),
+          AnimatedBuilder(
+            animation: _glowController,
+            builder: (context, child) {
+              return Container(
+                height: 180,
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF161920),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: CustomPaint(
+                  painter: _GlowScatterChartPainter(
+                    transactions: data.transactions,
+                    glowIntensity: _glowController.value,
+                  ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 16),
 
@@ -204,20 +224,17 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
 }
 
-class _ScatterChartPainter extends CustomPainter {
+class _GlowScatterChartPainter extends CustomPainter {
   final List<TransactionItem> transactions;
+  final double glowIntensity;
 
-  _ScatterChartPainter({required this.transactions});
+  _GlowScatterChartPainter({required this.transactions, required this.glowIntensity});
 
   @override
   void paint(Canvas canvas, Size size) {
     final axisPaint = Paint()
       ..color = Colors.grey.withOpacity(0.3)
       ..strokeWidth = 1;
-
-    final dotPaint = Paint()
-      ..color = const Color(0xFFD4AF37)
-      ..style = PaintingStyle.fill;
 
     // Draw grid lines
     canvas.drawLine(Offset(0, size.height), Offset(size.width, size.height), axisPaint);
@@ -236,11 +253,42 @@ class _ScatterChartPainter extends CustomPainter {
 
       final x = 20 + xRatio * (size.width - 40);
       final y = size.height - (20 + yRatio * (size.height - 40));
+      final center = Offset(x, y);
 
-      canvas.drawCircle(Offset(x, y), 8, dotPaint);
+      // Outer glow halo
+      final glowRadius = 14.0 + glowIntensity * 8.0;
+      final glowOpacity = 0.15 + glowIntensity * 0.25;
+      final glowPaint = Paint()
+        ..color = const Color(0xFFD4AF37).withOpacity(glowOpacity)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, glowRadius * 0.6);
+      canvas.drawCircle(center, glowRadius, glowPaint);
+
+      // Particle ring
+      final particlePaint = Paint()
+        ..color = const Color(0xFFD4AF37).withOpacity(0.5 + glowIntensity * 0.3)
+        ..style = PaintingStyle.fill;
+      for (int i = 0; i < 6; i++) {
+        final angle = (i / 6) * 2 * math.pi + glowIntensity * math.pi;
+        final px = x + math.cos(angle) * (10.0 + glowIntensity * 4.0);
+        final py = y + math.sin(angle) * (10.0 + glowIntensity * 4.0);
+        canvas.drawCircle(Offset(px, py), 2.0, particlePaint);
+      }
+
+      // Core dot
+      final dotPaint = Paint()
+        ..color = const Color(0xFFD4AF37)
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(center, 6, dotPaint);
+
+      // Inner shine
+      final shinePaint = Paint()
+        ..color = Colors.white.withOpacity(0.4 + glowIntensity * 0.3)
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(Offset(x - 2, y - 2), 2.5, shinePaint);
     }
   }
 
   @override
-  bool shouldRepaint(covariant _ScatterChartPainter oldDelegate) => true;
+  bool shouldRepaint(covariant _GlowScatterChartPainter oldDelegate) =>
+      oldDelegate.glowIntensity != glowIntensity;
 }

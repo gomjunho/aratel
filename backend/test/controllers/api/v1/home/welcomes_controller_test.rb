@@ -10,7 +10,7 @@ class Api::V1::Home::WelcomesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "디에이치 방배", json["complex_name"]
     assert_kind_of Array, json["art_docents"]
     assert_equal "더샵 갤러리 '조경과 빛'", json["art_docents"].first["title"]
-    assert_equal "https://storage.aratel.com/audio/docent1.mp3", json["art_docents"].first["audio_url"]
+    assert_equal "https://cdn.aratel.com/audio/docent1.webp", json["art_docents"].first["audio_url"]
 
     assert_kind_of Array, json["facilities_status"]
     assert_equal "스카이라운지", json["facilities_status"].first["facility_name"]

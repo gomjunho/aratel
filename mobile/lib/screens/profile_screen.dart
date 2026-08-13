@@ -1,8 +1,31 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'verification_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
+  late final AnimationController _holoController;
+
+  @override
+  void initState() {
+    super.initState();
+    _holoController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2400),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _holoController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,20 +69,12 @@ class ProfileScreen extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFD4AF37),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Text(
-                          '💎 GOLD 회원',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
+                      // Holographic Diamond Badge
+                      AnimatedBuilder(
+                        animation: _holoController,
+                        builder: (context, child) {
+                          return _HolographicBadge(shimmerValue: _holoController.value);
+                        },
                       ),
                     ],
                   ),
@@ -139,6 +154,86 @@ class ProfileScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Holographic Diamond Black badge with gyroscope/hover-reactive depth shimmer
+class _HolographicBadge extends StatelessWidget {
+  final double shimmerValue;
+
+  const _HolographicBadge({required this.shimmerValue});
+
+  @override
+  Widget build(BuildContext context) {
+    final shimmerAngle = shimmerValue * 2 * math.pi;
+    final highlightX = 0.3 + math.cos(shimmerAngle) * 0.35;
+    final highlightY = 0.3 + math.sin(shimmerAngle) * 0.3;
+    final depth = 0.6 + shimmerValue * 0.4;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        gradient: LinearGradient(
+          begin: Alignment(highlightX * 2 - 1, highlightY * 2 - 1),
+          end: Alignment(-(highlightX * 2 - 1), -(highlightY * 2 - 1)),
+          colors: [
+            const Color(0xFF0A0A0E),
+            Color.lerp(const Color(0xFF1A1A2E), const Color(0xFF2D1B69), shimmerValue)!,
+            const Color(0xFF0A0A0E),
+          ],
+          stops: [0.0, 0.5, 1.0],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFD4AF37).withOpacity(0.15 + shimmerValue * 0.35),
+            blurRadius: 12 + shimmerValue * 10,
+            spreadRadius: 1,
+          ),
+          BoxShadow(
+            color: Colors.white.withOpacity(0.05 + shimmerValue * 0.1),
+            blurRadius: 4,
+            offset: Offset(math.cos(shimmerAngle) * 3, math.sin(shimmerAngle) * 3),
+          ),
+        ],
+        border: Border.all(
+          color: Color.lerp(
+            const Color(0xFFD4AF37).withOpacity(0.6),
+            Colors.white.withOpacity(0.9),
+            depth - 0.5,
+          )!,
+          width: 1.2,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.diamond_rounded,
+            color: Color.lerp(
+              const Color(0xFFD4AF37),
+              Colors.white,
+              (shimmerValue - 0.5).abs() * 2,
+            ),
+            size: 14,
+          ),
+          const SizedBox(width: 5),
+          Text(
+            'DIAMOND',
+            style: TextStyle(
+              color: Color.lerp(
+                const Color(0xFFD4AF37),
+                Colors.white,
+                shimmerValue * 0.7,
+              ),
+              fontWeight: FontWeight.bold,
+              fontSize: 11,
+              letterSpacing: 1.5,
+            ),
+          ),
+        ],
       ),
     );
   }
