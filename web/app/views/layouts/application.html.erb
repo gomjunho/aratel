@@ -27,7 +27,8 @@
             <span class="status-badge tier-badge <%= current_user.tier.downcase %>">💎 <%= current_user.tier %> (인증 회원)</span>
             <span class="user-name">👤 <%= current_user.name %> 님 환영합니다</span>
           </div>
-          <div class="status-actions">
+          <div class="status-actions" style="display: flex; gap: 8px; align-items: center;">
+            <%= link_to "👤 내 정보", profile_path, style: "color: #fbbf24; background: #0f172a; border: 1px solid #fbbf24; border-radius: 6px; padding: 6px 12px; text-decoration: none; font-size: 13px; font-weight: 700;" %>
             <%= button_to "🚪 로그아웃", logout_path, method: :delete, class: "btn-demo-logout" %>
           </div>
         </div>
@@ -39,7 +40,6 @@
         </div>
         <div class="nav-links">
           <a href="<%= home_path %>" class="nav-item">🏠 웰컴 홈</a>
-          <a href="<%= verification_path %>" class="nav-item">🔐 자산 인증</a>
           <a href="<%= community_posts_path %>" class="nav-item">💬 커뮤니티 & 익명 라운지</a>
           <a href="<%= curation_path %>" class="nav-item">💎 VVIP 큐레이션</a>
           <a href="<%= insight_path %>" class="nav-item">📊 실거래 인사이트</a>

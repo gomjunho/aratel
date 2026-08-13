@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   post "demo_login", to: "sessions#create"
   delete "logout", to: "sessions#destroy", as: :logout
 
+  resource :profile, only: [:show]
+
   resource :verification, only: [:show] do
     post :identity_verify
     post :trust_api_sync
