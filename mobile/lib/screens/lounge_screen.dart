@@ -16,6 +16,15 @@ class _LoungeScreenState extends State<LoungeScreen> {
   bool _isLoading = true;
   String? _errorMessage;
   List<LoungePost> _posts = [];
+  int _selectedFilterTab = 0;
+
+  final List<String> _filterTabs = const [
+    '전체 모아보기',
+    '전체 공동',
+    '단지 기명',
+    '단지 익명',
+    'VVIP 암호화',
+  ];
 
   @override
   void initState() {
@@ -122,7 +131,7 @@ class _LoungeScreenState extends State<LoungeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF0F1115),
       appBar: AppBar(
-        title: const Text('하이엔드 암호화 라운지', style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold)),
+        title: const Text('커뮤니티 & 익명 라운지', style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold)),
         backgroundColor: const Color(0xFF161920),
         elevation: 0,
       ),
@@ -131,13 +140,52 @@ class _LoungeScreenState extends State<LoungeScreen> {
         onPressed: _showCreatePostDialog,
         child: const Icon(Icons.edit, color: Colors.black),
       ),
-      body: _buildBody(),
+      body: Column(
+        children: [
+          _buildFilterChips(),
+          Expanded(child: _buildBody()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterChips() {
+    return Container(
+      height: 50,
+      color: const Color(0xFF161920),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        itemCount: _filterTabs.length,
+        itemBuilder: (context, index) {
+          final isSelected = _selectedFilterTab == index;
+          return Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: ChoiceChip(
+              label: Text(
+                _filterTabs[index],
+                style: TextStyle(
+                  color: isSelected ? Colors.black : Colors.white70,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              selected: isSelected,
+              selectedColor: const Color(0xFFD4AF37),
+              backgroundColor: const Color(0xFF1E222B),
+              onSelected: (_) {
+                setState(() => _selectedFilterTab = index);
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator(color: Color(0xFFD4AF37)));
+      return _buildSkeletonLoader();
     }
 
     if (_errorMessage != null) {
@@ -173,6 +221,38 @@ class _LoungeScreenState extends State<LoungeScreen> {
           return _buildPostCard(post);
         },
       ),
+    );
+  }
+
+  Widget _buildSkeletonLoader() {
+    return ListView.builder(
+      key: const Key('skeleton_loader'),
+      padding: const EdgeInsets.all(16),
+      itemCount: 3,
+      itemBuilder: (context, index) {
+        return Container(
+          height: 110,
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF161920),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(width: 80, height: 14, color: Colors.white12),
+                const SizedBox(height: 12),
+                Container(width: double.infinity, height: 16, color: Colors.white12),
+                const SizedBox(height: 8),
+                Container(width: 180, height: 12, color: Colors.white10),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

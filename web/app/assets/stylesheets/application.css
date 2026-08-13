@@ -650,3 +650,34 @@ p, span, div, td, th, label, input, textarea, select {
   background: linear-gradient(90deg, var(--gold-primary), #10b981);
   transition: width 0.4s ease;
 }
+
+/* Community Subtab Filter Pills */
+.community-subtab-pills {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+/* Skeleton Shimmer Loading Placeholder */
+.skeleton-loader-preview {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.skeleton-card-pulse {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.5s infinite;
+  border-radius: 12px;
+  height: 100px;
+}
+
+@keyframes skeletonShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

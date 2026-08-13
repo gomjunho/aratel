@@ -57,6 +57,8 @@ class CommunityPostsControllerTest < ActionDispatch::IntegrationTest
   test "should get index for all board aggregate feed" do
     get community_posts_path(board_type: "ALL")
     assert_response :success
+    assert_select ".community-subtab-pills"
+    assert_select ".skeleton-loader-preview"
     assert_select "span", text: /📋 전체 커뮤니티 & 암호화 라운지/
     assert_select "h3", text: "전체 공동 안건"
     assert_select "h3", text: "방배 기명 안건"

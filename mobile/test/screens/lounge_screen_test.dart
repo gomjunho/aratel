@@ -57,7 +57,7 @@ void main() {
       );
 
       // Loading state
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byKey(const Key('skeleton_loader')), findsOneWidget);
       await tester.pumpAndSettle();
 
       // Check displayed post
@@ -106,6 +106,32 @@ void main() {
 
       expect(find.textContaining('게시글을 불러올 수 없습니다'), findsOneWidget);
       expect(find.byType(ElevatedButton), findsOneWidget); // Refresh/Retry button
+    });
+
+    testWidgets('renders filter chips and skeleton loader when loading', (WidgetTester tester) async {
+      final mockClient = MockClient((request) async {
+        return http.Response(
+          jsonEncode({'posts': []}),
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      });
+
+      loungeService = LoungeService(client: mockClient);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: LoungeScreen(loungeService: loungeService),
+        ),
+      );
+
+      // Loading state displays skeleton loader
+      expect(find.byKey(const Key('skeleton_loader')), findsOneWidget);
+      await tester.pumpAndSettle();
+
+      // Sub-tab filter chips are visible
+      expect(find.text('전체 모아보기'), findsOneWidget);
+      expect(find.text('VVIP 암호화'), findsOneWidget);
     });
   });
 }

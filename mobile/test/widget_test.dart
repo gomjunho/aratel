@@ -14,7 +14,7 @@ void main() {
     // Tap on Lounge / Community tab
     await tester.tap(find.byIcon(Icons.forum_rounded));
     await tester.pump();
-    expect(find.text('하이엔드 암호화 라운지'), findsOneWidget);
+    expect(find.text('커뮤니티 & 익명 라운지'), findsOneWidget);
 
     // Tap on VVIP Curation tab
     await tester.tap(find.byIcon(Icons.diamond_rounded));

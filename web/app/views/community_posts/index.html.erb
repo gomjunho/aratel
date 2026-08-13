@@ -12,7 +12,7 @@
   </header>
 
   <!-- Board Type Sub-Tabs -->
-  <div style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid #334155; padding-bottom: 12px; flex-wrap: wrap;">
+  <div class="community-subtab-pills">
     <%= link_to community_posts_path(board_type: "ALL"), style: "padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@board_type == 'ALL' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@board_type == 'ALL' ? '#fff' : '#94a3b8'};" do %>
       📋 전체 모아보기
     <% end %>
@@ -32,6 +32,12 @@
     <%= link_to community_posts_path(board_type: "ENCRYPTED_LOUNGE"), style: "padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@board_type == 'ENCRYPTED_LOUNGE' ? '#0f172a' : '#1e293b'}; color: #{@board_type == 'ENCRYPTED_LOUNGE' ? '#fbbf24' : '#94a3b8'}; border: #{@board_type == 'ENCRYPTED_LOUNGE' ? '1px solid #fbbf24' : 'none'};" do %>
       🔐 암호화 VVIP 라운지
     <% end %>
+  </div>
+
+  <!-- Skeleton Shimmer Loading Placeholder -->
+  <div class="skeleton-loader-preview">
+    <div class="skeleton-card-pulse"></div>
+    <div class="skeleton-card-pulse"></div>
   </div>
 
   <!-- Banner -->
