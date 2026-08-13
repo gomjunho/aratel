@@ -1,20 +1,21 @@
 :root {
-  --bg-dark: #070a12;
-  --card-bg: #0f172a;
-  --card-border: #1e293b;
+  --bg-dark: #0f1115;
+  --card-bg: #161920;
+  --card-bg-elevated: #1e222b;
+  --card-border: rgba(212, 175, 55, 0.2);
   --gold-primary: #d4af37;
   --gold-light: #f3e5ab;
   --gold-dark: #aa820a;
-  --text-main: #f8fafc;
-  --text-sub: #f1f5f9;
-  --text-muted: #cbd5e1;
-  --text-dim: #94a3b8;
-  --diamond-color: #38bdf8;
+  --text-main: #ffffff;
+  --text-sub: #e2e8f0;
+  --text-muted: #9e9e9e;
+  --text-dim: #757575;
+  --diamond-color: #4fc3f7;
   --platinum-color: #cbd5e1;
   --bronze-color: #cd7f32;
-  --success-color: #10b981;
-  --warning-color: #f59e0b;
-  --danger-color: #ef4444;
+  --success-color: #00e676;
+  --warning-color: #ffa726;
+  --danger-color: #ff5252;
 }
 
 * {
@@ -43,10 +44,33 @@ p, span, div, td, th, label, input, textarea, select {
   color: var(--text-sub);
 }
 
-/* User Status Bar Header */
+/* Satin Gold Security Glow Frame (Aligned with Mobile #29) */
+.security-glow-frame {
+  position: relative;
+  border: 2.5px solid var(--gold-primary);
+  border-radius: 12px;
+  animation: satinGlowPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes satinGlowPulse {
+  0% {
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.4), inset 0 0 6px rgba(212, 175, 55, 0.25);
+    border-color: rgba(212, 175, 55, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(212, 175, 55, 0.85), inset 0 0 14px rgba(212, 175, 55, 0.55);
+    border-color: rgba(212, 175, 55, 0.95);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.4), inset 0 0 6px rgba(212, 175, 55, 0.25);
+    border-color: rgba(212, 175, 55, 0.5);
+  }
+}
+
+/* User Status Bar Header (Aligned with Mobile #28 Tier System) */
 .status-header {
-  background: #090d16;
-  border-bottom: 1px solid #1e293b;
+  background: #161920;
+  border-bottom: 1px solid var(--card-border);
   padding: 0.6rem 2.5rem;
   font-size: 0.85rem;
 }
@@ -68,33 +92,34 @@ p, span, div, td, th, label, input, textarea, select {
 
 .status-badge {
   padding: 0.35rem 0.75rem;
-  border-radius: 6px;
+  border-radius: 20px;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .status-badge.complex-badge {
-  background: #1e293b;
-  color: #f8fafc;
-  border: 1px solid #334155;
+  background: var(--card-bg-elevated);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.status-badge.tier-badge.gold {
-  background: rgba(212, 175, 55, 0.15);
-  color: var(--gold-primary);
-  border: 1px solid var(--gold-primary);
+.status-badge.tier-badge.gold, .status-badge.tier-badge.diamond {
+  background: var(--gold-primary);
+  color: #000000;
+  border: none;
 }
 
 .status-badge.tier-badge.diamond_black {
-  background: #000;
+  background: #000000;
   color: var(--diamond-color);
   border: 1px solid var(--diamond-color);
 }
 
 .status-badge.guest-badge {
-  background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: rgba(255, 167, 38, 0.15);
+  color: var(--warning-color);
+  border: 1px solid rgba(255, 167, 38, 0.4);
 }
 
 .guest-desc {
@@ -119,47 +144,47 @@ p, span, div, td, th, label, input, textarea, select {
 }
 
 .btn-demo-login.gold {
-  background: #2563eb;
-  color: #ffffff;
+  background: var(--gold-primary);
+  color: #000000;
 }
 
 .btn-demo-login.gold:hover {
-  background: #1d4ed8;
+  background: var(--gold-light);
 }
 
 .btn-demo-login.diamond {
-  background: #0f172a;
+  background: #161920;
   color: var(--gold-primary);
   border: 1px solid var(--gold-primary);
 }
 
 .btn-demo-login.diamond:hover {
-  background: #1e293b;
+  background: var(--card-bg-elevated);
 }
 
 .btn-demo-logout {
   padding: 0.35rem 0.8rem;
-  background: #334155;
-  color: #f8fafc;
-  border: none;
+  background: var(--card-bg-elevated);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   font-size: 0.8rem;
   cursor: pointer;
 }
 
 .btn-demo-logout:hover {
-  background: #475569;
+  background: rgba(255, 255, 255, 0.15);
 }
 
-/* Navbar */
+/* Navbar (Aligned with Mobile Dark Gold Bar) */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem 2.5rem;
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(22, 25, 32, 0.95);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid var(--card-border);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -194,7 +219,7 @@ p, span, div, td, th, label, input, textarea, select {
   transition: color 0.2s ease;
 }
 
-.nav-item:hover {
+.nav-item:hover, .nav-item.active {
   color: var(--gold-primary);
 }
 
@@ -255,7 +280,7 @@ p, span, div, td, th, label, input, textarea, select {
 .my-3 { margin: 1.5rem 0; }
 .p-3 { padding: 1.5rem; }
 
-/* Cards */
+/* Cards (Aligned with Mobile Card Styling: #161920 & Satin Gold Accent Border) */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -276,12 +301,13 @@ p, span, div, td, th, label, input, textarea, select {
   gap: 1.5rem;
 }
 
-/* Tier Card */
+/* Tier Card (Aligned with Mobile Profile Card) */
 .tier-card {
-  background: linear-gradient(145deg, #1e293b, #0f172a);
+  background: linear-gradient(135deg, #1e222b, #2a2f3d);
   border: 1px solid rgba(212, 175, 55, 0.3);
   position: relative;
   overflow: hidden;
+  border-radius: 16px;
 }
 
 .tier-card::before {
@@ -331,13 +357,13 @@ p, span, div, td, th, label, input, textarea, select {
 }
 
 .badge-verified_owner {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgba(0, 230, 118, 0.15);
   color: var(--success-color);
   border: 1px solid var(--success-color);
 }
 
 .badge-resident {
-  background: rgba(56, 189, 248, 0.15);
+  background: rgba(79, 195, 247, 0.15);
   color: var(--diamond-color);
   border: 1px solid var(--diamond-color);
 }
@@ -372,14 +398,14 @@ p, span, div, td, th, label, input, textarea, select {
   font-size: 0.8rem;
   padding: 0.3rem 0.75rem;
   border-radius: 8px;
-  background: #1e293b;
+  background: var(--card-bg-elevated);
   color: var(--text-muted);
 }
 
 .security-tag.active {
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(0, 230, 118, 0.15);
   color: var(--success-color);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  border: 1px solid rgba(0, 230, 118, 0.4);
 }
 
 /* Forms & Controls */
@@ -398,7 +424,7 @@ p, span, div, td, th, label, input, textarea, select {
 .form-control {
   width: 100%;
   padding: 0.75rem 1rem;
-  background: #090d16;
+  background: #0f1115;
   border: 1px solid var(--card-border);
   border-radius: 8px;
   color: var(--text-main);
@@ -408,7 +434,7 @@ p, span, div, td, th, label, input, textarea, select {
 .form-control:focus {
   outline: none;
   border-color: var(--gold-primary);
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.25);
 }
 
 /* Buttons */
@@ -433,13 +459,13 @@ p, span, div, td, th, label, input, textarea, select {
 .btn-gold { background: var(--gold-primary); color: #000; font-weight: 700; }
 .btn-gold:hover { background: var(--gold-light); }
 
-.btn-secondary { background: #475569; color: #fff; }
-.btn-secondary:hover { background: #334155; }
+.btn-secondary { background: var(--card-bg-elevated); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); }
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
 
 .btn-outline { background: transparent; border: 1px solid var(--card-border); color: var(--text-main); }
 .btn-outline:hover { border-color: var(--gold-primary); color: var(--gold-primary); }
 
-.btn-success { background: var(--success-color); color: #fff; }
+.btn-success { background: var(--success-color); color: #000; font-weight: 700; }
 .btn-danger { background: var(--danger-color); color: #fff; }
 
 .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.85rem; }
@@ -474,17 +500,17 @@ p, span, div, td, th, label, input, textarea, select {
 }
 
 .status-under_review, .status-pending_owner_approval {
-  background: rgba(245, 158, 11, 0.15);
+  background: rgba(255, 167, 38, 0.15);
   color: var(--warning-color);
 }
 
 .status-verified, .status-approved {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgba(0, 230, 118, 0.15);
   color: var(--success-color);
 }
 
 .status-rejected {
-  background: rgba(239, 68, 68, 0.15);
+  background: rgba(255, 82, 82, 0.15);
   color: var(--danger-color);
 }
 
@@ -496,8 +522,8 @@ p, span, div, td, th, label, input, textarea, select {
   font-weight: 500;
 }
 
-.alert-success { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid var(--success-color); }
-.alert-warning { background: rgba(245, 158, 11, 0.2); color: #fde047; border: 1px solid var(--warning-color); }
+.alert-success { background: rgba(0, 230, 118, 0.2); color: #6ee7b7; border: 1px solid var(--success-color); }
+.alert-warning { background: rgba(255, 167, 38, 0.2); color: #fde047; border: 1px solid var(--warning-color); }
 
 /* Filter Bar */
 .filter-bar {
@@ -510,7 +536,7 @@ p, span, div, td, th, label, input, textarea, select {
 .filter-chip {
   padding: 0.4rem 1rem;
   border-radius: 20px;
-  background: #1e293b;
+  background: var(--card-bg-elevated);
   color: var(--text-muted);
   text-decoration: none;
   font-size: 0.85rem;
@@ -520,7 +546,7 @@ p, span, div, td, th, label, input, textarea, select {
 .filter-chip.active, .filter-chip:hover {
   border-color: var(--gold-primary);
   color: var(--gold-primary);
-  background: rgba(212, 175, 55, 0.1);
+  background: rgba(212, 175, 55, 0.15);
 }
 
 .inline-form {
@@ -538,55 +564,11 @@ p, span, div, td, th, label, input, textarea, select {
 }
 
 .admin-notes-box {
-  background: #090d16;
+  background: #0f1115;
   padding: 0.75rem;
   border-radius: 6px;
   border-left: 3px solid var(--gold-primary);
   margin-top: 0.25rem;
-}
-
-/* Light / System Scheme Overrides for High Contrast Legibility */
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-dark: #f8fafc;
-    --card-bg: #ffffff;
-    --card-border: #cbd5e1;
-    --text-main: #0f172a;
-    --text-sub: #1e293b;
-    --text-muted: #475569;
-    --text-dim: #64748b;
-  }
-
-  body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-  }
-
-  .status-header {
-    background: #f1f5f9;
-    border-bottom: 1px solid #cbd5e1;
-  }
-
-  .navbar {
-    background: rgba(255, 255, 255, 0.95);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
-  }
-
-  .nav-item {
-    color: #334155;
-  }
-
-  .card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
-
-  .form-control {
-    background: #ffffff;
-    color: #0f172a;
-    border: 1px solid #cbd5e1;
-  }
 }
 
 /* Verification Wizard Stepper */
@@ -606,7 +588,7 @@ p, span, div, td, th, label, input, textarea, select {
 }
 
 .step-wizard-item {
-  background: rgba(15, 23, 42, 0.6);
+  background: var(--card-bg-elevated);
   border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 0.9rem;
@@ -615,12 +597,12 @@ p, span, div, td, th, label, input, textarea, select {
 
 .step-wizard-item.active {
   border-color: var(--gold-primary);
-  background: rgba(212, 175, 55, 0.08);
+  background: rgba(212, 175, 55, 0.12);
 }
 
 .step-wizard-item.completed {
   border-color: var(--success-color);
-  background: rgba(16, 185, 129, 0.08);
+  background: rgba(0, 230, 118, 0.12);
 }
 
 .step-number {
@@ -639,7 +621,7 @@ p, span, div, td, th, label, input, textarea, select {
 
 .wizard-progress-bar {
   height: 6px;
-  background: #1e293b;
+  background: var(--card-bg-elevated);
   border-radius: 3px;
   overflow: hidden;
   margin-top: 0.75rem;
@@ -647,18 +629,49 @@ p, span, div, td, th, label, input, textarea, select {
 
 .wizard-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--gold-primary), #10b981);
+  background: linear-gradient(90deg, var(--gold-primary), #00e676);
   transition: width 0.4s ease;
 }
 
-/* Community Subtab Filter Pills */
-.community-subtab-pills {
+/* AI Context Banner & Suggestion Chips (Aligned with Mobile #30) */
+.ai-context-banner {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 8px;
+  padding: 8px 14px;
+  color: var(--gold-primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.suggestion-chips-row {
   display: flex;
   gap: 8px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid var(--card-border);
-  padding-bottom: 12px;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.suggestion-chip {
+  background: var(--card-bg-elevated);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: var(--gold-primary);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.suggestion-chip:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--gold-primary);
 }
 
 /* Skeleton Shimmer Loading Placeholder */
@@ -670,7 +683,7 @@ p, span, div, td, th, label, input, textarea, select {
 }
 
 .skeleton-card-pulse {
-  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background: linear-gradient(90deg, #1e222b 25%, #2a2f3d 50%, #1e222b 75%);
   background-size: 200% 100%;
   animation: skeletonShimmer 1.5s infinite;
   border-radius: 12px;
