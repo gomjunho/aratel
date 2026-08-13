@@ -1,5 +1,14 @@
 {
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i app/assets/stylesheets/active_admin.css -o app/assets/builds/active_admin.css"
+  },
   "dependencies": {
-    "@activeadmin/activeadmin": "^4.0.0-beta22"
+    "@activeadmin/activeadmin": "^4.0.0-beta22",
+    "@tailwindcss/cli": "^4.3.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.26",
+    "tailwindcss": "^4.3.3"
   }
 }
