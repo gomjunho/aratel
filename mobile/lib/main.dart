@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'screens/lounge_screen.dart';
 import 'screens/curation_screen.dart';
@@ -5,7 +6,17 @@ import 'screens/insights_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/ai_agent_dialogue_overlay.dart';
 
+class DevHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
+}
+
 void main() {
+  // Allow self-signed or development SSL certificates in Flutter HttpClient
+  HttpOverrides.global = DevHttpOverrides();
   runApp(const AratelApp());
 }
 
