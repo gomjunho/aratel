@@ -1,5 +1,6 @@
 class AteliersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:api_flat_maps, :api_create_simulation]
+  skip_before_action :authenticate_user!, only: [:api_flat_maps, :api_create_simulation]
 
   def show
     @flat_map_url = "https://storage.aratel.com/3d/dh_bangbae_84a.gltf"

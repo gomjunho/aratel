@@ -1,5 +1,6 @@
 class DelegatedAccessesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:api_create, :api_approve]
+  skip_before_action :authenticate_user!, only: [:api_create, :api_approve]
 
   def create
     req = current_user.delegated_access_requests.build(delegated_access_params)

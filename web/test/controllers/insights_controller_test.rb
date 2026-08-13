@@ -3,6 +3,7 @@ require "test_helper"
 class InsightsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = User.first || User.create!(name: "홍길동", phone_number: "01012345678", birth_date: "19800101")
+    post demo_login_path(user_id: @user.id)
     @tx1 = RealEstateTransaction.create!(complex_name: "디에이치 방배", floor: 15, price: 2850000000, deal_date: "2026-07-15")
     @tx2 = RealEstateTransaction.create!(complex_name: "디에이치 방배", floor: 3, price: 2510000000, deal_date: "2026-07-10")
   end

@@ -1,5 +1,6 @@
 class ClubDealsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:api_index, :api_order]
+  skip_before_action :authenticate_user!, only: [:api_index, :api_order]
 
   def index
     @club_deals = ClubDeal.all

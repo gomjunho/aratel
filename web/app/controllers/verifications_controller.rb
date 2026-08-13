@@ -4,6 +4,11 @@ class VerificationsController < ApplicationController
     :api_trust_api_sync,
     :api_me_tier
   ]
+  skip_before_action :authenticate_user!, only: [
+    :api_identity_verify,
+    :api_trust_api_sync,
+    :api_me_tier
+  ]
 
   def show
     @user = current_user

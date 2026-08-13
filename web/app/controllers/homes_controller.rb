@@ -1,5 +1,6 @@
 class HomesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:api_welcome, :api_agent_dialogue]
+  skip_before_action :authenticate_user!, only: [:api_welcome, :api_agent_dialogue]
 
   def show
     @complex_name = current_user.complex_name.presence || "디에이치 방배"

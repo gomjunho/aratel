@@ -4,8 +4,10 @@ Rails.application.routes.draw do
 
   root "homes#show"
 
+  get "login", to: "sessions#new", as: :login
+  post "login", to: "sessions#create"
   post "demo_login", to: "sessions#create"
-  delete "logout", to: "sessions#destroy"
+  delete "logout", to: "sessions#destroy", as: :logout
 
   resource :verification, only: [:show] do
     post :identity_verify

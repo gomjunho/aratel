@@ -7,6 +7,7 @@ class DelegatedAccessesControllerTest < ActionDispatch::IntegrationTest
       phone_number: "01012345678",
       birth_date: "19800101"
     )
+    post demo_login_path(user_id: @user.id)
   end
 
   test "should create delegated access request via web" do

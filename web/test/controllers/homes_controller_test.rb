@@ -5,11 +5,10 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     @user = User.first || User.create!(name: "홍길동", phone_number: "01012345678", birth_date: "19800101", complex_name: "디에이치 방배", building_number: "101동", unit_number: "1502호", tier: "GOLD")
   end
 
-  test "should get unauthenticated guest show view" do
+  test "should redirect unauthenticated guest to login_path" do
     get home_path
-    assert_response :success
-    assert_includes response.body, "게스트 미인증 상태"
-    assert_includes response.body, "제한적 게스트 화면"
+    assert_response :redirect
+    assert_redirected_to login_path
   end
 
   test "should get authenticated show view" do

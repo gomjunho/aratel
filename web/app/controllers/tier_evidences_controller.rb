@@ -1,5 +1,6 @@
 class TierEvidencesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:api_create]
+  skip_before_action :authenticate_user!, only: [:api_create]
 
   def new
     @tier_evidence = current_user.tier_evidences.build

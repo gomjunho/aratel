@@ -1,9 +1,23 @@
 class ApplicationController < ActionController::Base
   allow_browser versions: :modern, block: false
 
+  before_action :authenticate_user!
+
   helper_method :current_user, :user_signed_in?
 
   private
+
+  def authenticate_user!
+    return if active_admin_or_devise_controller?
+
+    unless user_signed_in?
+      redirect_to login_path, alert: "로그인이 필요한 서비스입니다. 입주민 인증 후 이용 가능합니다."
+    end
+  end
+
+  def active_admin_or_devise_controller?
+    self.class.name.start_with?("ActiveAdmin::") || self.class.name.start_with?("Admin::") || is_a?(DeviseController)
+  end
 
   def current_user
     @current_user ||= if session[:user_id].present?

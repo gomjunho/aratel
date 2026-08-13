@@ -1,5 +1,6 @@
 class ConciergesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:api_create_reservation]
+  skip_before_action :authenticate_user!, only: [:api_create_reservation]
 
   def show
     @reservations = ConciergeReservation.where(user: current_user).order(created_at: :desc)

@@ -1,0 +1,45 @@
+<div style="max-width: 480px; margin: 60px auto; font-family: 'Noto Sans KR', sans-serif;">
+  <div style="background: #0f172a; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 20px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center;">
+    
+    <!-- Branding Header -->
+    <div style="margin-bottom: 28px;">
+      <h1 style="font-family: 'Cinzel', serif; color: #d4af37; font-size: 32px; font-weight: 900; letter-spacing: 2px; margin-bottom: 4px;">
+        ARATEL <span style="font-size: 16px; font-weight: 400; color: #94a3b8;">아라뜰</span>
+      </h1>
+      <p style="color: #cbd5e1; font-size: 15px; font-weight: 600; margin-top: 6px;">입주민 전용 프라이빗 웰컴 포털</p>
+      <p style="color: #64748b; font-size: 13px; margin-top: 4px;">인증된 입주민 계정으로 로그인 후 이용하실 수 있습니다.</p>
+    </div>
+
+    <!-- Quick Demo Login Switcher Card -->
+    <div style="background: rgba(30, 41, 59, 0.7); border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 28px;">
+      <h3 style="color: #f3e5ab; font-size: 14px; margin-bottom: 12px; font-weight: 700;">⚡ 빠른 데모 계정 선택 (시연용)</h3>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <%= button_to demo_login_path(preset: "gold"), method: :post, style: "width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px;" do %>
+          🔑 홍길동 님 (디에이치 방배 / GOLD) 로그인
+        <% end %>
+        <%= button_to demo_login_path(preset: "diamond"), method: :post, style: "width: 100%; padding: 12px; background: #0f172a; color: #fbbf24; border: 1px solid #fbbf24; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px;" do %>
+          💎 이서진 님 (한남 더힐 / VVIP) 로그인
+        <% end %>
+      </div>
+    </div>
+
+    <!-- General Sign In Form -->
+    <%= form_with url: login_path, method: :post, local: true do |f| %>
+      <div style="text-align: left; margin-bottom: 16px;">
+        <label style="display: block; color: #94a3b8; font-size: 13px; margin-bottom: 6px; font-weight: 600;">입주민 이름</label>
+        <%= f.text_field :name, placeholder: "예: 홍길동", style: "width: 100%; padding: 12px 14px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 15px; box-sizing: border-box;" %>
+      </div>
+      <div style="text-align: left; margin-bottom: 24px;">
+        <label style="display: block; color: #94a3b8; font-size: 13px; margin-bottom: 6px; font-weight: 600;">휴대폰 번호</label>
+        <%= f.text_field :phone_number, placeholder: "01012345678", style: "width: 100%; padding: 12px 14px; background: #090d16; border: 1px solid #334155; border-radius: 8px; color: #fff; font-size: 15px; box-sizing: border-box;" %>
+      </div>
+
+      <%= f.submit "입주민 인증 로그인", style: "width: 100%; padding: 14px; background: #d4af37; color: #000; border: none; border-radius: 8px; font-weight: 800; font-size: 16px; cursor: pointer; transition: background 0.2s ease;" %>
+    <% end %>
+
+    <div style="margin-top: 24px; font-size: 12px; color: #64748b;">
+      * 단지별 테마 및 맞춤 서비스는 로그인 후 자동으로 적용됩니다.
+    </div>
+
+  </div>
+</div>

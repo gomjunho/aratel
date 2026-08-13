@@ -3,6 +3,7 @@ require "test_helper"
 class ConciergesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = User.first || User.create!(name: "홍길동", phone_number: "01012345678", birth_date: "19800101")
+    post demo_login_path(user_id: @user.id)
   end
 
   test "should get show view" do
