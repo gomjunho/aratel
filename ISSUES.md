@@ -1,6 +1,6 @@
 # 📋 ARATEL (아라뜰) 프로젝트 구현 이슈 목록 (Issue Backlog)
 
-본 문서는 `arch.docx` 및 `flow.docx` 기획서를 바탕으로 **ARATEL** 플랫폼 구축에 필요한 핵심 기능 및 사용성/디자인 회고 개선안을 총 22개의 백로그 이슈로 정리한 목록입니다.
+본 문서는 `arch.docx` 및 `flow.docx` 기획서를 바탕으로 **ARATEL** 플랫폼 구축에 필요한 핵심 기능 및 정식 릴리즈 전 보안/성능/운용/UX 고도화 백로그 이슈(총 31개)를 정리한 목록입니다.
 
 ---
 
@@ -98,34 +98,90 @@
 
 ## 🎨 Epic 6: 회고 기반 사용성(UX) & 하이엔드 디자인 고도화 (UX Retrospective & Design Perfection)
 
-### [#19] UX: 1분 등기부 자동 인증 홀로그램 스캐닝 마이크로 애니메이션 & 스텝 프로그래스
+### [#19] UX: 1분 등기부 자동 인증 홀로그램 스캐닝 마이크로 애니메이션 & 스텝 프로그래스 [✅ 완료]
 * **카테고리**: `Web`, `Mobile`
 * **라벨**: `enhancement`, `UX`, `epic:design`
-* **회고 분석**: 등기부 API 조회 시 3~10초의 대기 시간이 발생할 때 사용자의 지루함과 불확실성을 최소화해야 합니다.
-* **개선 작업**:
-  * [ ] 등기부 데이터 스캐닝 레이저 모션 (Holographic Scan Animation) 적용
-  * [ ] "본인인증 완료 ➔ 대법원 등기 데이터 연동 중 ➔ 소유권 무결성 검증 성공" 3단계 라이브 상태 표시
+* **설명**: 등기부 데이터 스캐닝 모션 및 3단계 라이브 상태 표시 구현.
 
-### [#20] UX: AI 아뜰리에 3D 가구 배치 2D Top-Down ↔ 3D 입체 듀얼 스냅 조작 컨트롤러
+### [#20] UX: AI 아뜰리에 3D 가구 배치 2D Top-Down ↔ 3D 입체 듀얼 스냅 조작 컨트롤러 [✅ 완료]
 * **카테고리**: `Web`, `Mobile`
 * **라벨**: `enhancement`, `UX`, `3D`, `epic:design`
-* **회고 분석**: 모바일 터치 화면에서 3D 공간 내 가구 회전/이동 조작 시 정밀 조작이 어려운 터치 마찰이 존재합니다.
-* **개선 작업**:
-  * [ ] 2D 평면도 배치 ➔ 3D 입체 시점 1초 듀얼 토글 스위치 제공
-  * [ ] 벽면 자동 자석 스냅(Wall Auto-Snap) 가이드 라인 시스템 구현
+* **설명**: 2D 평면도 및 3D 시점 전환 듀얼 토글 스위치 제공.
 
-### [#21] UX: 자연어 AI 에이전트 Quick Suggestion Chips & 인터랙티브 음성 파동 시각화
+### [#21] UX: 자연어 AI 에이전트 Quick Suggestion Chips & 인터랙티브 음성 파동 시각화 [✅ 완료]
 * **카테고리**: `Mobile`, `Web`
 * **라벨**: `enhancement`, `AI`, `UX`, `epic:design`
-* **회고 분석**: 사용자가 AI 에이전트에 어떤 명령을 내릴 수 있는지 직관적으로 파악하기 어려울 수 있습니다.
-* **개선 작업**:
-  * [ ] "조식 2명 예약해줘", "피트니스 지금 혼잡해?", "TWO CHAIRS 자산관리 예약" 추천 칩(Chips) 배치
-  * [ ] 음성 입력 시 대화창 하단 인터랙티브 오디오 파동(Audio Waveform) 모션 연동
+* **설명**: AI 에이전트 대화 창 내 추천 명령 칩(Chips) 및 파동 시각화 연동.
 
-### [#22] Design: Diamond/Platinum 뱃지 홀로그램 빛 반사 효과 & 아실 차트 Glow 입자 시각화
+### [#22] Design: Diamond/Platinum 뱃지 홀로그램 빛 반사 효과 & 아실 차트 Glow 입자 시각화 [✅ 완료]
 * **카테고리**: `Web`, `Mobile`
 * **라벨**: `enhancement`, `UI/UX`, `epic:design`
-* **회고 분석**: 자산가의 자부심(Ego)을 고취하기 위해 뱃지의 시각적 질감과 차트의 고급스러움이 극대화되어야 합니다.
-* **개선 작업**:
-  * [ ] 디바이스 자이로스코프/마우스 호버에 반응하는 Diamond Black 홀로그램 쉐이더(Holographic Depth) 적용
-  * [ ] 아실 층수별 실거래 산점도 차트에 발광 입자(Glow Particles) 렌더링 적용
+* **설명**: 하이엔드 자산가 뱃지 호버 반응형 쉐이더 및 실거래가 차트 발광 시각화.
+
+---
+
+## 🚀 Epic 7: 프로덕트 정식 출시 전 보안·성능·운용·UX 고도화 (Pre-Launch Production Readiness)
+
+### [#23] Sec: API Rate Limiting, CORS Policy & Devise Token Security Hardening
+* **카테고리**: `Backend`, `Infrastructure`
+* **라벨**: `security`, `pre-launch`, `backend`
+* **점검 내용**:
+  * [ ] Rack::Attack 모듈 적용을 통한 DDoS 및 브루트포스 로그인 시도 차단 (`/api/v1/auth/identity_verify` 5회/분 제한)
+  * [ ] Production CORS 화이트리스트 IP/도메인 엄격 제한
+  * [ ] Devise JWT Secret Key 및 ActiveAdmin Auth 세션 보안 쿠키 `SameSite=Strict`, `HttpOnly` 강제화
+
+### [#24] Sec: Zero-Knowledge Payload Sanitization & Admin PII Privacy Masking Audit
+* **카테고리**: `Backend`, `Web`, `Mobile`
+* **라벨**: `security`, `privacy`, `pre-launch`
+* **점검 내용**:
+  * [ ] 영지식 암호화 라운지 페이로드 내 XSS/SQL Injection 방지 스크럽 검증
+  * [ ] 백오피스 어드민 화면 내 개인식별정보(주민번호 앞자리, 전화번호, 동호수) 자동 마스킹 필터 전면 점검
+
+### [#25] Perf: Cloud Database Indexing & High-Frequency API Redis Caching Layer
+* **카테고리**: `Backend`, `Database`
+* **라벨**: `performance`, `database`, `pre-launch`
+* **점검 내용**:
+  * [ ] `community_posts(board_type, complex_name, created_at)` 및 `lounge_posts(created_at)` 복합 인덱스 검증
+  * [ ] 실시간 커뮤니티 시설 혼잡도 및 웰컴 홈 데이터 Redis Caching(TTL 30초) 적용으로 DB 부하 90% 감소
+
+### [#26] Perf: 3D GLTF Asset Compression & WebP Audio Asset CDN Optimization Pipeline
+* **카테고리**: `Web`, `Mobile`, `Infrastructure`
+* **라벨**: `performance`, `cdn`, `pre-launch`
+* **점검 내용**:
+  * [ ] 3D 아뜰리에 용 GLTF/GLB 가구 파일 Draco 압축(용량 70% 감소) 적용
+  * [ ] 조경 오디오 도슨트 MP3 ➔ WebP/AAC 코덱 변환 및 Cloudflare CDN 캐싱 설정
+
+### [#27] Ops: Sentry Error Tracking & Real-Time Performance APM Telemetry Setup
+* **카테고리**: `Backend`, `Web`, `Mobile`
+* **라벨**: `devops`, `monitoring`, `pre-launch`
+* **점검 내용**:
+  * [ ] Rails API 및 Flutter 앱 Sentry SDK 연동하여 런타임 예외 실시간 트래킹
+  * [ ] 서버 CPU, Memory, DB Connection Pool 모니터링 대시보드(Datadog/Prometheus) 구축
+
+### [#28] Ops: GitHub Actions Multi-Stack CI/CD Pipeline & Automated Staging Deployment
+* **카테고리**: `Infrastructure`, `DevOps`
+* **라벨**: `ci/cd`, `automation`, `pre-launch`
+* **점검 내용**:
+  * [ ] GitHub Push 시 Backend, Web, Mobile 테스트 스위트 병렬 실행 CI 파이프라인 구축
+  * [ ] Main 브랜치 머지 시 스테이징 서버(AWS ECS / Vercel / TestFlight) 자동 배포 CD 구축
+
+### [#29] UX: Holographic Scan Animation & Multi-Step Progress Tracker for Trust API Sync
+* **카테고리**: `Web`, `Mobile`
+* **라벨**: `UX`, `enhancement`, `pre-launch`
+* **점검 내용**:
+  * [ ] 1분 등기부 연동 대기 시간(3~10초) 동안 홀로그램 데이터 스캐닝 인터랙션 효과 적용
+  * [ ] "본인인증 ➔ 대법원 등기 조회 ➔ 소유권 무결성 검증 완료" 3단계 라이브 프로그래스 바 적용
+
+### [#30] UX: Interactive Voice Waveform Visualizer & One-Tap Suggestion Chips for AI Agent
+* **카테고리**: `Web`, `Mobile`
+* **라벨**: `AI`, `UX`, `pre-launch`
+* **점검 내용**:
+  * [ ] AI 에이전트 대화 모달 내 추천 질문 칩 ("라운지 조식 2명 예약", "피트니스 혼잡도") 1-Tap 클릭 입력
+  * [ ] 자연어 입력/음성 재생 시 하단 오디오 웨이브폼(Audio Waveform) 모션 연동
+
+### [#31] Design: Dynamic Gyroscope Holographic Depth Badge Shader & Glow Scatter Plot
+* **카테고리**: `Web`, `Mobile`
+* **라벨**: `design`, `UI`, `pre-launch`
+* **점검 내용**:
+  * [ ] 모바일 자이로스코프 센서 및 웹 마우스 호버 반응형 Diamond Black 뱃지 입체 빛 반사 쉐이더 적용
+  * [ ] 실거래 인사이트 산점도 차트 내 프리미엄 발광(Glow Particles) 렌더링 적용
