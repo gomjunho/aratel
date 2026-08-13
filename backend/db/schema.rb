@@ -11,6 +11,40 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2026_08_13_030000) do
+  create_table "active_admin_comments", force: :cascade do |t|
+    t.string "namespace"
+    t.text "body"
+    t.string "resource_type"
+    t.integer "resource_id"
+    t.string "author_type"
+    t.integer "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author"
+    t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
+    t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource"
+  end
+
+  create_table "admin_users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_admin_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  end
+
+  create_table "art_docents", force: :cascade do |t|
+    t.string "title"
+    t.string "audio_url"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "atelier_simulations", force: :cascade do |t|
     t.string "simulation_id", null: false
     t.string "flat_map_id", null: false
@@ -49,6 +83,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_030000) do
     t.index ["deal_id"], name: "index_club_deals_on_deal_id", unique: true
   end
 
+  create_table "community_posts", force: :cascade do |t|
+    t.string "board_type"
+    t.string "complex_name"
+    t.string "building_number"
+    t.string "nickname"
+    t.boolean "is_anonymous"
+    t.string "title"
+    t.text "content"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["board_type", "complex_name", "created_at"], name: "idx_comm_posts_board_complex_created"
+  end
+
   create_table "concierge_reservations", force: :cascade do |t|
     t.string "reservation_id", null: false
     t.string "service_type", null: false
@@ -59,6 +107,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_030000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["reservation_id"], name: "index_concierge_reservations_on_reservation_id", unique: true
+  end
+
+  create_table "delegated_access_requests", force: :cascade do |t|
+    t.string "delegation_id", null: false
+    t.integer "user_id", null: false
+    t.string "relationship", null: false
+    t.string "document_url", null: false
+    t.string "status", default: "PENDING_OWNER_APPROVAL"
+    t.string "granted_badge"
+    t.string "role"
+    t.datetime "requested_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["delegation_id"], name: "index_delegated_access_requests_on_delegation_id", unique: true
+    t.index ["user_id"], name: "index_delegated_access_requests_on_user_id"
   end
 
   create_table "delegated_accesses", force: :cascade do |t|
@@ -72,6 +135,39 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_030000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["delegation_id"], name: "index_delegated_accesses_on_delegation_id", unique: true
+  end
+
+  create_table "facility_statuses", force: :cascade do |t|
+    t.string "facility_name"
+    t.string "crowd_level"
+    t.integer "active_reservations"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "furniture_catalogs", force: :cascade do |t|
+    t.string "furniture_id", null: false
+    t.string "brand"
+    t.string "name"
+    t.string "model_3d_url"
+    t.integer "price"
+    t.integer "stock"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["furniture_id"], name: "index_furniture_catalogs_on_furniture_id", unique: true
+  end
+
+  create_table "furniture_simulations", force: :cascade do |t|
+    t.string "simulation_id", null: false
+    t.string "flat_map_id"
+    t.text "placed_items"
+    t.boolean "club_deal_triggered", default: true
+    t.string "club_deal_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["simulation_id"], name: "index_furniture_simulations_on_simulation_id", unique: true
+    t.index ["user_id"], name: "index_furniture_simulations_on_user_id"
   end
 
   create_table "identity_verifications", force: :cascade do |t|
@@ -105,6 +201,26 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_030000) do
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_lounge_posts_on_created_at"
     t.index ["post_id"], name: "index_lounge_posts_on_post_id", unique: true
+  end
+
+  create_table "real_estate_transactions", force: :cascade do |t|
+    t.string "complex_name", default: "디에이치 방배"
+    t.integer "floor"
+    t.integer "price", limit: 8
+    t.string "deal_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "residential_complexes", force: :cascade do |t|
+    t.string "name"
+    t.string "primary_color"
+    t.string "secondary_color"
+    t.string "accent_color"
+    t.string "banner_title"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "tier_evidences", force: :cascade do |t|
@@ -156,4 +272,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_030000) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_users_on_user_id", unique: true
   end
+
+  add_foreign_key "delegated_access_requests", "users"
+  add_foreign_key "furniture_simulations", "users"
 end

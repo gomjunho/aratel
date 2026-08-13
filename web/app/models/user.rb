@@ -14,6 +14,10 @@ class User < ApplicationRecord
     ["tier_evidences", "delegated_access_requests"]
   end
 
+  def badge
+    (self[:badge] if has_attribute?(:badge)).presence || "UNVERIFIED"
+  end
+
   def set_defaults
     self.tier ||= "BRONZE"
     self.badge ||= "UNVERIFIED"
