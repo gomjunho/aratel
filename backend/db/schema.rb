@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_13_000005) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_13_030000) do
   create_table "atelier_simulations", force: :cascade do |t|
     t.string "simulation_id", null: false
     t.string "flat_map_id", null: false
@@ -103,6 +103,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_000005) do
     t.string "status", default: "PUBLISHED"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_lounge_posts_on_created_at"
     t.index ["post_id"], name: "index_lounge_posts_on_post_id", unique: true
   end
 

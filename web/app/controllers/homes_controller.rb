@@ -49,27 +49,32 @@ class HomesController < ApplicationController
   end
 
   def api_welcome
-    render json: {
-      complex_name: current_user.complex_name.presence || "디에이치 방배",
-      art_docents: [
-        {
-          title: "더샵 갤러리 '조경과 빛'",
-          audio_url: "https://storage.aratel.com/audio/docent1.mp3",
-          description: "단지 중앙 정원에 위치한 현대 미술 조형물에 대한 설명입니다."
+    cache_key = "web_api_welcome_#{current_user&.complex_name || 'default'}"
+    cached_data = Rails.cache.fetch(cache_key, expires_in: 30.seconds) do
+      {
+        complex_name: current_user&.complex_name.presence || "디에이치 방배",
+        art_docents: [
+          {
+            title: "더샵 갤러리 '조경과 빛'",
+            audio_url: "https://storage.aratel.com/audio/docent1.mp3",
+            description: "단지 중앙 정원에 위치한 현대 미술 조형물에 대한 설명입니다."
+          }
+        ],
+        facilities_status: [
+          { facility_name: "스카이라운지", crowd_level: "NORMAL", active_reservations: 12 },
+          { facility_name: "피트니스 센타", crowd_level: "CROWDED", active_reservations: 45 },
+          { facility_name: "사우나", crowd_level: "SMOOTH", active_reservations: 8 }
+        ],
+        smart_home_state: {
+          lighting: "ON",
+          hvac_temperature: 22.5,
+          ventilation: "AUTO"
         }
-      ],
-      facilities_status: [
-        { facility_name: "스카이라운지", crowd_level: "NORMAL", active_reservations: 12 },
-        { facility_name: "피트니스 센타", crowd_level: "CROWDED", active_reservations: 45 },
-        { facility_name: "사우나", crowd_level: "SMOOTH", active_reservations: 8 }
-      ],
-      smart_home_state: {
-        lighting: "ON",
-        hvac_temperature: 22.5,
-        ventilation: "AUTO"
       }
-    }, status: :ok
+    end
+    render json: cached_data, status: :ok
   end
+
 
   def api_agent_dialogue
     render json: {

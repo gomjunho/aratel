@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_13_020004) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_13_030000) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -85,6 +85,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_020004) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["board_type", "complex_name", "created_at"], name: "idx_comm_posts_board_complex_created"
   end
 
   create_table "concierge_reservations", force: :cascade do |t|
@@ -164,6 +165,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_020004) do
     t.string "status", default: "PUBLISHED"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_lounge_posts_on_created_at"
     t.index ["post_id"], name: "index_lounge_posts_on_post_id", unique: true
   end
 
