@@ -39,6 +39,14 @@
     </div>
   </div>
 
+  <!-- Area Size Segmented Switcher -->
+  <div class="area-size-switcher" style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid #334155; padding-bottom: 12px;">
+    <button style="padding: 8px 16px; border-radius: 20px; border: none; background: #2563eb; color: #fff; font-weight: 700; font-size: 13px; cursor: pointer;">84㎡ (대표)</button>
+    <button style="padding: 8px 16px; border-radius: 20px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-weight: 600; font-size: 13px; cursor: pointer;">59㎡</button>
+    <button style="padding: 8px 16px; border-radius: 20px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-weight: 600; font-size: 13px; cursor: pointer;">114㎡</button>
+    <button style="padding: 8px 16px; border-radius: 20px; border: 1px solid #334155; background: #1e293b; color: #94a3b8; font-weight: 600; font-size: 13px; cursor: pointer;">164㎡ (펜트하우스)</button>
+  </div>
+
   <!-- SECTION 1: Real Estate Transactions Scatter Plot & Analysis -->
   <section style="background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; padding: 24px; margin-bottom: 32px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -46,12 +54,18 @@
       <span style="color: #94a3b8; font-size: 13px;">국토교통부 실거래 데이터 연동</span>
     </div>
 
-    <!-- Scatter Plot Mock Visualizer -->
-    <div style="background: #020617; border: 1px solid #334155; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
-      <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 8px;">층수 vs 실거래가 매핑 차트 (84m² 기준)</h3>
+    <!-- Scatter Plot Mock Visualizer with Zoom Controller -->
+    <div style="background: #020617; border: 1px solid #334155; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="color: #f8fafc; font-size: 16px;">층수 vs 실거래가 매핑 차트 (84m² 기준)</h3>
+        <div class="scatter-zoom-slider" style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #94a3b8; font-size: 12px;">🔍 줌 배율:</span>
+          <input type="range" class="zoom-range" min="1" max="5" value="2" style="width: 100px;">
+        </div>
+      </div>
       <div style="background: #0f172a; border: 1px dashed #475569; height: 160px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 30px;">
         <% (@transactions || []).each do |tx| %>
-          <div style="background: #1e293b; border: 1px solid #38bdf8; padding: 10px 16px; border-radius: 8px; text-align: center;">
+          <div style="background: #1e293b; border: 1px solid #38bdf8; padding: 10px 16px; border-radius: 8px; text-align: center; cursor: pointer;">
             <span style="color: #fbbf24; font-weight: 800; font-size: 15px; block"><%= tx.floor %>층</span>
             <span style="color: #fff; font-weight: 700; font-size: 16px; block; margin-top: 2px;"><%= number_with_delimiter(tx.price / 100000000.0) %>억원</span>
             <span style="color: #64748b; font-size: 11px; block; margin-top: 2px;"><%= tx.deal_date %></span>
@@ -103,9 +117,9 @@
   </section>
 
   <!-- SECTION 4: Supply Gas Risk Index -->
-  <section style="background: #0f172a; border: 1px solid #166534; border-radius: 14px; padding: 24px; margin-bottom: 32px;">
+  <section class="supply-gas-detail-sheet" style="background: #0f172a; border: 1px solid #166534; border-radius: 14px; padding: 24px; margin-bottom: 32px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-      <h2 style="font-size: 20px; font-weight: 700; color: #4ade80;">📊 4. 입주 물량 & 가스(입주 독성) 위험 지수</h2>
+      <h2 style="font-size: 20px; font-weight: 700; color: #4ade80;">📊 4. 입주 물량 & 가스(입주 독성) 위험 지수 리포트</h2>
       <span style="background: #166534; color: #86efac; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px;">안전 (LOW RISK)</span>
     </div>
     <div style="background: #1e293b; padding: 16px; border-radius: 10px;">

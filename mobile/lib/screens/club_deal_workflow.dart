@@ -45,7 +45,9 @@ class _ClubDealWorkflowWidgetState extends State<ClubDealWorkflowWidget> {
   }
 
   void _showOrderModal(ClubDeal deal) {
-    final pointsController = TextEditingController(text: '0');
+    double sliderValue = 0.0;
+    final maxLimit = deal.pointDiscountLimit > 0 ? deal.pointDiscountLimit.toDouble() : 1000.0;
+    final divisions = (maxLimit / 1000.0).clamp(1, 100).toInt();
 
     showModalBottomSheet(
       context: context,
@@ -55,7 +57,7 @@ class _ClubDealWorkflowWidgetState extends State<ClubDealWorkflowWidget> {
       builder: (ctx) {
         return StatefulBuilder(
           builder: (context, setModalState) {
-            final usedPoints = int.tryParse(pointsController.text) ?? 0;
+            final usedPoints = sliderValue.toInt();
             final cashAmount = (deal.dealPrice - usedPoints).clamp(0, deal.dealPrice);
 
             return Padding(
@@ -69,34 +71,80 @@ class _ClubDealWorkflowWidgetState extends State<ClubDealWorkflowWidget> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '클럽딜 공동 구매 신청',
-                    style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 18, fontWeight: FontWeight.bold),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'VVIP 클럽딜 공동 구매',
+                        style: TextStyle(color: Color(0xFFD4AF37), fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.white54),
+                        onPressed: () => Navigator.pop(ctx),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Text(deal.itemName, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                   Text('${deal.brand} | 할인가: ${deal.dealPrice}원 (원가 ${deal.originalPrice}원)', style: const TextStyle(color: Colors.grey, fontSize: 13)),
-                  const SizedBox(height: 16),
-                  TextField(
-                    key: const Key('points_input_field'),
-                    controller: pointsController,
-                    keyboardType: TextInputType.number,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: '사용할 ARATEL 포인트 (최대 ${deal.pointDiscountLimit}P)',
-                      labelStyle: const TextStyle(color: Colors.grey),
-                      enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  const SizedBox(height: 20),
+
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF0F1115),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
                     ),
-                    onChanged: (val) {
-                      setModalState(() {});
-                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('포인트 차감 슬라이더', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+                            Text('${usedPoints.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} P', style: const TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        SliderTheme(
+                          data: SliderThemeData(
+                            activeTrackColor: const Color(0xFFD4AF37),
+                            inactiveTrackColor: Colors.grey[800],
+                            thumbColor: const Color(0xFFD4AF37),
+                            overlayColor: const Color(0xFFD4AF37).withOpacity(0.2),
+                          ),
+                          child: Slider(
+                            key: const Key('point_calculator_slider'),
+                            value: sliderValue,
+                            min: 0.0,
+                            max: maxLimit,
+                            divisions: divisions,
+                            label: '${usedPoints}P',
+                            onChanged: (val) {
+                              setModalState(() {
+                                sliderValue = val;
+                              });
+                            },
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('0 P', style: TextStyle(color: Colors.grey, fontSize: 11)),
+                            Text('최대 ${maxLimit.toInt()} P', style: const TextStyle(color: Colors.grey, fontSize: 11)),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
+
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('최종 현금 결제 금액:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                      Text('$cashAmount원', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 18, fontWeight: FontWeight.bold)),
+                      const Text('최종 결제 금액:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                      Text('${cashAmount.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')}원', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 20, fontWeight: FontWeight.bold)),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -196,7 +244,13 @@ class _ClubDealWorkflowWidgetState extends State<ClubDealWorkflowWidget> {
                       ),
                       child: const Text('VVIP CLUB DEAL', style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold)),
                     ),
-                    Text(deal.status, style: const TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold, fontSize: 12)),
+                    Row(
+                      children: [
+                        const Icon(Icons.timer_outlined, color: Colors.orangeAccent, size: 14),
+                        const SizedBox(width: 4),
+                        const Text('⏱️ 딜 종료 14:25:38', style: TextStyle(color: Colors.orangeAccent, fontSize: 11, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -246,71 +300,88 @@ class _ClubDealWorkflowWidgetState extends State<ClubDealWorkflowWidget> {
   }
 
   Widget _buildOrderStatusStepper(String status) {
-    int currentStep = 1;
-    if (status.contains('COMPLETED') || status.contains('배송완료')) {
+    int currentStep = 2;
+    if (status.contains('COMPLETED') || status.contains('설치완료')) {
       currentStep = 4;
-    } else if (status.contains('SHIPPING') || status.contains('배송중')) {
+    } else if (status.contains('SHIPPING') || status.contains('직배송')) {
       currentStep = 3;
-    } else if (status.contains('ORDERED') || status.contains('주문완료')) {
+    } else if (status.contains('CONFIRMED') || status.contains('수량확정')) {
       currentStep = 2;
     }
 
-    final steps = ['모집중', '주문완료', '배송중', '배송완료'];
+    final steps = ['주문 완료', '단지 수량 확정', '이탈리아 직배송', '전문 기사 방문 설치'];
+    final timestamps = ['08.13 14:00', '08.14 09:00', '예정 08.20', '예정 08.25'];
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         color: const Color(0xFF0F1115),
         borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.withOpacity(0.15)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(steps.length, (idx) {
-          final stepNum = idx + 1;
-          final isPassed = stepNum <= currentStep;
-          final isCurrent = stepNum == currentStep;
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('주문 이력 라이브 타임라인', style: TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(steps.length, (idx) {
+              final stepNum = idx + 1;
+              final isPassed = stepNum <= currentStep;
+              final isCurrent = stepNum == currentStep;
 
-          return Row(
-            children: [
-              Column(
-                children: [
-                  CircleAvatar(
-                    radius: 10,
-                    backgroundColor: isCurrent
-                        ? const Color(0xFFD4AF37)
-                        : (isPassed ? const Color(0xFF4CAF50) : const Color(0xFF222630)),
-                    child: Text(
-                      '$stepNum',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color: (isCurrent || isPassed) ? Colors.black : Colors.grey,
+              return Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 10,
+                            backgroundColor: isCurrent
+                                ? const Color(0xFFD4AF37)
+                                : (isPassed ? const Color(0xFF4CAF50) : const Color(0xFF222630)),
+                            child: Text(
+                              '$stepNum',
+                              style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.bold,
+                                color: (isCurrent || isPassed) ? Colors.black : Colors.grey,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            steps[idx],
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                              color: isCurrent
+                                  ? const Color(0xFFD4AF37)
+                                  : (isPassed ? Colors.white70 : Colors.grey),
+                            ),
+                          ),
+                          Text(
+                            timestamps[idx],
+                            style: const TextStyle(fontSize: 8, color: Colors.grey),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    steps[idx],
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
-                      color: isCurrent
-                          ? const Color(0xFFD4AF37)
-                          : (isPassed ? Colors.white70 : Colors.grey),
-                    ),
-                  ),
-                ],
-              ),
-              if (idx < steps.length - 1)
-                Container(
-                  width: 20,
-                  height: 2,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  color: isPassed ? const Color(0xFF4CAF50) : const Color(0xFF222630),
+                    if (idx < steps.length - 1)
+                      Container(
+                        width: 10,
+                        height: 2,
+                        color: isPassed ? const Color(0xFF4CAF50) : const Color(0xFF222630),
+                      ),
+                  ],
                 ),
-            ],
-          );
-        }),
+              );
+            }),
+          ),
+        ],
       ),
     );
   }

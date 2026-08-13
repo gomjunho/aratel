@@ -11,6 +11,9 @@ class InsightsControllerTest < ActionDispatch::IntegrationTest
   test "should get show view with scatter plot, urgent deals, and wealth investment proposals" do
     get insight_path
     assert_response :success
+    assert_select ".area-size-switcher"
+    assert_select ".scatter-zoom-slider"
+    assert_select ".supply-gas-detail-sheet"
     assert_select "h1", text: /자산 증식 인사이트/
     assert_select "h2", text: /급매물 & 시세 이하/
     assert_select "h2", text: /부동산 트렌드 & 하이엔드 절세/

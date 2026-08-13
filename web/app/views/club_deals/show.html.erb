@@ -11,6 +11,12 @@
     </div>
   <% end %>
 
+  <!-- Live Countdown Banner -->
+  <div class="live-countdown-banner" style="background: #0f172a; border: 1px solid #fbbf24; border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+    <span style="color: #fbbf24; font-weight: 700; font-size: 14px;">⏱️ VVIP 클럽딜 마감 임박</span>
+    <span style="color: #4ade80; font-family: monospace; font-size: 14px; font-weight: 700;">⏱️ 딜 종료까지 14시간 23분</span>
+  </div>
+
   <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #edf2f7; padding-bottom: 16px; margin-bottom: 16px;">
       <div>
@@ -23,12 +29,36 @@
       </div>
     </div>
 
+    <!-- Order Lifecycle Stepper -->
+    <div class="order-lifecycle-stepper" style="margin-bottom: 24px; background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0;">
+      <h4 style="font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 12px;">🚚 주문 배송 진행 4단계 스태퍼</h4>
+      <div style="display: flex; justify-content: space-between; text-align: center;">
+        <div style="flex: 1;">
+          <div style="width: 24px; height: 24px; background: #3b82f6; color: #fff; border-radius: 50%; margin: 0 auto 6px; font-size: 12px; line-height: 24px; font-weight: 700;">1</div>
+          <div style="font-size: 12px; font-weight: 700; color: #1e293b;">주문 완료</div>
+        </div>
+        <div style="flex: 1;">
+          <div style="width: 24px; height: 24px; background: #94a3b8; color: #fff; border-radius: 50%; margin: 0 auto 6px; font-size: 12px; line-height: 24px;">2</div>
+          <div style="font-size: 12px; color: #64748b;">단지 수량 확정</div>
+        </div>
+        <div style="flex: 1;">
+          <div style="width: 24px; height: 24px; background: #94a3b8; color: #fff; border-radius: 50%; margin: 0 auto 6px; font-size: 12px; line-height: 24px;">3</div>
+          <div style="font-size: 12px; color: #64748b;">이탈리아 직배송</div>
+        </div>
+        <div style="flex: 1;">
+          <div style="width: 24px; height: 24px; background: #94a3b8; color: #fff; border-radius: 50%; margin: 0 auto 6px; font-size: 12px; line-height: 24px;">4</div>
+          <div style="font-size: 12px; color: #64748b;">전문 기사 방문 설치</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Order Form Section -->
     <h3 style="font-size: 18px; font-weight: 700; color: #2d3748; margin-bottom: 16px;">🛍️ 프라이빗 공동 오더 참여</h3>
     <%= form_with url: order_club_deal_path(@club_deal.deal_id), method: :post, local: true do |f| %>
-      <div style="margin-bottom: 16px;">
-        <label style="display: block; margin-bottom: 6px; font-weight: 600;">사용할 포인트 (최대 <%= number_with_delimiter(@club_deal.point_discount_limit) %>P)</label>
-        <%= f.number_field :used_points, value: 500000, max: @club_deal.point_discount_limit, style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" %>
+      <div class="point-calculator-slider" style="margin-bottom: 16px; background: #f1f5f9; padding: 14px; border-radius: 8px;">
+        <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px;">🎯 포인트 차감 슬라이더 계산기 (최대 <%= number_with_delimiter(@club_deal.point_discount_limit) %>P)</label>
+        <input type="range" class="point-slider" min="0" max="<%= @club_deal.point_discount_limit %>" step="1000" value="500000" style="width: 100%; margin-bottom: 8px;" oninput="document.getElementById('used_points_input').value = this.value">
+        <%= f.number_field :used_points, id: "used_points_input", value: 500000, max: @club_deal.point_discount_limit, style: "width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" %>
       </div>
 
       <div style="margin-bottom: 20px;">
