@@ -74,5 +74,35 @@ void main() {
       expect(find.textContaining('인사이트 데이터를 불러올 수 없습니다'), findsOneWidget);
       expect(find.byType(ElevatedButton), findsOneWidget);
     });
+
+    testWidgets('renders area size filter chips', (WidgetTester tester) async {
+      final mockClient = MockClient((request) async {
+        return http.Response(
+          jsonEncode({
+            'complex_name': '디에이치 방배',
+            'transactions': [],
+            'supply_gas_index': {
+              'risk_level': 'LOW',
+              'upcoming_supply_units': 450,
+              'analysis_summary': '요약'
+            }
+          }),
+          200,
+          headers: {'content-type': 'application/json; charset=utf-8'},
+        );
+      });
+
+      final service = InsightsService(client: mockClient);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: InsightsScreen(insightsService: service),
+        ),
+      );
+
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.text('84㎡ (대표)'), findsOneWidget);
+      expect(find.text('164㎡'), findsOneWidget);
+    });
   });
 }

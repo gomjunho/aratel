@@ -19,6 +19,8 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
   String? _errorMessage;
   InsightsResponse? _data;
   RangeValues _floorRange = const RangeValues(1, 35);
+  String _selectedArea = 'ALL';
+  double _zoomLevel = 1.0;
 
   @override
   void initState() {
@@ -73,6 +75,96 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
       default:
         return const Color(0xFFD4AF37);
     }
+  }
+
+  void _showSupplyGasDetailSheet() {
+    final data = _data?.supplyGasIndex;
+    if (data == null) return;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF161920),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) {
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('공급 물량 독성 지수 상세 리포트', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 16, fontWeight: FontWeight.bold)),
+                  IconButton(icon: const Icon(Icons.close, color: Colors.white54), onPressed: () => Navigator.pop(ctx)),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text('입주 예정 물량: ${data.upcomingSupplyUnits}세대', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text('공급가스 위험 단계: ${data.riskLevel}', style: TextStyle(color: _getRiskColor(data.riskLevel), fontSize: 14, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 12),
+              Text(data.analysisSummary, style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.4)),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0F1115),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Color(0xFFD4AF37), size: 20),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '아실 빅데이터 엔진이 인근 반경 3km 내 입주예정 단지 분양권 전매 물량을 실시간 산출합니다.',
+                        style: TextStyle(color: Colors.grey, fontSize: 11),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showTransactionDetailModal(TransactionItem tx) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF161920),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: const Color(0xFFD4AF37).withOpacity(0.4)),
+          ),
+          title: const Text('실거래 상세 계약 정보', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 16, fontWeight: FontWeight.bold)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('거래가: ${_formatPrice(tx.price)} (${tx.price}원)', style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text('계약일자: ${tx.dealDate}', style: const TextStyle(color: Colors.grey, fontSize: 13)),
+              Text('층수: ${tx.floor}층 (고층 프리미엄)', style: const TextStyle(color: Colors.grey, fontSize: 13)),
+              Text('전용면적: ${_selectedArea == 'ALL' ? '84㎡' : _selectedArea}', style: const TextStyle(color: Colors.grey, fontSize: 13)),
+              Text('단지명: ${_data?.complexName ?? "디에이치 방배"}', style: const TextStyle(color: Colors.grey, fontSize: 13)),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('확인', style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -140,71 +232,116 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
           ),
           const SizedBox(height: 20),
 
-          // Supply Gas Risk Index Card
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF161920),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('입주 물량 독성 지수 (Supply Gas Index)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: _getRiskColor(data.supplyGasIndex.riskLevel).withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        '공급 가스 리스크: ${data.supplyGasIndex.riskLevel}',
-                        style: TextStyle(color: _getRiskColor(data.supplyGasIndex.riskLevel), fontSize: 11, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('입주 예정 물량: ${data.supplyGasIndex.upcomingSupplyUnits}세대', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 15, fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 6),
-                          Text(data.supplyGasIndex.analysisSummary, style: TextStyle(color: Colors.grey[300], fontSize: 13)),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    // Animated Risk Gauge Meter Visualizer
-                    SizedBox(
-                      width: 70,
-                      height: 50,
-                      child: CustomPaint(
-                        painter: _RiskGaugePainter(
-                          riskLevel: data.supplyGasIndex.riskLevel,
-                          color: _getRiskColor(data.supplyGasIndex.riskLevel),
+          // Supply Gas Risk Index Card with Clickable Badge
+          InkWell(
+            key: const Key('supply_gas_card_button'),
+            onTap: _showSupplyGasDetailSheet,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF161920),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('입주 물량 독성 지수 (Supply Gas Index)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _getRiskColor(data.supplyGasIndex.riskLevel).withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          '상세 리포트: ${data.supplyGasIndex.riskLevel}',
+                          style: TextStyle(color: _getRiskColor(data.supplyGasIndex.riskLevel), fontSize: 11, fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('입주 예정 물량: ${data.supplyGasIndex.upcomingSupplyUnits}세대', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 15, fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 6),
+                            Text(data.supplyGasIndex.analysisSummary, style: TextStyle(color: Colors.grey[300], fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      SizedBox(
+                        width: 70,
+                        height: 50,
+                        child: CustomPaint(
+                          painter: _RiskGaugePainter(
+                            riskLevel: data.supplyGasIndex.riskLevel,
+                            color: _getRiskColor(data.supplyGasIndex.riskLevel),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 20),
 
-          // Asil Scatter Chart Container
+          // Area Size Filter Switcher Chips
+          const Text('평형별 세그먼트 스위처', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildAreaChip('ALL', '전체 평형'),
+                const SizedBox(width: 6),
+                _buildAreaChip('59㎡', '59㎡ (25평)'),
+                const SizedBox(width: 6),
+                _buildAreaChip('84㎡', '84㎡ (34평)'),
+                const SizedBox(width: 6),
+                _buildAreaChip('114㎡', '114㎡ (45평)'),
+                const SizedBox(width: 6),
+                _buildAreaChip('164㎡', '164㎡ (펜트하우스)'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Zoom Scale & Floor Range
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('아실 층수별 실거래가 산점도', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-              Text('층수 필터: ${_floorRange.start.round()}층 ~ ${_floorRange.end.round()}층', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 12)),
+              const Text('층수별 산점도 줌 슬라이더', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.zoom_out, color: Color(0xFFD4AF37), size: 20),
+                    onPressed: () {
+                      setState(() {
+                        _zoomLevel = (_zoomLevel - 0.25).clamp(1.0, 3.0);
+                      });
+                    },
+                  ),
+                  Text('${_zoomLevel.toStringAsFixed(1)}x', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 12, fontWeight: FontWeight.bold)),
+                  IconButton(
+                    icon: const Icon(Icons.zoom_in, color: Color(0xFFD4AF37), size: 20),
+                    onPressed: () {
+                      setState(() {
+                        _zoomLevel = (_zoomLevel + 0.25).clamp(1.0, 3.0);
+                      });
+                    },
+                  ),
+                ],
+              ),
             ],
           ),
           RangeSlider(
@@ -222,6 +359,7 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
             },
           ),
           const SizedBox(height: 4),
+
           AnimatedBuilder(
             animation: _glowController,
             builder: (context, child) {
@@ -237,10 +375,18 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
                   color: const Color(0xFF161920),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: CustomPaint(
-                  painter: _GlowScatterChartPainter(
-                    transactions: filteredTx,
-                    glowIntensity: _glowController.value,
+                child: GestureDetector(
+                  onTapUp: (details) {
+                    if (filteredTx.isNotEmpty) {
+                      _showTransactionDetailModal(filteredTx.first);
+                    }
+                  },
+                  child: CustomPaint(
+                    painter: _GlowScatterChartPainter(
+                      transactions: filteredTx,
+                      glowIntensity: _glowController.value,
+                      zoomLevel: _zoomLevel,
+                    ),
                   ),
                 ),
               );
@@ -251,11 +397,12 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
           // Transaction list
           const Text('최근 실거래 기록', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          ...data.transactions.map((tx) {
+          ...data.transactions.where((t) => t.floor >= _floorRange.start && t.floor <= _floorRange.end).map((tx) {
             return Card(
               color: const Color(0xFF161920),
               margin: const EdgeInsets.only(bottom: 8),
               child: ListTile(
+                onTap: () => _showTransactionDetailModal(tx),
                 leading: CircleAvatar(
                   backgroundColor: const Color(0xFF222630),
                   child: Text('${tx.floor}층', style: const TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, fontSize: 12)),
@@ -270,13 +417,41 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
       ),
     );
   }
+
+  Widget _buildAreaChip(String value, String label) {
+    final isSelected = _selectedArea == value;
+    return ChoiceChip(
+      key: Key('area_chip_$value'),
+      label: Text(
+        label,
+        style: TextStyle(
+          color: isSelected ? Colors.black : Colors.white70,
+          fontSize: 11,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      selected: isSelected,
+      selectedColor: const Color(0xFFD4AF37),
+      backgroundColor: const Color(0xFF161920),
+      onSelected: (_) {
+        setState(() {
+          _selectedArea = value;
+        });
+      },
+    );
+  }
 }
 
 class _GlowScatterChartPainter extends CustomPainter {
   final List<TransactionItem> transactions;
   final double glowIntensity;
+  final double zoomLevel;
 
-  _GlowScatterChartPainter({required this.transactions, required this.glowIntensity});
+  _GlowScatterChartPainter({
+    required this.transactions,
+    required this.glowIntensity,
+    required this.zoomLevel,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -284,7 +459,6 @@ class _GlowScatterChartPainter extends CustomPainter {
       ..color = Colors.grey.withOpacity(0.3)
       ..strokeWidth = 1;
 
-    // Draw grid lines
     canvas.drawLine(Offset(0, size.height), Offset(size.width, size.height), axisPaint);
     canvas.drawLine(const Offset(0, 0), Offset(0, size.height), axisPaint);
 
@@ -299,12 +473,18 @@ class _GlowScatterChartPainter extends CustomPainter {
       final xRatio = maxFloor == minFloor ? 0.5 : (tx.floor - minFloor) / (maxFloor - minFloor);
       final yRatio = maxPrice == minPrice ? 0.5 : (tx.price - minPrice) / (maxPrice - minPrice);
 
-      final x = 20 + xRatio * (size.width - 40);
-      final y = size.height - (20 + yRatio * (size.height - 40));
+      final rawX = 20 + xRatio * (size.width - 40);
+      final rawY = size.height - (20 + yRatio * (size.height - 40));
+
+      final centerX = size.width / 2;
+      final centerY = size.height / 2;
+
+      final x = centerX + (rawX - centerX) * zoomLevel;
+      final y = centerY + (rawY - centerY) * zoomLevel;
       final center = Offset(x, y);
 
       // Outer glow halo
-      final glowRadius = 14.0 + glowIntensity * 8.0;
+      final glowRadius = (14.0 + glowIntensity * 8.0) * zoomLevel;
       final glowOpacity = 0.15 + glowIntensity * 0.25;
       final glowPaint = Paint()
         ..color = const Color(0xFFD4AF37).withOpacity(glowOpacity)
@@ -317,28 +497,28 @@ class _GlowScatterChartPainter extends CustomPainter {
         ..style = PaintingStyle.fill;
       for (int i = 0; i < 6; i++) {
         final angle = (i / 6) * 2 * math.pi + glowIntensity * math.pi;
-        final px = x + math.cos(angle) * (10.0 + glowIntensity * 4.0);
-        final py = y + math.sin(angle) * (10.0 + glowIntensity * 4.0);
-        canvas.drawCircle(Offset(px, py), 2.0, particlePaint);
+        final px = x + math.cos(angle) * (10.0 + glowIntensity * 4.0) * zoomLevel;
+        final py = y + math.sin(angle) * (10.0 + glowIntensity * 4.0) * zoomLevel;
+        canvas.drawCircle(Offset(px, py), 2.0 * zoomLevel, particlePaint);
       }
 
       // Core dot
       final dotPaint = Paint()
         ..color = const Color(0xFFD4AF37)
         ..style = PaintingStyle.fill;
-      canvas.drawCircle(center, 6, dotPaint);
+      canvas.drawCircle(center, 6 * zoomLevel, dotPaint);
 
       // Inner shine
       final shinePaint = Paint()
         ..color = Colors.white.withOpacity(0.4 + glowIntensity * 0.3)
         ..style = PaintingStyle.fill;
-      canvas.drawCircle(Offset(x - 2, y - 2), 2.5, shinePaint);
+      canvas.drawCircle(Offset(x - 2, y - 2), 2.5 * zoomLevel, shinePaint);
     }
   }
 
   @override
   bool shouldRepaint(covariant _GlowScatterChartPainter oldDelegate) =>
-      oldDelegate.glowIntensity != glowIntensity;
+      oldDelegate.glowIntensity != glowIntensity || oldDelegate.zoomLevel != zoomLevel;
 }
 
 class _RiskGaugePainter extends CustomPainter {
@@ -364,7 +544,6 @@ class _RiskGaugePainter extends CustomPainter {
       ..strokeWidth = 6
       ..strokeCap = StrokeCap.round;
 
-    // Draw background arc (180 degrees)
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius - 4),
       math.pi,
@@ -373,12 +552,10 @@ class _RiskGaugePainter extends CustomPainter {
       bgPaint,
     );
 
-    // Calculate risk ratio
     double ratio = 0.25;
     if (riskLevel.toUpperCase() == 'MEDIUM') ratio = 0.6;
     if (riskLevel.toUpperCase() == 'HIGH') ratio = 0.9;
 
-    // Draw active arc
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius - 4),
       math.pi,
@@ -387,7 +564,6 @@ class _RiskGaugePainter extends CustomPainter {
       gaugePaint,
     );
 
-    // Draw pointer needle
     final needleAngle = math.pi + math.pi * ratio;
     final needlePaint = Paint()
       ..color = Colors.white

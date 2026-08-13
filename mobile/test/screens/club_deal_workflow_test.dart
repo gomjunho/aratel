@@ -69,12 +69,9 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify order modal fields
-      expect(find.text('클럽딜 공동 구매 신청'), findsOneWidget);
-      final pointsInput = find.byKey(const Key('points_input_field'));
-      expect(pointsInput, findsOneWidget);
-
-      await tester.enterText(pointsInput, '500000');
-      await tester.pumpAndSettle();
+      expect(find.text('VVIP 클럽딜 공동 구매'), findsOneWidget);
+      final slider = find.byKey(const Key('point_calculator_slider'));
+      expect(slider, findsOneWidget);
 
       // Submit order
       final confirmBtn = find.byKey(const Key('confirm_order_button'));
