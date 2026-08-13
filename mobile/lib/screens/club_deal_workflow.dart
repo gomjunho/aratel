@@ -226,6 +226,8 @@ class _ClubDealWorkflowWidgetState extends State<ClubDealWorkflowWidget> {
                   style: const TextStyle(color: Colors.grey, fontSize: 11),
                 ),
                 const SizedBox(height: 12),
+                _buildOrderStatusStepper(deal.status),
+                const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -240,6 +242,74 @@ class _ClubDealWorkflowWidgetState extends State<ClubDealWorkflowWidget> {
           ),
         );
       },
+    );
+  Widget _buildOrderStatusStepper(String status) {
+    int currentStep = 1;
+    if (status.contains('COMPLETED') || status.contains('배송완료')) {
+      currentStep = 4;
+    } else if (status.contains('SHIPPING') || status.contains('배송중')) {
+      currentStep = 3;
+    } else if (status.contains('ORDERED') || status.contains('주문완료')) {
+      currentStep = 2;
+    }
+
+    final steps = ['모집중', '주문완료', '배송중', '배송완료'];
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F1115),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: List.generate(steps.length, (idx) {
+          final stepNum = idx + 1;
+          final isPassed = stepNum <= currentStep;
+          final isCurrent = stepNum == currentStep;
+
+          return Row(
+            children: [
+              Column(
+                children: [
+                  CircleAvatar(
+                    radius: 10,
+                    backgroundColor: isCurrent
+                        ? const Color(0xFFD4AF37)
+                        : (isPassed ? const Color(0xFF4CAF50) : const Color(0xFF222630)),
+                    child: Text(
+                      '$stepNum',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: (isCurrent || isPassed) ? Colors.black : Colors.grey,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    steps[idx],
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                      color: isCurrent
+                          ? const Color(0xFFD4AF37)
+                          : (isPassed ? Colors.white70 : Colors.grey),
+                    ),
+                  ),
+                ],
+              ),
+              if (idx < steps.length - 1)
+                Container(
+                  width: 20,
+                  height: 2,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  color: isPassed ? const Color(0xFF4CAF50) : const Color(0xFF222630),
+                ),
+            ],
+          );
+        }),
+      ),
     );
   }
 }

@@ -18,6 +18,7 @@ class _AtelierScreenState extends State<AtelierScreen> {
   String? _flatMapUrl;
   List<FurnitureItem> _catalog = [];
   final List<FurnitureItem> _placedItems = [];
+  bool _is3dMode = true;
 
   @override
   void initState() {
@@ -164,7 +165,7 @@ class _AtelierScreenState extends State<AtelierScreen> {
 
     return Column(
       children: [
-        // 3D Canvas Mock Viewport
+        // 3D/2D Viewport Container with Camera Mode Switcher
         Container(
           height: 220,
           margin: const EdgeInsets.all(16),
@@ -175,18 +176,89 @@ class _AtelierScreenState extends State<AtelierScreen> {
             border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.view_in_ar_rounded, color: Color(0xFFD4AF37), size: 48),
-              const SizedBox(height: 8),
-              Text(
-                '3D 평면도 시뮬레이션 (${_flatMapUrl?.split('/').last ?? ''})',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              // Top Viewport Control Bar
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _is3dMode ? '🎥 3D Orbit View (Perspective)' : '📐 2D Top-Down (Orthographic)',
+                      style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    Row(
+                      children: [
+                        ChoiceChip(
+                          key: const Key('camera_mode_3d'),
+                          label: const Text('3D Orbit', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                          selected: _is3dMode,
+                          selectedColor: const Color(0xFFD4AF37),
+                          backgroundColor: const Color(0xFF1E222B),
+                          labelStyle: TextStyle(color: _is3dMode ? Colors.black : Colors.white),
+                          onSelected: (val) {
+                            if (val) setState(() => _is3dMode = true);
+                          },
+                        ),
+                        const SizedBox(width: 6),
+                        ChoiceChip(
+                          key: const Key('camera_mode_2d'),
+                          label: const Text('2D Top', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                          selected: !_is3dMode,
+                          selectedColor: const Color(0xFFD4AF37),
+                          backgroundColor: const Color(0xFF1E222B),
+                          labelStyle: TextStyle(color: !_is3dMode ? Colors.black : Colors.white),
+                          onSelected: (val) {
+                            if (val) setState(() => _is3dMode = false);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                '배치된 가구 (${_placedItems.length}개)',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
+              const Divider(color: Colors.white10, height: 1),
+              Expanded(
+                child: AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 300),
+                  crossFadeState: _is3dMode ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                  firstChild: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.view_in_ar_rounded, color: Color(0xFFD4AF37), size: 44),
+                        const SizedBox(height: 6),
+                        Text(
+                          '3D 평면도 시뮬레이션 (${_flatMapUrl?.split('/').last ?? ''})',
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '배치된 가구 (${_placedItems.length}개)',
+                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                  secondChild: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.grid_on_rounded, color: Color(0xFF38BDF8), size: 44),
+                        const SizedBox(height: 6),
+                        const Text(
+                          '2D 평면 도면 그리드',
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '탑다운 정사영 뷰 | 배치 가구 (${_placedItems.length}개)',
+                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
