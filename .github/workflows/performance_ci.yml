@@ -1,0 +1,49 @@
+name: ARATEL Mobile CI/CD & Performance Benchmark
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test_and_benchmark:
+    name: Flutter Analyze, Unit Tests & FPS Benchmark
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Install Dependencies
+        run: |
+          cd mobile
+          flutter pub get
+
+      - name: Run Static Analysis
+        run: |
+          cd mobile
+          flutter analyze
+
+      - name: Run Unit & Widget Tests with Coverage
+        run: |
+          cd mobile
+          flutter test --coverage
+
+      - name: Run Performance & FPS Benchmarks
+        run: |
+          cd mobile
+          flutter test test/benchmarks/performance_benchmark_test.dart
