@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_13_020002) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_13_020003) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -159,6 +159,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_020002) do
     t.integer "floor"
     t.integer "price", limit: 8
     t.string "deal_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "residential_complexes", force: :cascade do |t|
+    t.string "name"
+    t.string "primary_color"
+    t.string "secondary_color"
+    t.string "accent_color"
+    t.string "banner_title"
+    t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

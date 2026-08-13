@@ -1,15 +1,26 @@
+<% if @complex.present? %>
+  <style>
+    :root {
+      --complex-primary: <%= @complex.primary_color %>;
+      --complex-secondary: <%= @complex.secondary_color %>;
+      --complex-accent: <%= @complex.accent_color %>;
+    }
+  </style>
+<% end %>
+
 <div class="welcome-home-container" style="padding: 24px; max-width: 1000px; margin: 0 auto; font-family: sans-serif;">
   <% if user_signed_in? %>
-    <!-- Authenticated Resident View -->
-    <header style="margin-bottom: 32px; border-bottom: 2px solid #2563eb; padding-bottom: 16px; background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 24px; border-radius: 12px;">
+    <!-- Authenticated Resident View with Dynamic Complex Theme -->
+    <header style="margin-bottom: 32px; border-bottom: 3px solid <%= @complex&.accent_color || '#2563eb' %>; padding-bottom: 16px; background: linear-gradient(135deg, <%= @complex&.secondary_color || '#1e293b' %>, <%= @complex&.primary_color || '#0f172a' %>); color: #fff; padding: 28px; border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
         <div>
-          <span style="background: #2563eb; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase;">인증 입주민 전용</span>
-          <h1 style="font-size: 28px; font-weight: 700; margin: 8px 0 4px 0; color: #fff;">🏠 <%= @complex_name %> 디지털 웰컴 홈</h1>
-          <p style="color: #cbd5e1; font-size: 15px; margin: 0;">동호수: <strong><%= current_user.building_number %> <%= current_user.unit_number %></strong> | 멤버십: <strong style="color: #fbbf24;"><%= current_user.tier %></strong></p>
+          <span style="background: <%= @complex&.accent_color || '#2563eb' %>; color: #0f172a; font-size: 12px; font-weight: 800; padding: 5px 10px; border-radius: 6px; text-transform: uppercase;">🏢 <%= @complex_name %> 전용 브랜딩 테마</span>
+          <h1 style="font-size: 28px; font-weight: 700; margin: 10px 0 6px 0; color: #fff;"><%= @complex&.banner_title.presence || "🏠 #{@complex_name} 디지털 웰컴 홈" %></h1>
+          <p style="color: #e2e8f0; font-size: 15px; margin: 0;">동호수: <strong><%= current_user.building_number %> <%= current_user.unit_number %></strong> | 멤버십: <strong style="color: <%= @complex&.accent_color || '#fbbf24' %>;"><%= current_user.tier %></strong></p>
+          <p style="color: #cbd5e1; font-size: 13px; margin-top: 6px; font-style: italic;"><%= @complex&.description %></p>
         </div>
         <div>
-          <span style="background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px; font-size: 14px; border: 1px solid rgba(255,255,255,0.2);">✨ <%= current_user.complex_name %> 전용 테마 적용됨</span>
+          <span style="background: rgba(255,255,255,0.15); color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 14px; border: 1px solid rgba(255,255,255,0.3); font-weight: 600;">✨ 어드민 설정 테마 (<%= @complex&.primary_color %> / <%= @complex&.accent_color %>)</span>
         </div>
       </div>
     </header>
@@ -20,7 +31,7 @@
       <h1 style="font-size: 26px; color: #0f172a; font-weight: 700; margin-bottom: 8px;">ARATEL 하이엔드 입주민 전용 포털 (게스트 미인증 상태)</h1>
       <p style="color: #64748b; font-size: 15px; max-width: 680px; margin: 0 auto 20px auto; line-height: 1.6;">
         현재 특정 입주 단지가 선택되지 않은 <strong>제한적 게스트 화면</strong>입니다.<br>
-        소속 입주 단지(디에이치 방배, 한남 더힐 등)로 인증 로그인하시면 <strong>실시간 스마트홈 제어, 조경 오디오 도슨트, 커뮤니티 예약</strong> 등 단지 맞춤형 혜택이 개방됩니다.
+        소속 입주 단지(디에이치 방배, 한남 더힐 등)로 인증 로그인하시면 <strong>단지별 어드민 커스텀 테마 색상, 실시간 스마트홈 제어, 조경 오디오 도슨트, 커뮤니티 예약</strong> 등 단지 맞춤형 혜택이 개방됩니다.
       </p>
       <div style="display: inline-flex; gap: 12px; justify-content: center;">
         <%= button_to "🔑 데모로그인 (디에이치 방배)", demo_login_path(preset: "gold"), method: :post, style: "padding: 12px 24px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;" %>
@@ -106,7 +117,7 @@
     <%= form_with url: agent_dialogue_home_path, method: :post, local: true do |f| %>
       <div style="display: flex; gap: 8px;">
         <%= f.text_field :message, placeholder: user_signed_in? ? "예: 라운지 조식 2명 예약해줘" : "로그인 후 AI 음성/자연어 제어를 이용하실 수 있습니다", disabled: !user_signed_in?, style: "flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" %>
-        <%= f.submit "전송", disabled: !user_signed_in?, style: "padding: 10px 20px; background: #{user_signed_in? ? '#3182ce' : '#cbd5e1'}; color: #fff; border: none; border-radius: 6px; cursor: #{user_signed_in? ? 'pointer' : 'not-allowed'}; font-weight: 600;" %>
+        <%= f.submit "전송", disabled: !user_signed_in?, style: "padding: 10px 20px; background: #{user_signed_in? ? (@complex&.primary_color || '#3182ce') : '#cbd5e1'}; color: #fff; border: none; border-radius: 6px; cursor: #{user_signed_in? ? 'pointer' : 'not-allowed'}; font-weight: 600;" %>
       </div>
     <% end %>
   </section>

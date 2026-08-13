@@ -3,6 +3,15 @@ class HomesController < ApplicationController
 
   def show
     @complex_name = current_user.complex_name.presence || "디에이치 방배"
+    @complex = ResidentialComplex.find_by(name: @complex_name) || ResidentialComplex.create!(
+      name: @complex_name,
+      primary_color: "#2563eb",
+      secondary_color: "#1e293b",
+      accent_color: "#d4af37",
+      banner_title: "#{@complex_name} 하이엔드 갤러리 웰컴 홈",
+      description: "입주민을 위한 프라이빗 아뜰리에 및 스마트 웰컴 서비스"
+    )
+
     @art_docents = ArtDocent.all
     if @art_docents.empty?
       @art_docents = [

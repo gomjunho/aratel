@@ -127,4 +127,18 @@ class ActiveAdminTest < ActionDispatch::IntegrationTest
     get admin_concierge_reservations_path
     assert_response :success
   end
+
+  test "should get active_admin residential_complexes index and edit" do
+    complex = ResidentialComplex.find_or_create_by!(name: "디에이치 방배") do |c|
+      c.primary_color = "#2563eb"
+      c.secondary_color = "#1e293b"
+      c.accent_color = "#d4af37"
+    end
+    get admin_residential_complexes_path
+    assert_response :success
+    assert_select "td", text: "디에이치 방배"
+
+    get edit_admin_residential_complex_path(complex)
+    assert_response :success
+  end
 end
