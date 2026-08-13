@@ -42,6 +42,14 @@ class CommunityPostsControllerTest < ActionDispatch::IntegrationTest
     )
   end
 
+  test "should get index for all board aggregate feed" do
+    get community_posts_path(board_type: "ALL")
+    assert_response :success
+    assert_select "span", text: /📋 전체 모아보기/
+    assert_select "h3", text: "전체 공동 안건"
+    assert_select "h3", text: "방배 기명 안건"
+  end
+
   test "should get index for global board" do
     get community_posts_path(board_type: "GLOBAL")
     assert_response :success
@@ -63,32 +71,25 @@ class CommunityPostsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h3", text: "방배 익명 제안"
   end
 
-  test "should get index for custom board_type" do
-    get community_posts_path(board_type: "ALL")
-    assert_response :success
-    assert_select "h3", text: "전체 공동 안건"
-  end
-
   test "should get new post view" do
     get new_community_post_path(board_type: "GLOBAL")
     assert_response :success
     assert_select "h1", text: /커뮤니티 게시글 작성/
   end
 
-  test "should create global post" do
+  test "should create global post using user name as nickname" do
     assert_difference("CommunityPost.count", 1) do
       post community_posts_path, params: {
         community_post: {
           board_type: "GLOBAL",
           title: "전체 주차장 규칙 공유",
-          content: "공동 에티켓 공유합니다.",
-          nickname: "푸른하늘"
+          content: "공동 에티켓 공유합니다."
         }
       }
     end
     assert_redirected_to community_posts_path(board_type: "GLOBAL")
     follow_redirect!
-    assert_select "div", text: /디에이치 방배 - 푸른하늘/
+    assert_select "div", text: /디에이치 방배 - 홍길동/
   end
 
   test "should create complex anonymous post" do
@@ -97,8 +98,7 @@ class CommunityPostsControllerTest < ActionDispatch::IntegrationTest
         community_post: {
           board_type: "COMPLEX_ANONYMOUS",
           title: "익명 커뮤니티 건의",
-          content: "익명 건의드립니다.",
-          nickname: "홍길동"
+          content: "익명 건의드립니다."
         }
       }
     end

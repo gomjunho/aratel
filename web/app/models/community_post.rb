@@ -17,6 +17,19 @@ class CommunityPost < ApplicationRecord
     end
   end
 
+  def board_type_emoji_badge
+    case board_type
+    when "GLOBAL"
+      "🌐 [전체공동]"
+    when "COMPLEX_NAMED"
+      "🏢 [단지기명]"
+    when "COMPLEX_ANONYMOUS"
+      "🔒 [단지익명]"
+    else
+      "📋 [기타]"
+    end
+  end
+
   def self.ransackable_attributes(auth_object = nil)
     ["id", "board_type", "complex_name", "building_number", "nickname", "is_anonymous", "title", "content", "user_id", "created_at", "updated_at"]
   end

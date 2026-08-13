@@ -12,6 +12,7 @@ class CommunityPostTest < ActiveSupport::TestCase
     )
     assert post.valid?
     assert_equal "디에이치 방배 - 푸른하늘", post.author_display_name
+    assert_equal "🌐 [전체공동]", post.board_type_emoji_badge
   end
 
   test "global board author display with default nil values" do
@@ -30,6 +31,7 @@ class CommunityPostTest < ActiveSupport::TestCase
     )
     assert post.valid?
     assert_equal "101동 - 푸른하늘", post.author_display_name
+    assert_equal "🏢 [단지기명]", post.board_type_emoji_badge
   end
 
   test "complex named board author display with default nil values" do
@@ -49,11 +51,13 @@ class CommunityPostTest < ActiveSupport::TestCase
     )
     assert post.valid?
     assert_equal "익명 (AI Clean Signal)", post.author_display_name
+    assert_equal "🔒 [단지익명]", post.board_type_emoji_badge
   end
 
-  test "fallback author display name for unknown board_type" do
+  test "fallback author display name and emoji badge for unknown board_type" do
     post = CommunityPost.new(board_type: "OTHER", nickname: "테스터")
     assert_equal "테스터", post.author_display_name
+    assert_equal "📋 [기타]", post.board_type_emoji_badge
 
     post_empty = CommunityPost.new(board_type: "OTHER")
     assert_equal "입주민", post_empty.author_display_name
