@@ -5,13 +5,23 @@ class User < ApplicationRecord
   serialize :badges_list, coder: JSON
 
   after_initialize :set_defaults, if: :new_record?
+  before_validation :generate_user_id
 
   def self.ransackable_attributes(auth_object = nil)
-    ["badge", "badges_list", "birth_date", "building_number", "complex_name", "created_at", "id", "name", "ownership_percentage", "phone_number", "privacy_masked", "screen_capture_prevented", "tier", "unit_number", "updated_at", "verification_token", "verified_identity_at"]
+    ["badge", "badges_list", "birth_date", "building_number", "complex_name", "created_at", "id", "name", "ownership_percentage", "phone_number", "privacy_masked", "screen_capture_prevented", "tier", "unit_number", "updated_at", "user_id", "verification_token", "verified_identity_at"]
   end
 
   def self.ransackable_associations(auth_object = nil)
     ["tier_evidences", "delegated_access_requests"]
+  end
+
+  def user_id
+    (self[:user_id] if has_attribute?(:user_id)).presence || @user_id || generate_user_id
+  end
+
+  def user_id=(val)
+    self[:user_id] = val if respond_to?(:write_attribute) && has_attribute?(:user_id)
+    @user_id = val
   end
 
   def badge
@@ -19,6 +29,7 @@ class User < ApplicationRecord
   end
 
   def set_defaults
+    generate_user_id
     self.tier ||= "BRONZE"
     self.badge ||= "UNVERIFIED"
     self.screen_capture_prevented = true if screen_capture_prevented.nil?
@@ -79,5 +90,16 @@ class User < ApplicationRecord
       screen_capture_prevented: screen_capture_prevented,
       privacy_masked: privacy_masked
     }
+  end
+
+  private
+
+  def generate_user_id
+    val = (self[:user_id] if has_attribute?(:user_id)).presence || @user_id
+    if val.blank?
+      val = "usr_#{SecureRandom.hex(6)}"
+      self.user_id = val
+    end
+    val
   end
 end

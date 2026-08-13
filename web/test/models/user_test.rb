@@ -7,6 +7,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal true, user.screen_capture_prevented
     assert_equal true, user.privacy_masked
     assert_includes user.badges, "BRONZE_METALLIC"
+    assert user.user_id.start_with?("usr_")
   end
 
   test "verifies identity and generates verification token" do
@@ -41,5 +42,16 @@ class UserTest < ActiveSupport::TestCase
     profile = user.security_profile
     assert_equal true, profile[:screen_capture_prevented]
     assert_equal true, profile[:privacy_masked]
+  end
+
+  test "user_id auto-generation and custom user_id assignment" do
+    custom_user = User.create!(name: "이순신", user_id: "usr_custom_999")
+    assert_equal "usr_custom_999", custom_user.user_id
+
+    blank_user = User.new(name: "강감찬")
+    assert blank_user.user_id.start_with?("usr_")
+
+    blank_user.user_id = "usr_override_123"
+    assert_equal "usr_override_123", blank_user.user_id
   end
 end
