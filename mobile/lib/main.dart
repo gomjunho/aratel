@@ -17,8 +17,16 @@ class DevHttpOverrides extends HttpOverrides {
 void main() {
   // Allow self-signed or development SSL certificates in Flutter HttpClient
   HttpOverrides.global = DevHttpOverrides();
+  
+  // Initialize Sentry SDK & APM Telemetry for Flutter runtime error tracking
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    debugPrint('[Sentry APM Telemetry] Captured Exception: ${details.exception}');
+  };
+
   runApp(const AratelApp());
 }
+
 
 class AratelApp extends StatelessWidget {
   const AratelApp({super.key});
