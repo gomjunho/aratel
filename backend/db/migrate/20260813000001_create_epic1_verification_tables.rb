@@ -2,6 +2,8 @@ class CreateEpic1VerificationTables < ActiveRecord::Migration[8.0]
   def change
     create_table :users do |t|
       t.string :user_id, null: false, index: { unique: true }
+      t.string :email
+      t.string :password_digest
       t.string :name
       t.string :phone_number
       t.string :birth_date

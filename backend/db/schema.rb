@@ -139,6 +139,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_13_030000) do
 
   create_table "users", force: :cascade do |t|
     t.string "user_id", null: false
+    t.string "email"
+    t.string "password_digest"
     t.string "name"
     t.string "phone_number"
     t.string "birth_date"

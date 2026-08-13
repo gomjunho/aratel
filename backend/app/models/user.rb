@@ -1,6 +1,8 @@
 require "json"
 
 class User < ApplicationRecord
+  has_secure_password validations: false
+
   validates :user_id, presence: true, uniqueness: true
   validates :tier, presence: true
 

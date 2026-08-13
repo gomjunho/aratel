@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       namespace :auth do
+        post "register", to: "sessions#register"
+        post "login", to: "sessions#login"
+        get "me", to: "sessions#me"
         post "identity_verify", to: "identity_verifications#create"
       end
 

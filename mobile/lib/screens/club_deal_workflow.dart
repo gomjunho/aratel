@@ -243,6 +243,8 @@ class _ClubDealWorkflowWidgetState extends State<ClubDealWorkflowWidget> {
         );
       },
     );
+  }
+
   Widget _buildOrderStatusStepper(String status) {
     int currentStep = 1;
     if (status.contains('COMPLETED') || status.contains('배송완료')) {
