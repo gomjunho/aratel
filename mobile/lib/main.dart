@@ -6,6 +6,7 @@ import 'screens/insights_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/ai_agent_dialogue_overlay.dart';
 import 'models/user_tier.dart';
+import 'models/screen_context.dart';
 
 class DevHttpOverrides extends HttpOverrides {
   @override
@@ -72,14 +73,32 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ProfileScreen(),
   ];
 
+  /// Maps the current tab index to a [ScreenContext] for AI context-awareness.
+  static const _screenNames = [
+    '웰콤 홈',
+    '커뮤니티 라운지',
+    'VVIP 큐레이션',
+    '자산증식 인사이트',
+    '내 정보',
+  ];
+
+  ScreenContext _currentScreenContext() {
+    return ScreenContext(
+      tabIndex: _currentIndex,
+      screenName: _screenNames[_currentIndex],
+    );
+  }
+
   void _openAiAgentOverlay() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => const FractionallySizedBox(
+      builder: (ctx) => FractionallySizedBox(
         heightFactor: 0.75,
-        child: AiAgentDialogueOverlay(),
+        child: AiAgentDialogueOverlay(
+          screenContext: _currentScreenContext(),
+        ),
       ),
     );
   }
@@ -91,15 +110,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         index: _currentIndex,
         children: _screens,
       ),
-      floatingActionButton: _currentIndex == 0
-          ? FloatingActionButton.extended(
-              key: const Key('ai_agent_fab'),
-              backgroundColor: const Color(0xFFD4AF37),
-              onPressed: _openAiAgentOverlay,
-              icon: const Icon(Icons.smart_toy_outlined, color: Colors.black),
-              label: const Text('AI 에이전트', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-            )
-          : null,
+      floatingActionButton: FloatingActionButton.extended(
+        key: const Key('ai_agent_fab'),
+        backgroundColor: const Color(0xFFD4AF37),
+        onPressed: _openAiAgentOverlay,
+        icon: const Icon(Icons.smart_toy_outlined, color: Colors.black),
+        label: const Text('AI 에이전트', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),

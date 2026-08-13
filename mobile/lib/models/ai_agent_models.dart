@@ -1,3 +1,5 @@
+import 'screen_context.dart';
+
 class ReservationDetails {
   final String facility;
   final int partySize;
@@ -27,7 +29,11 @@ class ReservationDetails {
 class AiAgentRequest {
   final String message;
 
-  const AiAgentRequest({required this.message});
+  /// Optional screen context passed to the backend AI so it can give
+  /// contextually-aware responses and proactive 1-tap recommendations.
+  final ScreenContext? screenContext;
+
+  const AiAgentRequest({required this.message, this.screenContext});
 
   factory AiAgentRequest.fromJson(Map<String, dynamic> json) {
     return AiAgentRequest(
@@ -37,6 +43,7 @@ class AiAgentRequest {
 
   Map<String, dynamic> toJson() => {
         'message': message,
+        if (screenContext != null) 'screen_context': screenContext!.toJson(),
       };
 }
 
