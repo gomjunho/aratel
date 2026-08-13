@@ -18,6 +18,7 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
   bool _isLoading = true;
   String? _errorMessage;
   InsightsResponse? _data;
+  RangeValues _floorRange = const RangeValues(1, 35);
 
   @override
   void initState() {
@@ -167,20 +168,67 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
                   ],
                 ),
                 const SizedBox(height: 12),
-                Text('입주 예정 물량: ${data.supplyGasIndex.upcomingSupplyUnits}세대', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 15, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 6),
-                Text(data.supplyGasIndex.analysisSummary, style: TextStyle(color: Colors.grey[300], fontSize: 13)),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('입주 예정 물량: ${data.supplyGasIndex.upcomingSupplyUnits}세대', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 15, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 6),
+                          Text(data.supplyGasIndex.analysisSummary, style: TextStyle(color: Colors.grey[300], fontSize: 13)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Animated Risk Gauge Meter Visualizer
+                    SizedBox(
+                      width: 70,
+                      height: 50,
+                      child: CustomPaint(
+                        painter: _RiskGaugePainter(
+                          riskLevel: data.supplyGasIndex.riskLevel,
+                          color: _getRiskColor(data.supplyGasIndex.riskLevel),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
           const SizedBox(height: 20),
 
           // Asil Scatter Chart Container
-          const Text('아실 층수별 실거래가 산점도', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('아실 층수별 실거래가 산점도', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+              Text('층수 필터: ${_floorRange.start.round()}층 ~ ${_floorRange.end.round()}층', style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 12)),
+            ],
+          ),
+          RangeSlider(
+            key: const Key('floor_range_slider'),
+            values: _floorRange,
+            min: 1,
+            max: 35,
+            divisions: 34,
+            activeColor: const Color(0xFFD4AF37),
+            inactiveColor: const Color(0xFF222630),
+            onChanged: (RangeValues newValues) {
+              setState(() {
+                _floorRange = newValues;
+              });
+            },
+          ),
+          const SizedBox(height: 4),
           AnimatedBuilder(
             animation: _glowController,
             builder: (context, child) {
+              final filteredTx = data.transactions.where((t) {
+                return t.floor >= _floorRange.start && t.floor <= _floorRange.end;
+              }).toList();
+
               return Container(
                 height: 180,
                 width: double.infinity,
@@ -191,7 +239,7 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
                 ),
                 child: CustomPaint(
                   painter: _GlowScatterChartPainter(
-                    transactions: data.transactions,
+                    transactions: filteredTx,
                     glowIntensity: _glowController.value,
                   ),
                 ),
@@ -291,4 +339,71 @@ class _GlowScatterChartPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _GlowScatterChartPainter oldDelegate) =>
       oldDelegate.glowIntensity != glowIntensity;
+}
+
+class _RiskGaugePainter extends CustomPainter {
+  final String riskLevel;
+  final Color color;
+
+  _RiskGaugePainter({required this.riskLevel, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height * 0.85);
+    final radius = math.min(size.width / 2, size.height);
+
+    final bgPaint = Paint()
+      ..color = const Color(0xFF222630)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 6
+      ..strokeCap = StrokeCap.round;
+
+    final gaugePaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 6
+      ..strokeCap = StrokeCap.round;
+
+    // Draw background arc (180 degrees)
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius - 4),
+      math.pi,
+      math.pi,
+      false,
+      bgPaint,
+    );
+
+    // Calculate risk ratio
+    double ratio = 0.25;
+    if (riskLevel.toUpperCase() == 'MEDIUM') ratio = 0.6;
+    if (riskLevel.toUpperCase() == 'HIGH') ratio = 0.9;
+
+    // Draw active arc
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius - 4),
+      math.pi,
+      math.pi * ratio,
+      false,
+      gaugePaint,
+    );
+
+    // Draw pointer needle
+    final needleAngle = math.pi + math.pi * ratio;
+    final needlePaint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 2;
+    canvas.drawLine(
+      center,
+      Offset(
+        center.dx + (radius - 10) * math.cos(needleAngle),
+        center.dy + (radius - 10) * math.sin(needleAngle),
+      ),
+      needlePaint,
+    );
+    canvas.drawCircle(center, 3, Paint()..color = Colors.white);
+  }
+
+  @override
+  bool shouldRepaint(covariant _RiskGaugePainter oldDelegate) =>
+      oldDelegate.riskLevel != riskLevel || oldDelegate.color != color;
 }
