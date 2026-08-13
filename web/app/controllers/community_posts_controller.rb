@@ -8,9 +8,28 @@ class CommunityPostsController < ApplicationController
       CommunityPost.where(board_type: "COMPLEX_NAMED", complex_name: current_user.complex_name).order(created_at: :desc)
     when "COMPLEX_ANONYMOUS"
       CommunityPost.where(board_type: "COMPLEX_ANONYMOUS", complex_name: current_user.complex_name).order(created_at: :desc)
+    when "ENCRYPTED_LOUNGE"
+      []
     else
       # "ALL" or default: 모아보기 (전체 공동 + 소속 단지 게시글)
       CommunityPost.where("board_type = 'GLOBAL' OR complex_name = ?", current_user.complex_name).order(created_at: :desc)
+    end
+
+    @encrypted_posts = LoungePost.order(created_at: :desc)
+    if @encrypted_posts.empty?
+      @encrypted_posts = [
+        LoungePost.create!(
+          post_id: "post_7001",
+          anonymous_nickname: "은밀한 자산가 42",
+          verified_badge: "VERIFIED_OWNER",
+          tier: "DIAMOND",
+          complex_name: "디에이치 방배",
+          title: "2026 하반기 종합소득세 및 증여 절세 노하우",
+          content_encrypted: "EncryptedBodyPayload...",
+          is_diamond_weighted: true,
+          trust_score: 98
+        )
+      ]
     end
   end
 

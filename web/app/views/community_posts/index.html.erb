@@ -1,72 +1,116 @@
-<div class="community-board-container" style="max-width: 1000px; margin: 0 auto; padding: 24px; font-family: sans-serif;">
+<div class="community-board-container" style="max-width: 1040px; margin: 0 auto; padding: 24px; font-family: 'Noto Sans KR', sans-serif;">
+  <!-- Header -->
   <header style="margin-bottom: 24px; border-bottom: 2px solid var(--complex-primary, #2563eb); padding-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
     <div>
-      <h1 style="font-size: 26px; color: #fff; font-weight: 700;">💬 입주민 커뮤니티 게시판</h1>
-      <p style="color: #94a3b8; font-size: 14px; margin-top: 4px;">전체 단지 회원 공동 게시판 및 <%= current_user.complex_name %> 입주민 전용 게시판</p>
+      <h1 style="font-size: 26px; color: #fff; font-weight: 700;">💬 커뮤니티 & 익명 라운지 Hub</h1>
+      <p style="color: #94a3b8; font-size: 14px; margin-top: 4px;">전체 단지 회원 공동 소통, 단지별 기명/익명 게시판 및 암호화 VVIP 라운지 통합 공간</p>
     </div>
-    <%= link_to "✏️ 새 글 작성", new_community_post_path(board_type: @board_type), style: "padding: 10px 20px; background: var(--complex-primary, #2563eb); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 700;" %>
+    <div style="display: flex; gap: 10px;">
+      <%= link_to "🔒 암호화 라운지 작성", new_lounge_post_path, style: "padding: 10px 16px; background: #0f172a; color: #fbbf24; border: 1px solid #fbbf24; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;" %>
+      <%= link_to "✏️ 일반 커뮤니티 작성", new_community_post_path(board_type: @board_type), style: "padding: 10px 18px; background: var(--complex-primary, #2563eb); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 14px;" %>
+    </div>
   </header>
 
-  <!-- Board Type Tabs -->
-  <div style="display: flex; gap: 10px; margin-bottom: 24px; border-bottom: 1px solid #334155; padding-bottom: 12px; flex-wrap: wrap;">
+  <!-- Board Type Sub-Tabs -->
+  <div style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid #334155; padding-bottom: 12px; flex-wrap: wrap;">
     <%= link_to community_posts_path(board_type: "ALL"), style: "padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@board_type == 'ALL' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@board_type == 'ALL' ? '#fff' : '#94a3b8'};" do %>
       📋 전체 모아보기
     <% end %>
 
     <%= link_to community_posts_path(board_type: "GLOBAL"), style: "padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@board_type == 'GLOBAL' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@board_type == 'GLOBAL' ? '#fff' : '#94a3b8'};" do %>
-      🌐 전체 공동 게시판 <span style="font-size: 12px; opacity: 0.8;">([단지명] [닉네임])</span>
+      🌐 전체 공동 게시판
     <% end %>
 
     <%= link_to community_posts_path(board_type: "COMPLEX_NAMED"), style: "padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@board_type == 'COMPLEX_NAMED' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@board_type == 'COMPLEX_NAMED' ? '#fff' : '#94a3b8'};" do %>
-      🏢 <%= current_user.complex_name %> 기명 게시판 <span style="font-size: 12px; opacity: 0.8;">([동] [닉네임])</span>
+      🏢 <%= current_user.complex_name %> 기명
     <% end %>
 
     <%= link_to community_posts_path(board_type: "COMPLEX_ANONYMOUS"), style: "padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@board_type == 'COMPLEX_ANONYMOUS' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@board_type == 'COMPLEX_ANONYMOUS' ? '#fff' : '#94a3b8'};" do %>
-      🔒 <%= current_user.complex_name %> 완전 익명 게시판 <span style="font-size: 12px; opacity: 0.8;">(익명 100%)</span>
+      🔒 <%= current_user.complex_name %> 익명
+    <% end %>
+
+    <%= link_to community_posts_path(board_type: "ENCRYPTED_LOUNGE"), style: "padding: 10px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@board_type == 'ENCRYPTED_LOUNGE' ? '#0f172a' : '#1e293b'}; color: #{@board_type == 'ENCRYPTED_LOUNGE' ? '#fbbf24' : '#94a3b8'}; border: #{@board_type == 'ENCRYPTED_LOUNGE' ? '1px solid #fbbf24' : 'none'};" do %>
+      🔐 암호화 VVIP 라운지
     <% end %>
   </div>
 
-  <!-- Board Description Banner -->
-  <div style="background: #0f172a; border: 1px solid #334155; padding: 16px 20px; border-radius: 10px; margin-bottom: 20px;">
+  <!-- Banner -->
+  <div style="background: #0f172a; border: 1px solid #334155; padding: 16px 20px; border-radius: 10px; margin-bottom: 24px;">
     <% if @board_type == "ALL" %>
-      <span style="color: #a855f7; font-weight: 700;">📋 전체 모아보기 피드</span>
-      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">모든 게시판의 최신 글을 이모지 프리픽스(🌐/🏢/🔒)와 함께 통합 피드로 모아봅니다.</p>
+      <span style="color: #a855f7; font-weight: 700;">📋 전체 커뮤니티 & 암호화 라운지 통합 모아보기</span>
+      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">전체 공동, 단지별 기명/익명 피드와 영지식 암호화 VVIP 라운지 게시글을 모아서 시청합니다.</p>
+    <% elsif @board_type == "ENCRYPTED_LOUNGE" %>
+      <span style="color: #fbbf24; font-weight: 700;">🔐 영지식 암호화 VVIP 라운지 (Zero-Knowledge Encrypted)</span>
+      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">자산 가중치와 AI Clean Signal 검증을 받은 영지식 암호화 비밀 라운지 피드입니다.</p>
     <% elsif @board_type == "GLOBAL" %>
-      <span style="color: #fbbf24; font-weight: 700;">🌐 전체 공동 게시판 가이드</span>
-      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">타 아파트 단지 입주민들과 소통하는 공간입니다. 작성자명은 <strong>[단지명 - 닉네임]</strong> 형태로 자동 표기됩니다.</p>
+      <span style="color: #fbbf24; font-weight: 700;">🌐 전체 공동 게시판</span>
+      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">타 아파트 단지 입주민들과 소통하는 오픈 공간입니다. [단지명 - 닉네임] 표기.</p>
     <% elsif @board_type == "COMPLEX_NAMED" %>
-      <span style="color: #38bdf8; font-weight: 700;">🏢 <%= current_user.complex_name %> 입주민 기명 게시판</span>
-      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">호수는 숨겨지고 <strong>[<%= current_user.building_number %> - 닉네임]</strong> 형태로 표기됩니다.</p>
+      <span style="color: #38bdf8; font-weight: 700;">🏢 <%= current_user.complex_name %> 기명 게시판</span>
+      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">동과 닉네임만 표시되어 사생활을 보호합니다.</p>
     <% else %>
-      <span style="color: #f43f5e; font-weight: 700;">🔒 <%= current_user.complex_name %> 입주민 완전 익명 게시판</span>
-      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">100% 익명 처리되며 AI 클린 시그널 검증 마크가 부여됩니다.</p>
+      <span style="color: #f43f5e; font-weight: 700;">🔒 <%= current_user.complex_name %> 100% 익명 게시판</span>
+      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">100% 익명 처리 및 AI 클린 시그널 검증 적용.</p>
     <% end %>
   </div>
 
-  <!-- Posts List -->
-  <div class="posts-list" style="display: flex; flex-direction: column; gap: 16px;">
-    <% if @posts.empty? %>
-      <div style="text-align: center; padding: 40px; background: #0f172a; border-radius: 12px; color: #64748b;">
-        등록된 게시글이 없습니다. 첫 번째 이야기를 남겨보세요!
-      </div>
-    <% else %>
-      <% @posts.each do |post| %>
-        <div style="background: #0f172a; border: 1px solid #1e293b; padding: 20px; border-radius: 12px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <span style="background: #334155; color: #f8fafc; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 6px;">
-                <%= post.board_type_emoji_badge %>
-              </span>
-              <span style="background: #1e293b; color: var(--complex-accent, #fbbf24); font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
-                👤 <%= post.author_display_name %>
-              </span>
+  <!-- Zero-Knowledge Encrypted Lounge Feed Section -->
+  <% if @board_type == "ALL" || @board_type == "ENCRYPTED_LOUNGE" %>
+    <div style="margin-bottom: 32px;">
+      <h3 style="color: #fbbf24; font-size: 18px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+        🔐 <span>영지식 암호화 VVIP 라운지 피드</span>
+        <span style="font-size: 12px; background: #0f172a; color: #fbbf24; border: 1px solid #fbbf24; padding: 2px 8px; border-radius: 12px; font-weight: 400;">Diamond-Weighted</span>
+      </h3>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <% (@encrypted_posts || []).each do |lounge| %>
+          <div style="background: #0f172a; border: 1px solid rgba(251, 191, 36, 0.4); padding: 20px; border-radius: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="background: #fbbf24; color: #000; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 4px;">ENCRYPTED</span>
+                <span style="color: #fff; font-size: 14px; font-weight: 700;">👤 <%= lounge.anonymous_nickname %></span>
+                <span style="background: #1e293b; color: #38bdf8; font-size: 12px; padding: 2px 8px; border-radius: 10px;">💎 <%= lounge.tier %> (<%= lounge.complex_name %>)</span>
+              </div>
+              <span style="color: #86efac; font-size: 12px; font-weight: 700;">✨ Trust Score: <%= lounge.trust_score %> P (Clean Signal)</span>
             </div>
-            <span style="color: #64748b; font-size: 13px;"><%= post.created_at.strftime("%Y-%m-%d %H:%M") %></span>
+            <h4 style="font-size: 17px; color: #fff; font-weight: 700; margin-bottom: 6px;"><%= lounge.title %></h4>
+            <p style="color: #cbd5e1; font-size: 14px; background: #020617; padding: 12px; border-radius: 8px; font-family: monospace;">
+              🔒 <%= lounge.content_encrypted %>
+            </p>
           </div>
-          <h3 style="font-size: 18px; color: #fff; font-weight: 700; margin-bottom: 8px;"><%= post.title %></h3>
-          <p style="color: #cbd5e1; font-size: 15px; line-height: 1.6;"><%= post.content %></p>
-        </div>
-      <% end %>
-    <% end %>
-  </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Standard Community Posts Section -->
+  <% unless @board_type == "ENCRYPTED_LOUNGE" %>
+    <div>
+      <h3 style="color: #fff; font-size: 18px; font-weight: 700; margin-bottom: 14px;">💬 일반 커뮤니티 게시글 피드</h3>
+      <div class="posts-list" style="display: flex; flex-direction: column; gap: 16px;">
+        <% if @posts.empty? %>
+          <div style="text-align: center; padding: 36px; background: #0f172a; border-radius: 12px; color: #64748b;">
+            등록된 커뮤니티 게시글이 없습니다. 첫 이야기를 남겨보세요!
+          </div>
+        <% else %>
+          <% @posts.each do |post| %>
+            <div style="background: #0f172a; border: 1px solid #1e293b; padding: 20px; border-radius: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="background: #334155; color: #f8fafc; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 6px;">
+                    <%= post.board_type_emoji_badge %>
+                  </span>
+                  <span style="background: #1e293b; color: var(--complex-accent, #fbbf24); font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
+                    👤 <%= post.author_display_name %>
+                  </span>
+                </div>
+                <span style="color: #64748b; font-size: 13px;"><%= post.created_at.strftime("%Y-%m-%d %H:%M") %></span>
+              </div>
+              <h3 style="font-size: 18px; color: #fff; font-weight: 700; margin-bottom: 8px;"><%= post.title %></h3>
+              <p style="color: #cbd5e1; font-size: 15px; line-height: 1.6;"><%= post.content %></p>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 </div>

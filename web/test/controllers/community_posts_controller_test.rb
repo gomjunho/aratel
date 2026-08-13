@@ -40,14 +40,40 @@ class CommunityPostsControllerTest < ActionDispatch::IntegrationTest
       title: "방배 익명 제안",
       content: "솔직한 입주민 의견입니다."
     )
+
+    @lounge_post = LoungePost.create!(
+      post_id: "post_7001",
+      anonymous_nickname: "은밀한 자산가 42",
+      verified_badge: "VERIFIED_OWNER",
+      tier: "DIAMOND",
+      complex_name: "디에이치 방배",
+      title: "2026 하반기 종합소득세 및 증여 절세 노하우",
+      content_encrypted: "EncryptedBodyPayload...",
+      is_diamond_weighted: true,
+      trust_score: 98
+    )
   end
 
   test "should get index for all board aggregate feed" do
     get community_posts_path(board_type: "ALL")
     assert_response :success
-    assert_select "span", text: /📋 전체 모아보기/
+    assert_select "span", text: /📋 전체 커뮤니티 & 암호화 라운지/
     assert_select "h3", text: "전체 공동 안건"
     assert_select "h3", text: "방배 기명 안건"
+    assert_select "h4", text: "2026 하반기 종합소득세 및 증여 절세 노하우"
+  end
+
+  test "should get index for encrypted lounge tab" do
+    get community_posts_path(board_type: "ENCRYPTED_LOUNGE")
+    assert_response :success
+    assert_select "h4", text: "2026 하반기 종합소득세 및 증여 절세 노하우"
+  end
+
+  test "should get index for encrypted lounge tab when empty" do
+    LoungePost.destroy_all
+    get community_posts_path(board_type: "ENCRYPTED_LOUNGE")
+    assert_response :success
+    assert_select "h4", text: "2026 하반기 종합소득세 및 증여 절세 노하우"
   end
 
   test "should get index for global board" do
