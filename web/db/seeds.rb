@@ -35,3 +35,30 @@ User.find_or_create_by!(name: "이서진") do |u|
   u.unit_number = "801호"
   u.badges_list = ["VERIFIED_OWNER", "RESIDENT", "DIAMOND_BLACK"]
 end
+
+CommunityPost.find_or_create_by!(title: "[공동] 2026 하이엔드 단지 커뮤니티 연합회 제안") do |p|
+  p.board_type = "GLOBAL"
+  p.complex_name = "한남 더힐"
+  p.building_number = "102동"
+  p.nickname = "갤러리스트"
+  p.is_anonymous = false
+  p.content = "하이엔드 아파트 단지 간 문화 예술 교류전 개최를 제안합니다."
+end
+
+CommunityPost.find_or_create_by!(title: "[방배] 101동 엘리베이터 점검 안내 건") do |p|
+  p.board_type = "COMPLEX_NAMED"
+  p.complex_name = "디에이치 방배"
+  p.building_number = "101동"
+  p.nickname = "입주민대표"
+  p.is_anonymous = false
+  p.content = "금주 금요일 14시부터 정기 점검이 진행될 예정입니다."
+end
+
+CommunityPost.find_or_create_by!(title: "[방배] 단지 내 조경 분수대 가동 시간에 대한 건의") do |p|
+  p.board_type = "COMPLEX_ANONYMOUS"
+  p.complex_name = "디에이치 방배"
+  p.building_number = "101동"
+  p.nickname = "은밀한주민"
+  p.is_anonymous = true
+  p.content = "주말 저녁 시간대 조경 분수대 조명 가동 시간을 1시간 연장했으면 좋겠습니다."
+end

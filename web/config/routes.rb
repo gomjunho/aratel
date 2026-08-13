@@ -74,6 +74,7 @@ Rails.application.routes.draw do
   end
 
   resources :lounge_posts, only: [:index, :new, :create]
+  resources :community_posts, only: [:index, :new, :create]
 
   resource :atelier, only: [:show] do
     post :simulate

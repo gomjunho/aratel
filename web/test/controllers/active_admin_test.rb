@@ -141,4 +141,18 @@ class ActiveAdminTest < ActionDispatch::IntegrationTest
     get edit_admin_residential_complex_path(complex)
     assert_response :success
   end
+
+  test "should get active_admin community_posts index" do
+    CommunityPost.create!(
+      board_type: "GLOBAL",
+      complex_name: "디에이치 방배",
+      building_number: "101동",
+      nickname: "홍길동",
+      title: "어드민 검증용 안건",
+      content: "어드민 테스트"
+    )
+    get admin_community_posts_path
+    assert_response :success
+    assert_select "td", text: "어드민 검증용 안건"
+  end
 end

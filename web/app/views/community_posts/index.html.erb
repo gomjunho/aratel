@@ -1,0 +1,60 @@
+<div class="community-board-container" style="max-width: 1000px; margin: 0 auto; padding: 24px; font-family: sans-serif;">
+  <header style="margin-bottom: 24px; border-bottom: 2px solid var(--complex-primary, #2563eb); padding-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h1 style="font-size: 26px; color: #fff; font-weight: 700;">💬 입주민 커뮤니티 게시판</h1>
+      <p style="color: #94a3b8; font-size: 14px; margin-top: 4px;">전체 단지 회원 공동 게시판 및 <%= current_user.complex_name %> 입주민 전용 게시판</p>
+    </div>
+    <%= link_to "✏️ 새 글 작성", new_community_post_path(board_type: @board_type), style: "padding: 10px 20px; background: var(--complex-primary, #2563eb); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 700;" %>
+  </header>
+
+  <!-- Board Type Tabs -->
+  <div style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid #334155; padding-bottom: 12px;">
+    <%= link_to community_posts_path(board_type: "GLOBAL"), style: "padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; background: #{@board_type == 'GLOBAL' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@board_type == 'GLOBAL' ? '#fff' : '#94a3b8'};" do %>
+      🌐 전체 공동 게시판 <span style="font-size: 12px; font-weight: 400; opacity: 0.8;">([단지명] [닉네임])</span>
+    <% end %>
+
+    <%= link_to community_posts_path(board_type: "COMPLEX_NAMED"), style: "padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; background: #{@board_type == 'COMPLEX_NAMED' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@board_type == 'COMPLEX_NAMED' ? '#fff' : '#94a3b8'};" do %>
+      🏢 <%= current_user.complex_name %> 기명 게시판 <span style="font-size: 12px; font-weight: 400; opacity: 0.8;">([동] [닉네임])</span>
+    <% end %>
+
+    <%= link_to community_posts_path(board_type: "COMPLEX_ANONYMOUS"), style: "padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 15px; background: #{@board_type == 'COMPLEX_ANONYMOUS' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@board_type == 'COMPLEX_ANONYMOUS' ? '#fff' : '#94a3b8'};" do %>
+      🔒 <%= current_user.complex_name %> 완전 익명 게시판 <span style="font-size: 12px; font-weight: 400; opacity: 0.8;">(익명 100%)</span>
+    <% end %>
+  </div>
+
+  <!-- Board Description Banner -->
+  <div style="background: #0f172a; border: 1px solid #334155; padding: 16px 20px; border-radius: 10px; margin-bottom: 20px;">
+    <% if @board_type == "GLOBAL" %>
+      <span style="color: #fbbf24; font-weight: 700;">🌐 전체 공동 게시판 가이드</span>
+      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">타 아파트 단지 입주민들과 소통하는 오픈 공간입니다. 작성자명은 <strong>[단지명 - 닉네임]</strong> 형태로 자동 표기되며 별도 익명 기능은 제공되지 않습니다.</p>
+    <% elsif @board_type == "COMPLEX_NAMED" %>
+      <span style="color: #38bdf8; font-weight: 700;">🏢 <%= current_user.complex_name %> 입주민 기명 게시판</span>
+      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">사생활 보호를 위해 호수는 숨겨지고 <strong>[<%= current_user.building_number %> - 닉네임]</strong> 형태로 안전하게 표기됩니다.</p>
+    <% else %>
+      <span style="color: #f43f5e; font-weight: 700;">🔒 <%= current_user.complex_name %> 입주민 완전 익명 게시판</span>
+      <p style="color: #cbd5e1; font-size: 14px; margin-top: 4px;">단지 내부 제안 및 솔직한 소통을 위해 100% 익명 처리되며, AI 클린 시그널 검증 마크가 부여됩니다.</p>
+    <% end %>
+  </div>
+
+  <!-- Posts List -->
+  <div class="posts-list" style="display: flex; flex-direction: column; gap: 16px;">
+    <% if @posts.empty? %>
+      <div style="text-align: center; padding: 40px; background: #0f172a; border-radius: 12px; color: #64748b;">
+        등록된 게시글이 없습니다. 첫 번째 이야기를 남겨보세요!
+      </div>
+    <% else %>
+      <% @posts.each do |post| %>
+        <div style="background: #0f172a; border: 1px solid #1e293b; padding: 20px; border-radius: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="background: #1e293b; color: var(--complex-accent, #fbbf24); font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 20px;">
+              👤 <%= post.author_display_name %>
+            </span>
+            <span style="color: #64748b; font-size: 13px;"><%= post.created_at.strftime("%Y-%m-%d %H:%M") %></span>
+          </div>
+          <h3 style="font-size: 18px; color: #fff; font-weight: 700; margin-bottom: 8px;"><%= post.title %></h3>
+          <p style="color: #cbd5e1; font-size: 15px; line-height: 1.6;"><%= post.content %></p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
