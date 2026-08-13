@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../config/api_config.dart';
 import '../models/club_deal_models.dart';
 
 class ClubDealService {
@@ -8,8 +9,9 @@ class ClubDealService {
 
   ClubDealService({
     http.Client? client,
-    this.baseUrl = 'https://api.aratel.com',
-  }) : client = client ?? http.Client();
+    String? baseUrl,
+  })  : client = client ?? http.Client(),
+        baseUrl = baseUrl ?? ApiConfig.defaultBaseUrl;
 
   Future<ClubDealListResponse> getClubDeals() async {
     final response = await client.get(

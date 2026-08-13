@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../config/api_config.dart';
 import '../models/verification_models.dart';
 
 class VerificationService {
@@ -7,9 +8,10 @@ class VerificationService {
   final http.Client _client;
 
   VerificationService({
-    this.baseUrl = 'https://api.aratel.com',
+    String? baseUrl,
     http.Client? client,
-  }) : _client = client ?? http.Client();
+  })  : baseUrl = baseUrl ?? ApiConfig.defaultBaseUrl,
+        _client = client ?? http.Client();
 
   Map<String, String> get _headers => {
         'Content-Type': 'application/json',

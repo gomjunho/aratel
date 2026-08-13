@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../config/api_config.dart';
 import '../models/atelier_models.dart';
 
 class AtelierService {
@@ -8,8 +9,9 @@ class AtelierService {
 
   AtelierService({
     http.Client? client,
-    this.baseUrl = 'https://api.aratel.com',
-  }) : client = client ?? http.Client();
+    String? baseUrl,
+  })  : client = client ?? http.Client(),
+        baseUrl = baseUrl ?? ApiConfig.defaultBaseUrl;
 
   Future<FlatMapResponse> getFlatMaps() async {
     final response = await client.get(

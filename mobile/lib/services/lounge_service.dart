@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../config/api_config.dart';
 import '../models/lounge_models.dart';
 
 class LoungeService {
@@ -8,8 +9,9 @@ class LoungeService {
 
   LoungeService({
     http.Client? client,
-    this.baseUrl = 'https://api.aratel.com',
-  }) : client = client ?? http.Client();
+    String? baseUrl,
+  })  : client = client ?? http.Client(),
+        baseUrl = baseUrl ?? ApiConfig.defaultBaseUrl;
 
   Future<LoungePostListResponse> getPosts() async {
     final response = await client.get(

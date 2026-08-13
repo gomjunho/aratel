@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../config/api_config.dart';
 import '../models/ai_agent_models.dart';
 
 class AiAgentService {
@@ -8,8 +9,9 @@ class AiAgentService {
 
   AiAgentService({
     http.Client? client,
-    this.baseUrl = 'https://api.aratel.com',
-  }) : client = client ?? http.Client();
+    String? baseUrl,
+  })  : client = client ?? http.Client(),
+        baseUrl = baseUrl ?? ApiConfig.defaultBaseUrl;
 
   Future<AiAgentResponse> sendDialogue(AiAgentRequest request) async {
     final response = await client.post(
