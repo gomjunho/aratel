@@ -33,6 +33,114 @@ h1, h2, h3, h4, .logo, .tier-title {
   font-family: 'Cinzel', 'Noto Sans KR', serif;
 }
 
+/* User Status Bar Header */
+.status-header {
+  background: #090d16;
+  border-bottom: 1px solid #1e293b;
+  padding: 0.6rem 2.5rem;
+  font-size: 0.85rem;
+}
+
+.user-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.status-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-badge.complex-badge {
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid #334155;
+}
+
+.status-badge.tier-badge.gold {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--gold-primary);
+  border: 1px solid var(--gold-primary);
+}
+
+.status-badge.tier-badge.diamond_black {
+  background: #000;
+  color: var(--diamond-color);
+  border: 1px solid var(--diamond-color);
+}
+
+.status-badge.guest-badge {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.guest-desc {
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+.status-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-demo-login {
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-demo-login.gold {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn-demo-login.gold:hover {
+  background: #1d4ed8;
+}
+
+.btn-demo-login.diamond {
+  background: #0f172a;
+  color: var(--gold-primary);
+  border: 1px solid var(--gold-primary);
+}
+
+.btn-demo-login.diamond:hover {
+  background: #1e293b;
+}
+
+.btn-demo-logout {
+  padding: 0.35rem 0.8rem;
+  background: #334155;
+  color: #f8fafc;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.btn-demo-logout:hover {
+  background: #475569;
+}
+
 /* Navbar */
 .navbar {
   display: flex;

@@ -19,6 +19,30 @@
   </head>
 
   <body>
+    <header class="status-header">
+      <div class="user-status-bar">
+        <% if user_signed_in? %>
+          <div class="status-info authenticated">
+            <span class="status-badge complex-badge">🏢 <%= current_user.complex_name %> <%= current_user.building_number %> <%= current_user.unit_number %></span>
+            <span class="status-badge tier-badge <%= current_user.tier.downcase %>">💎 <%= current_user.tier %> (인증 회원)</span>
+            <span class="user-name">👤 <%= current_user.name %> 님 환영합니다</span>
+          </div>
+          <div class="status-actions">
+            <%= button_to "🚪 로그아웃", logout_path, method: :delete, class: "btn-demo-logout" %>
+          </div>
+        <% else %>
+          <div class="status-info guest">
+            <span class="status-badge guest-badge">🔒 게스트 상태 (단지 미선택 / 티어 미인증)</span>
+            <span class="guest-desc">로그인 시 대상 단지별 커스텀 뷰 및 VVIP 전용 서비스가 개방됩니다.</span>
+          </div>
+          <div class="status-actions">
+            <%= button_to "🔑 데모로그인 (디에이치 방배/GOLD)", demo_login_path(preset: "gold"), method: :post, class: "btn-demo-login gold" %>
+            <%= button_to "💎 데모로그인 (한남 더힐/VVIP)", demo_login_path(preset: "diamond"), method: :post, class: "btn-demo-login diamond" %>
+          </div>
+        <% end %>
+      </div>
+    </header>
+
     <nav class="navbar">
       <div class="nav-brand">
         <a href="/" class="logo">ARATEL <span>아라뜰</span></a>
@@ -26,10 +50,10 @@
       <div class="nav-links">
         <a href="<%= home_path %>" class="nav-item">🏠 웰컴 홈</a>
         <a href="<%= verification_path %>" class="nav-item">🔐 자산 인증</a>
-        <a href="<%= lounge_posts_path %>" class="nav-item">💬 익명 라운지</a>
-        <a href="<%= atelier_path %>" class="nav-item">🛋️ AI 아뜰리에</a>
-        <a href="<%= club_deals_path %>" class="nav-item">🏷️ 클럽 딜</a>
-        <a href="<%= concierge_path %>" class="nav-item">🛎️ VIP 컨시어지</a>
+        <a href="<%= lounge_posts_path %>" class="nav-item">💬 익명 라운지 <%= "🔒" unless user_signed_in? %></a>
+        <a href="<%= atelier_path %>" class="nav-item">🛋️ AI 아뜰리에 <%= "🔒" unless user_signed_in? %></a>
+        <a href="<%= club_deals_path %>" class="nav-item">🏷️ 클럽 딜 <%= "🔒" unless user_signed_in? %></a>
+        <a href="<%= concierge_path %>" class="nav-item">🛎️ VIP 컨시어지 <%= "🔒" unless user_signed_in? %></a>
         <a href="<%= insight_path %>" class="nav-item">📊 실거래 인사이트</a>
       </div>
     </nav>

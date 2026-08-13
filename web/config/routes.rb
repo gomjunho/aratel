@@ -4,6 +4,9 @@ Rails.application.routes.draw do
 
   root "homes#show"
 
+  post "demo_login", to: "sessions#create"
+  delete "logout", to: "sessions#destroy"
+
   resource :verification, only: [:show] do
     post :identity_verify
     post :trust_api_sync

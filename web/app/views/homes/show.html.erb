@@ -1,21 +1,55 @@
 <div class="welcome-home-container" style="padding: 24px; max-width: 1000px; margin: 0 auto; font-family: sans-serif;">
-  <header style="margin-bottom: 32px; border-bottom: 1px solid #eaeaea; padding-bottom: 16px;">
-    <h1 style="font-size: 28px; color: #1a1a1a; font-weight: 700;">🏠 디지털 웰컴 홈</h1>
-    <p style="color: #666; font-size: 16px;">단지명: <strong><%= @complex_name || "디에이치 방배" %></strong></p>
-  </header>
+  <% if user_signed_in? %>
+    <!-- Authenticated Resident View -->
+    <header style="margin-bottom: 32px; border-bottom: 2px solid #2563eb; padding-bottom: 16px; background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; padding: 24px; border-radius: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <span style="background: #2563eb; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase;">인증 입주민 전용</span>
+          <h1 style="font-size: 28px; font-weight: 700; margin: 8px 0 4px 0; color: #fff;">🏠 <%= @complex_name %> 디지털 웰컴 홈</h1>
+          <p style="color: #cbd5e1; font-size: 15px; margin: 0;">동호수: <strong><%= current_user.building_number %> <%= current_user.unit_number %></strong> | 멤버십: <strong style="color: #fbbf24;"><%= current_user.tier %></strong></p>
+        </div>
+        <div>
+          <span style="background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 20px; font-size: 14px; border: 1px solid rgba(255,255,255,0.2);">✨ <%= current_user.complex_name %> 전용 테마 적용됨</span>
+        </div>
+      </div>
+    </header>
+  <% else %>
+    <!-- Unauthenticated Guest View (Restricted Teaser) -->
+    <header style="margin-bottom: 32px; border: 1px dashed #cbd5e1; background: #f8fafc; padding: 24px; border-radius: 12px; text-align: center;">
+      <div style="font-size: 36px; margin-bottom: 8px;">🏢🔒</div>
+      <h1 style="font-size: 26px; color: #0f172a; font-weight: 700; margin-bottom: 8px;">ARATEL 하이엔드 입주민 전용 포털 (게스트 미인증 상태)</h1>
+      <p style="color: #64748b; font-size: 15px; max-width: 680px; margin: 0 auto 20px auto; line-height: 1.6;">
+        현재 특정 입주 단지가 선택되지 않은 <strong>제한적 게스트 화면</strong>입니다.<br>
+        소속 입주 단지(디에이치 방배, 한남 더힐 등)로 인증 로그인하시면 <strong>실시간 스마트홈 제어, 조경 오디오 도슨트, 커뮤니티 예약</strong> 등 단지 맞춤형 혜택이 개방됩니다.
+      </p>
+      <div style="display: inline-flex; gap: 12px; justify-content: center;">
+        <%= button_to "🔑 데모로그인 (디에이치 방배)", demo_login_path(preset: "gold"), method: :post, style: "padding: 12px 24px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;" %>
+        <%= button_to "💎 데모로그인 (한남 더힐 VVIP)", demo_login_path(preset: "diamond"), method: :post, style: "padding: 12px 24px; background: #0f172a; color: #fbbf24; border: 1px solid #fbbf24; border-radius: 8px; font-weight: 700; cursor: pointer;" %>
+      </div>
+    </header>
+  <% end %>
 
   <!-- Art Docent Section -->
-  <section style="margin-bottom: 32px; background: #f9f9fb; padding: 20px; border-radius: 12px;">
-    <h2 style="font-size: 20px; color: #222; margin-bottom: 16px;">🎨 조경 아트 도슨트</h2>
+  <section style="margin-bottom: 32px; background: #f9f9fb; padding: 20px; border-radius: 12px; position: relative;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 style="font-size: 20px; color: #222; margin: 0;">🎨 조경 아트 도슨트</h2>
+      <% unless user_signed_in? %>
+        <span style="font-size: 13px; color: #e11d48; background: #ffe4e6; padding: 4px 10px; border-radius: 12px; font-weight: 600;">🔒 로그인 시 재생 가능</span>
+      <% end %>
+    </div>
     <% (@art_docents || []).each do |docent| %>
       <div class="docent-card" style="background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 12px;">
         <h3 style="font-size: 18px; margin-bottom: 8px;"><%= docent.title %></h3>
         <p style="color: #555; margin-bottom: 12px;"><%= docent.description %></p>
-        <% if docent.audio_url.present? %>
+        <% if docent.audio_url.present? && user_signed_in? %>
           <audio controls style="width: 100%;">
             <source src="<%= docent.audio_url %>" type="audio/mpeg">
             오디오 태그를 지원하지 않는 브라우저입니다.
           </audio>
+        <% else %>
+          <div style="background: #f1f5f9; padding: 12px; border-radius: 6px; color: #64748b; font-size: 14px; text-align: center;">
+            🔒 단지 인증 입주민 전용 오디오 플레이어입니다. (로그인 필요)
+          </div>
         <% end %>
       </div>
     <% end %>
@@ -23,7 +57,12 @@
 
   <!-- Facility Status Section -->
   <section style="margin-bottom: 32px;">
-    <h2 style="font-size: 20px; color: #222; margin-bottom: 16px;">🏢 단지 커뮤니티 시설 혼잡도 & 예약</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 style="font-size: 20px; color: #222; margin: 0;">🏢 단지 커뮤니티 시설 혼잡도 & 예약</h2>
+      <% unless user_signed_in? %>
+        <span style="font-size: 13px; color: #e11d48; background: #ffe4e6; padding: 4px 10px; border-radius: 12px; font-weight: 600;">🔒 미리보기 모드</span>
+      <% end %>
+    </div>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
       <% (@facilities_status || []).each do |facility| %>
         <div style="border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; background: #fff;">
@@ -36,13 +75,24 @@
   </section>
 
   <!-- Smart Home State Section -->
-  <section style="margin-bottom: 32px; background: #edf2f7; padding: 20px; border-radius: 12px;">
-    <h2 style="font-size: 20px; color: #222; margin-bottom: 16px;">💡 스마트 홈 실시간 제어 상태</h2>
-    <div style="display: flex; gap: 24px; flex-wrap: wrap;">
-      <div><strong>조명:</strong> <%= @smart_home_state[:lighting] %></div>
-      <div><strong>난방/냉방 온도:</strong> <%= @smart_home_state[:hvac_temperature] %>°C</div>
-      <div><strong>환기 모드:</strong> <%= @smart_home_state[:ventilation] %></div>
+  <section style="margin-bottom: 32px; background: <%= user_signed_in? ? '#edf2f7' : '#f8fafc' %>; padding: 20px; border-radius: 12px; border: <%= user_signed_in? ? 'none' : '1px solid #e2e8f0' %>;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 style="font-size: 20px; color: #222; margin: 0;">💡 스마트 홈 실시간 제어 상태</h2>
+      <% unless user_signed_in? %>
+        <span style="font-size: 13px; color: #e11d48; background: #ffe4e6; padding: 4px 10px; border-radius: 12px; font-weight: 600;">🔒 세대주 인증 필요</span>
+      <% end %>
     </div>
+    <% if user_signed_in? %>
+      <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+        <div><strong>조명:</strong> <%= @smart_home_state[:lighting] %></div>
+        <div><strong>난방/냉방 온도:</strong> <%= @smart_home_state[:hvac_temperature] %>°C</div>
+        <div><strong>환기 모드:</strong> <%= @smart_home_state[:ventilation] %></div>
+      </div>
+    <% else %>
+      <div style="text-align: center; color: #64748b; padding: 16px;">
+        🔒 로그인 후 소속 단지의 스마트 홈(조명, 온도, 환기) 실시간 상태를 조회하고 제어할 수 있습니다.
+      </div>
+    <% end %>
   </section>
 
   <!-- AI Agent Dialogue Section -->
@@ -55,8 +105,8 @@
     <% end %>
     <%= form_with url: agent_dialogue_home_path, method: :post, local: true do |f| %>
       <div style="display: flex; gap: 8px;">
-        <%= f.text_field :message, placeholder: "예: 라운지 조식 2명 예약해줘", style: "flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" %>
-        <%= f.submit "전송", style: "padding: 10px 20px; background: #3182ce; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;" %>
+        <%= f.text_field :message, placeholder: user_signed_in? ? "예: 라운지 조식 2명 예약해줘" : "로그인 후 AI 음성/자연어 제어를 이용하실 수 있습니다", disabled: !user_signed_in?, style: "flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px;" %>
+        <%= f.submit "전송", disabled: !user_signed_in?, style: "padding: 10px 20px; background: #{user_signed_in? ? '#3182ce' : '#cbd5e1'}; color: #fff; border: none; border-radius: 6px; cursor: #{user_signed_in? ? 'pointer' : 'not-allowed'}; font-weight: 600;" %>
       </div>
     <% end %>
   </section>
