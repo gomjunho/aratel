@@ -3,7 +3,9 @@ class LoungePost < ApplicationRecord
   validates :content, presence: true
   validates :post_id, presence: true, uniqueness: true
 
+  before_validation :sanitize_payload
   before_validation :set_defaults
+
 
   def as_feed_json
     {
@@ -31,7 +33,14 @@ class LoungePost < ApplicationRecord
 
   private
 
+  def sanitize_payload
+    self.title = ActionController::Base.helpers.sanitize(title) if title.present?
+    self.content = ActionController::Base.helpers.sanitize(content) if content.present?
+    self.content_encrypted = ActionController::Base.helpers.sanitize(content_encrypted) if content_encrypted.present?
+  end
+
   def set_defaults
+
     self.post_id ||= "post_#{rand(7000..9999)}"
     self.anonymous_nickname ||= "은밀한 자산가 42"
     self.verified_badge ||= "VERIFIED_OWNER"

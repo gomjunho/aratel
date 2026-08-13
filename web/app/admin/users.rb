@@ -6,11 +6,15 @@ ActiveAdmin.register User do
   index title: "VVIP 회원 목록" do
     selectable_column
     id_column
-    column "이름", :name
-    column "전화번호", :phone_number
+    column "이름" do |user|
+      user.masked_name
+    end
+    column "전화번호" do |user|
+      user.masked_phone
+    end
     column "단지명", :complex_name
     column "동/호수" do |user|
-      "#{user.building_number} #{user.unit_number}"
+      user.masked_unit
     end
     column "멤버십 등급", :tier do |user|
       status_tag user.tier, class: "tier-#{user.tier.downcase}"
@@ -18,6 +22,7 @@ ActiveAdmin.register User do
     column "가입일", :created_at
     actions
   end
+
 
   filter :name
   filter :phone_number

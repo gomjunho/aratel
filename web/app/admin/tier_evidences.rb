@@ -17,8 +17,9 @@ ActiveAdmin.register TierEvidence do
     selectable_column
     id_column
     column "제출 회원" do |evidence|
-      link_to evidence.user.name, admin_user_path(evidence.user)
+      link_to evidence.user.masked_name, admin_user_path(evidence.user)
     end
+
     column "증빙 서류 유형", :evidence_type
     column "목표 등급", :target_tier do |evidence|
       status_tag evidence.target_tier

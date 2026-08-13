@@ -76,8 +76,9 @@ class ActiveAdminTest < ActionDispatch::IntegrationTest
   test "should get active_admin users index" do
     get admin_users_path
     assert_response :success
-    assert_select "td", text: "홍길동"
+    assert_select "td", text: "홍*동"
   end
+
 
   test "should get active_admin tier_evidences index and approve evidence" do
     get admin_tier_evidences_path

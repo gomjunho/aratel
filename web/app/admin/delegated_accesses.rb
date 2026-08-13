@@ -19,8 +19,9 @@ ActiveAdmin.register DelegatedAccessRequest do
     selectable_column
     id_column
     column "신청 유저" do |del|
-      link_to del.user.name, admin_user_path(del.user)
+      link_to del.user.masked_name, admin_user_path(del.user)
     end
+
     column "위임 관계", :relationship
     column "증명서" do |del|
       link_to "증명서 보기 🔗", del.document_url, target: "_blank"

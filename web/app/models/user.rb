@@ -43,6 +43,15 @@ class User < ApplicationRecord
     end
   end
 
+  def masked_phone
+    return "" if phone_number.blank?
+    phone_number.gsub(/(\d{3})\d{4}(\d{4})/, '\1-****-\2')
+  end
+
+  def masked_unit
+    "#{building_number} ***호"
+  end
+
   def verify_identity!
     self.verification_token = "ver_tok_#{SecureRandom.hex(4)}"
     self.verified_identity_at = Time.current
