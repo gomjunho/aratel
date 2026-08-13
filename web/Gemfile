@@ -19,7 +19,7 @@ gem "jbuilder"
 
 # ActiveAdmin & Devise for VVIP Admin Management Portal
 gem "devise"
-gem "activeadmin"
+gem "activeadmin", "4.0.0.beta22"
 gem "sprockets-rails"
 gem "sassc-rails"
 
