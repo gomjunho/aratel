@@ -44,13 +44,13 @@ void main() {
 
       // Check header and content
       expect(find.text('실거래가 & 공급 물량 인사이트'), findsOneWidget);
-      expect(find.textContaining('아실 층수별 실거래가 산점도'), findsOneWidget);
+      expect(find.textContaining('층수별 산점도 줌 슬라이더'), findsOneWidget);
       expect(find.textContaining('15층'), findsOneWidget);
       expect(find.textContaining('3층'), findsOneWidget);
       expect(find.textContaining('28.5억'), findsOneWidget);
 
       // Check Supply Gas Index Card
-      expect(find.textContaining('공급 가스 리스크: LOW'), findsOneWidget);
+      expect(find.textContaining('상세 리포트: LOW'), findsOneWidget);
       expect(find.textContaining('입주 예정 물량: 450세대'), findsOneWidget);
       expect(find.textContaining('향후 2년간 주변 과잉 공급 물량이 적어'), findsOneWidget);
     });
@@ -101,8 +101,8 @@ void main() {
       );
 
       await tester.pump(const Duration(seconds: 1));
-      expect(find.text('84㎡ (대표)'), findsOneWidget);
-      expect(find.text('164㎡'), findsOneWidget);
+      expect(find.text('84㎡ (34평)'), findsOneWidget);
+      expect(find.text('164㎡ (펜트하우스)'), findsOneWidget);
     });
   });
 }
