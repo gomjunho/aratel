@@ -138,10 +138,35 @@ bin/rails server -p 3001
 
 ---
 
-## 🔗 6. 관련 문서
+## 🔮 6. 향후 UI/UX 고려사항 (Future Design & UX Considerations)
+
+ARATEL 앱의 완성도를 더욱 높이기 위해 추후 고려 가능한 영역별 디자인 & UX 고도화 아이디어입니다.
+
+* **🏠 홈 대시보드 (Home)**:
+  * 스마트홈 HVAC/조명 0.5°C 단위 및 디밍 조광 실시간 인크리멘탈 슬라이더 컨트롤
+  * 입주민 전용 1-Tap 엘리베이터 호출 버튼 및 우리동 최근 공지사항 브리핑 스트립
+  * DIAMOND 회원 전용 단지 추정 시세 미니 스파크라인 차트
+* **💬 암호화 라운지 (Lounge)**:
+  * AES-GCM 암호화 블록 탭 시 Haptic Feedback 및 Decrypt-on-Tap 타이핑 애니메이션
+  * `VERIFIED OWNER` 검증 배지 탭 시 대법원 인터넷등기소 인증 일자 팝오버 툴팁
+  * 커뮤니티 카테고리 태그 칩 필터링 (`#절세`, `#3D인테리어`, `#골프모임`)
+* **🎨 3D 아뜰리에 (Atelier)**:
+  * 3D GLB 뷰포트 오르빗 카메라 조작 가이드 (Zoom/Rotate/Pan 3D 마이크로 툴팁)
+  * 가구 가상 배치 시 벽면 충돌 감지(Collision Check) 가이드라인
+  * 📱 카메라 연동 AR(증강현실) 1:1 실물 공간 가상 배치 뷰어
+* **🛎️ VIP 컨시어지 (Concierge)**:
+  * WOORI TWO CHAIRS 전담 수석 PB 1:1 프로필 카드 및 직통 핫라인 예약
+  * 전담 PB 휴무일 및 예약 마감 시간대 비활성화 스마트 카렌더
+* **🤖 AI 에이전트 오버레이 (AI Agent)**:
+  * 음성 VAD(Voice Activity Detection) 상태 인디케이터 ("듣고 있습니다..." Gold ➔ Cyan 펄스)
+  * 라운지 조식 / 사우나 / 피트니스 실시간 혼잡도 신호등(🟢/🟡/🔴) 상태 배지 연동
+
+---
+
+## 🔗 7. 관련 문서
 
 * [arch.docx](file:///Users/zion/Projects/aratel/arch.docx) : 정보 구조 및 서비스 설계안
 * [flow.docx](file:///Users/zion/Projects/aratel/flow.docx) : 인증-소통-소비 3대 가치 사슬 기반 상세 사용자 플로우 기획서
-* [ISSUES.md](file:///Users/zion/Projects/aratel/ISSUES.md) : 프로젝트 전체 18개 백로그 이슈 목록
+* [ISSUES.md](file:///Users/zion/Projects/aratel/ISSUES.md) : 프로젝트 전체 백로그 이슈 목록
 * [CONTRIBUTING.md](file:///Users/zion/Projects/aratel/CONTRIBUTING.md) : TDD, 100% Coverage & Gitmoji 개발 가이드라인
 * [AGENT.md](file:///Users/zion/Projects/aratel/AGENT.md) : AI 에이전트 영구 메모리 지침서

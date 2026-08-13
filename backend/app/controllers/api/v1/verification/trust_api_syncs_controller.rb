@@ -2,20 +2,19 @@ module Api
   module V1
     module Verification
       class TrustApiSyncsController < ApplicationController
-        skip_before_action :verify_authenticity_token, raise: false
-
         def create
-          iv = IdentityVerification.find_by(verification_token: params[:verification_token])
+          s_params = sync_params
+          iv = IdentityVerification.find_by(verification_token: s_params[:verification_token])
           unless iv
             render json: { status: "error", message: "Invalid verification token" }, status: :unprocessable_entity
             return
           end
 
           sync = TrustApiSync.new(
-            verification_token: params[:verification_token],
-            complex_name: params[:complex_name],
-            building_number: params[:building_number],
-            unit_number: params[:unit_number],
+            verification_token: s_params[:verification_token],
+            complex_name: s_params[:complex_name],
+            building_number: s_params[:building_number],
+            unit_number: s_params[:unit_number],
             owner_name_masked: iv.masked_name
           )
 
@@ -34,6 +33,12 @@ module Api
               errors: sync.errors.full_messages
             }, status: :unprocessable_entity
           end
+        end
+
+        private
+
+        def sync_params
+          params.permit(:verification_token, :complex_name, :building_number, :unit_number)
         end
       end
     end

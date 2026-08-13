@@ -2,13 +2,8 @@ module Api
   module V1
     module Verification
       class DelegatedAccessesController < ApplicationController
-        skip_before_action :verify_authenticity_token, raise: false
-
         def create
-          da = DelegatedAccess.new(
-            relationship: params[:relationship],
-            document_url: params[:document_url]
-          )
+          da = DelegatedAccess.new(delegated_params)
 
           if da.save
             render json: {
@@ -40,6 +35,12 @@ module Api
             granted_badge: da.granted_badge,
             role: da.role
           }, status: :ok
+        end
+
+        private
+
+        def delegated_params
+          params.permit(:relationship, :document_url)
         end
       end
     end

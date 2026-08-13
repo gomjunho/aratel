@@ -2,14 +2,8 @@ module Api
   module V1
     module Auth
       class IdentityVerificationsController < ApplicationController
-        skip_before_action :verify_authenticity_token, raise: false
-
         def create
-          iv = IdentityVerification.new(
-            name: params[:name],
-            phone_number: params[:phone_number],
-            birth_date: params[:birth_date]
-          )
+          iv = IdentityVerification.new(verification_params)
 
           if iv.save
             render json: {
@@ -24,6 +18,12 @@ module Api
               errors: iv.errors.full_messages
             }, status: :unprocessable_entity
           end
+        end
+
+        private
+
+        def verification_params
+          params.permit(:name, :phone_number, :birth_date)
         end
       end
     end

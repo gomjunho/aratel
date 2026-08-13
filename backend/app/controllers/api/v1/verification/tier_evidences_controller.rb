@@ -2,15 +2,8 @@ module Api
   module V1
     module Verification
       class TierEvidencesController < ApplicationController
-        skip_before_action :verify_authenticity_token, raise: false
-
         def create
-          te = TierEvidence.new(
-            evidence_type: params[:evidence_type],
-            document_url: params[:document_url],
-            instagram_handle: params[:instagram_handle],
-            referral_code: params[:referral_code]
-          )
+          te = TierEvidence.new(evidence_params)
 
           if te.save
             render json: {
@@ -25,6 +18,12 @@ module Api
               errors: te.errors.full_messages
             }, status: :unprocessable_entity
           end
+        end
+
+        private
+
+        def evidence_params
+          params.permit(:evidence_type, :document_url, :instagram_handle, :referral_code)
         end
       end
     end

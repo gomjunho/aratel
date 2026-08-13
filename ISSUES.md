@@ -170,3 +170,25 @@
 * **점검 내용**:
   * [ ] 조경 아트 도슨트 재배 시 하단 미니 오디오 플로팅 플레이어(Floating Audio Widget) 렌더링
   * [ ] 심야 시간대 피트니스/사우나 시설 미운영 시 "운영 준비 중" 상태 카드 및 운영 시간 가이드 UI 적용
+
+---
+
+## 🚀 Epic 9: VVIP 클럽딜 & 실거래가 인사이트 UI/UX 고도화 (Issues #25 & #26)
+
+### [#25] UI/UX: VVIP Club Deal Order Lifecycle Stepper & Point Calculator Slider
+* **카테고리**: `Web`, `Mobile`
+* **라벨**: `UI/UX`, `club-deal`, `user-flow`
+* **GitHub Issue**: [#25](https://github.com/gomjunho/aratel/issues/25)
+* **점검 내용**:
+  * [ ] 주문 상태 4단계 라이브 타임라인 스태퍼 (`주문 완료` ➔ `단지 수량 확정` ➔ `이탈리아 직배송` ➔ `전문 기사 방문 설치`)
+  * [ ] 결제 모달 포인트 차감 슬라이더 계산기 (1,000 P 단위 실시간 슬라이더 조절)
+  * [ ] 딜 종료 카운트다운 파티클 타이머 (`⏱️ 딜 종료까지 XX시간 XX분`)
+
+### [#26] UI/UX: Asil Insights Area Size Filter Switcher & Scatter Plot Zoom Slider
+* **카테고리**: `Web`, `Mobile`
+* **라벨**: `UI/UX`, `insights`, `chart`
+* **GitHub Issue**: [#26](https://github.com/gomjunho/aratel/issues/26)
+* **점검 내용**:
+  * [ ] 평형별 세그먼트 스위처 (`59㎡`, `84㎡`, `114㎡`, `164㎡ (펜트하우스)`)
+  * [ ] 산점도 차트 Zoom/Pan 컨트롤러 (`+` / `-` 줌 슬라이더 및 데이터 포인트 상세 모달 팝업)
+  * [ ] 공급 물량 독성 지수 리포트 상세 레이어 바텀시트 연동
