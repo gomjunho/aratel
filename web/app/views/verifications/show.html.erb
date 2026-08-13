@@ -3,6 +3,59 @@
   <p class="subtitle">대한민국 상위 0.1% VVIP 전용 주거 자산 인증 및 등급 관리 시스템</p>
 </div>
 
+<!-- Multi-Step Ownership Verification Wizard Stepper -->
+<% 
+  step1_done = @user.verification_token.present?
+  step2_done = @user.complex_name.present?
+  step3_done = @tier_evidences.any? || @delegated_access_requests.any?
+  progress_pct = (step1_done ? 33 : 0) + (step2_done ? 33 : 0) + (step3_done ? 34 : 0)
+%>
+<div class="verification-wizard-stepper">
+  <div class="card-header-flex">
+    <div>
+      <h3 style="margin:0; font-size:1.1rem; color:var(--gold-primary);">🔐 소유권 자동 인증 및 자산 증빙 마법사</h3>
+      <p class="text-muted" style="margin:0.2rem 0 0 0; font-size:0.85rem;">단계별 무결성 검증 진행률: <strong><%= progress_pct %>%</strong></p>
+    </div>
+    <%= form_with url: trust_api_sync_verification_path, method: :post, local: true, class: "inline-form" do |f| %>
+      <%= hidden_field_tag :verification_token, @user.verification_token || "ver_tok_sample" %>
+      <%= hidden_field_tag :complex_name, @user.complex_name || "디에이치 방배" %>
+      <%= hidden_field_tag :building_number, @user.building_number || "101동" %>
+      <%= hidden_field_tag :unit_number, @user.unit_number || "1502호" %>
+      <%= button_tag "⚡ 1-Tap 등기부 자동 재시도", type: :submit, class: "btn btn-xs btn-gold" %>
+    <% end %>
+  </div>
+
+  <div class="wizard-progress-bar">
+    <div class="wizard-progress-fill" style="width: <%= progress_pct %>%;"></div>
+  </div>
+
+  <div class="wizard-steps-grid">
+    <div class="step-wizard-item <%= step1_done ? 'completed' : 'active' %>">
+      <span class="step-number">STEP 1</span>
+      <div class="step-title">휴대폰 본인인증</div>
+      <span class="status-tag <%= step1_done ? 'status-verified' : 'status-pending_owner_approval' %>">
+        <%= step1_done ? '✓ 인증 완료' : '진행 대기' %>
+      </span>
+    </div>
+
+    <div class="step-wizard-item <%= step2_done ? 'completed' : (step1_done ? 'active' : '') %>">
+      <span class="step-number">STEP 2</span>
+      <div class="step-title">1분 실시간 등기부 연동</div>
+      <span class="status-tag <%= step2_done ? 'status-verified' : 'status-pending_owner_approval' %>">
+        <%= step2_done ? '✓ 등기 매칭 완료' : '연동 필요' %>
+      </span>
+    </div>
+
+    <div class="step-wizard-item <%= step3_done ? 'completed' : (step2_done ? 'active' : '') %>">
+      <span class="step-number">STEP 3</span>
+      <div class="step-title">VVIP 자산 증빙 및 위임</div>
+      <span class="status-tag <%= step3_done ? 'status-verified' : 'status-pending_owner_approval' %>">
+        <%= step3_done ? '✓ 제출 완료' : '서류 제출 대기' %>
+      </span>
+    </div>
+  </div>
+</div>
+
 <div class="grid grid-2">
   <!-- Tier & Badges Card -->
   <div class="card tier-card tier-<%= @user.tier.downcase %>">

@@ -430,5 +430,51 @@ void main() {
       await tapAndSettle(tester, find.byKey(const Key('switch_privacy_masking')));
       expect(securityService.isPrivacyMasked, false);
     });
+
+    testWidgets('renders 1-Tap retry button and triggers Trust API sync', (WidgetTester tester) async {
+      configureTestSurface(tester);
+      final mockClient = MockClient((request) async {
+        if (request.url.path.contains('/verification/trust_api_sync')) {
+          return http.Response(
+            jsonEncode({
+              'status': 'VERIFIED',
+              'owner_name_masked': '홍*동',
+              'ownership_percentage': 100,
+              'badge': 'VERIFIED_OWNER',
+              'assigned_tier': 'GOLD',
+              'verified_at': '2026-08-13T01:32:05Z',
+            }),
+            200,
+            headers: jsonHeaders,
+          );
+        }
+        return http.Response(
+          jsonEncode({
+            'user_id': 'usr_1001',
+            'tier': 'UNVERIFIED',
+            'badges': [],
+            'complex_name': '미인증',
+            'building_unit': '-',
+            'security_profile': {'screen_capture_prevented': true, 'privacy_masked': true},
+          }),
+          200,
+          headers: jsonHeaders,
+        );
+      });
+
+      final service = VerificationService(baseUrl: baseUrl, client: mockClient);
+
+      await tester.pumpWidget(buildTestableWidget(
+        verificationService: service,
+        securityService: securityService,
+      ));
+      await tester.pumpAndSettle();
+
+      await tapAndSettle(tester, find.text('2. 등기부 연동'));
+      expect(find.byKey(const Key('btn_1tap_retry')), findsOneWidget);
+
+      await tapAndSettle(tester, find.byKey(const Key('btn_1tap_retry')));
+      expect(find.text('VVIP 자산 증빙 & 권한 위임'), findsWidgets);
+    });
   });
 }

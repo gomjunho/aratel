@@ -522,18 +522,32 @@ class _VerificationScreenState extends State<VerificationScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              key: const Key('btn_trust_api_sync'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFD4AF37),
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  key: const Key('btn_trust_api_sync'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFD4AF37),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  onPressed: _handleTrustApiSync,
+                  child: const Text('등기부 자동 연동', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                ),
               ),
-              onPressed: _handleTrustApiSync,
-              child: const Text('등기부 자동 연동', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-            ),
+              const SizedBox(width: 8),
+              OutlinedButton(
+                key: const Key('btn_1tap_retry'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                  side: const BorderSide(color: Color(0xFFD4AF37)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                onPressed: _handleTrustApiSync,
+                child: const Text('⚡ 1-Tap 재시도', style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold)),
+              ),
+            ],
           ),
           if (_trustResult != null) ...[
             const SizedBox(height: 16),

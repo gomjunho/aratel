@@ -16,6 +16,14 @@ class VerificationsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", text: /인증 및 멤버십 대시보드|ARATEL Verification/
   end
 
+  test "should render multi-step verification wizard stepper and 1-tap retry option" do
+    get verification_url
+    assert_response :success
+    assert_select ".verification-wizard-stepper"
+    assert_select ".step-wizard-item", count: 3
+    assert_select "button, a, input", text: /1-Tap|재시도/
+  end
+
   test "should submit identity verification via web" do
     post identity_verify_verification_url, params: {
       name: "홍길동",
