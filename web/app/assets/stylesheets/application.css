@@ -6,7 +6,9 @@
   --gold-light: #f3e5ab;
   --gold-dark: #aa820a;
   --text-main: #f8fafc;
-  --text-muted: #94a3b8;
+  --text-sub: #f1f5f9;
+  --text-muted: #cbd5e1;
+  --text-dim: #94a3b8;
   --diamond-color: #38bdf8;
   --platinum-color: #cbd5e1;
   --bronze-color: #cd7f32;
@@ -29,8 +31,16 @@ body {
   line-height: 1.6;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-main);
+}
+
 h1, h2, h3, h4, .logo, .tier-title {
   font-family: 'Cinzel', 'Noto Sans KR', serif;
+}
+
+p, span, div, td, th, label, input, textarea, select {
+  color: var(--text-sub);
 }
 
 /* User Status Bar Header */
@@ -88,7 +98,7 @@ h1, h2, h3, h4, .logo, .tier-title {
 }
 
 .guest-desc {
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.8rem;
 }
 
@@ -147,7 +157,7 @@ h1, h2, h3, h4, .logo, .tier-title {
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem 2.5rem;
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(15, 23, 42, 0.95);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(212, 175, 55, 0.2);
   position: sticky;
@@ -380,8 +390,9 @@ h1, h2, h3, h4, .logo, .tier-title {
 .form-group label {
   display: block;
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--text-sub);
   margin-bottom: 0.4rem;
+  font-weight: 600;
 }
 
 .form-control {
@@ -447,11 +458,12 @@ h1, h2, h3, h4, .logo, .tier-title {
   padding: 0.85rem;
   text-align: left;
   border-bottom: 1px solid var(--card-border);
+  color: var(--text-sub);
 }
 
 .table th {
   color: var(--gold-primary);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .status-tag {
@@ -502,7 +514,6 @@ h1, h2, h3, h4, .logo, .tier-title {
   color: var(--text-muted);
   text-decoration: none;
   font-size: 0.85rem;
-
   border: 1px solid transparent;
 }
 
@@ -532,4 +543,48 @@ h1, h2, h3, h4, .logo, .tier-title {
   border-radius: 6px;
   border-left: 3px solid var(--gold-primary);
   margin-top: 0.25rem;
+}
+
+/* Light / System Scheme Overrides for High Contrast Legibility */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-dark: #f8fafc;
+    --card-bg: #ffffff;
+    --card-border: #cbd5e1;
+    --text-main: #0f172a;
+    --text-sub: #1e293b;
+    --text-muted: #475569;
+    --text-dim: #64748b;
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+  }
+
+  .status-header {
+    background: #f1f5f9;
+    border-bottom: 1px solid #cbd5e1;
+  }
+
+  .navbar {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+  }
+
+  .nav-item {
+    color: #334155;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .form-control {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+  }
 }
