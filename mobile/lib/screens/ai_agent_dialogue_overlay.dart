@@ -155,11 +155,14 @@ class _AiAgentDialogueOverlayState extends State<AiAgentDialogueOverlay> {
               },
             ),
           ),
-          if (_isSending)
+          _buildSuggestionChips(),
+          if (_isSending) ...[
+            _buildAudioWaveformVisualizer(),
             const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
+              padding: EdgeInsets.symmetric(vertical: 4),
               child: CircularProgressIndicator(color: Color(0xFFD4AF37)),
             ),
+          ],
           Row(
             children: [
               Expanded(
@@ -193,4 +196,56 @@ class _AiAgentDialogueOverlayState extends State<AiAgentDialogueOverlay> {
       ),
     );
   }
+
+  Widget _buildSuggestionChips() {
+    final suggestions = [
+      "라운지 조식 2명 예약",
+      "피트니스 센타 혼잡도 조회",
+      "사우나 현재 이용 상태",
+    ];
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: suggestions.map((chipText) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 6, bottom: 8),
+            child: ActionChip(
+              key: Key('chip_${chipText.substring(0, 4)}'),
+              backgroundColor: const Color(0xFF1E222B),
+              side: BorderSide(color: const Color(0xFFD4AF37).withOpacity(0.4)),
+              label: Text(chipText, style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 11, fontWeight: FontWeight.bold)),
+              onPressed: () {
+                _inputController.text = chipText;
+                _sendMessage();
+              },
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildAudioWaveformVisualizer() {
+    return Container(
+      height: 24,
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(12, (index) {
+          final heights = [8.0, 16.0, 12.0, 20.0, 14.0, 22.0, 10.0, 18.0, 14.0, 22.0, 12.0, 8.0];
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 2),
+            width: 3,
+            height: _isSending ? heights[index % heights.length] : 6.0,
+            decoration: BoxDecoration(
+              color: const Color(0xFFD4AF37),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
 }
