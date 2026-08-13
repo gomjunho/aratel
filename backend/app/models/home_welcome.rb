@@ -11,11 +11,14 @@ class HomeWelcome
     [
       {
         title: "더샵 갤러리 '조경과 빛'",
-        audio_url: "https://storage.aratel.com/audio/docent1.mp3",
+        audio_url: "https://cdn.aratel.com/audio/docent1.webp",
+        audio_codec: "AAC/WebP",
+        cdn_cached: true,
         description: "단지 중앙 정원에 위치한 현대 미술 조형물에 대한 설명입니다."
       }
     ]
   end
+
 
   def facilities_status
     [

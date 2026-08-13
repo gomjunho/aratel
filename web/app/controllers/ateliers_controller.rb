@@ -3,7 +3,7 @@ class AteliersController < ApplicationController
   skip_before_action :authenticate_user!, only: [:api_flat_maps, :api_create_simulation]
 
   def show
-    @flat_map_url = "https://storage.aratel.com/3d/dh_bangbae_84a.gltf"
+    @flat_map_url = "https://cdn.aratel.com/3d/dh_bangbae_84a_draco.glb"
     @space_measurements = [
       { name: "거실 (Living Room)", dimensions: "4.8m × 3.6m", max_furniture_size: "3.2m 이하" },
       { name: "다이닝 룸 (Dining Room)", dimensions: "3.5m × 3.0m", max_furniture_size: "2.4m 이하" },
@@ -17,12 +17,13 @@ class AteliersController < ApplicationController
           furniture_id: "furn_101",
           brand: "B&B Italia",
           name: "Camaleonda Sofa",
-          model_3d_url: "https://storage.aratel.com/3d/sofa_bb.gltf",
+          model_3d_url: "https://cdn.aratel.com/3d/sofa_bb_draco.glb",
           price: 18500000,
           stock: 3
         )
       ]
     end
+
 
     @club_deals = ClubDeal.all
     if @club_deals.empty?
@@ -91,7 +92,7 @@ class AteliersController < ApplicationController
           furniture_id: "furn_101",
           brand: "B&B Italia",
           name: "Camaleonda Sofa",
-          model_3d_url: "https://storage.aratel.com/3d/sofa_bb.gltf",
+          model_3d_url: "https://cdn.aratel.com/3d/sofa_bb_draco.glb",
           price: 18500000,
           stock: 3
         )
@@ -99,7 +100,10 @@ class AteliersController < ApplicationController
     end
 
     render json: {
-      flat_map_url: "https://storage.aratel.com/3d/dh_bangbae_84a.gltf",
+      flat_map_url: "https://cdn.aratel.com/3d/dh_bangbae_84a_draco.glb",
+      draco_compressed: true,
+      compression_ratio: "70%",
+
       furniture_catalog: catalog.map do |c|
         {
           id: c.furniture_id,
