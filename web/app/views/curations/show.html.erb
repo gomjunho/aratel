@@ -1,0 +1,165 @@
+<div class="curation-container" style="padding: 24px; max-width: 1040px; margin: 0 auto; font-family: 'Noto Sans KR', sans-serif;">
+  <!-- Branding Header -->
+  <header style="margin-bottom: 24px; border-bottom: 2px solid var(--complex-primary, #2563eb); padding-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <h1 style="font-size: 28px; font-weight: 900; color: #d4af37; font-family: 'Cinzel', serif; letter-spacing: 1px;">
+        💎 ARATEL MAISON CURATION <span style="font-size: 18px; font-weight: 700; color: #fff; font-family: 'Noto Sans KR', sans-serif;">VVIP 럭셔리 큐레이션 센터</span>
+      </h1>
+      <p style="color: #94a3b8; font-size: 15px; margin-top: 6px;">공간 3D 맞춤 시뮬레이션부터 하이엔드 가구 공구 딜, PB 금융 & 위생 VIP 컨시어지 원스톱 케어</p>
+    </div>
+    <span style="background: var(--complex-primary, #2563eb); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;">
+      🏢 <%= current_user.complex_name %> 전용 큐레이션
+    </span>
+  </header>
+
+  <!-- Service Sub-Tabs -->
+  <div style="display: flex; gap: 10px; margin-bottom: 28px; border-bottom: 1px solid #334155; padding-bottom: 12px; flex-wrap: wrap;">
+    <%= link_to curation_path(tab: "all"), style: "padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@active_tab == 'all' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@active_tab == 'all' ? '#fff' : '#94a3b8'};" do %>
+      💎 전체 큐레이션 통합 보기
+    <% end %>
+
+    <%= link_to curation_path(tab: "atelier"), style: "padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@active_tab == 'atelier' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@active_tab == 'atelier' ? '#fff' : '#94a3b8'};" do %>
+      🛋️ 3D 공간 아뜰리에
+    <% end %>
+
+    <%= link_to curation_path(tab: "club_deal"), style: "padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@active_tab == 'club_deal' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@active_tab == 'club_deal' ? '#fff' : '#94a3b8'};" do %>
+      🏷️ VVIP 클럽 딜 (하이엔드 공구)
+    <% end %>
+
+    <%= link_to curation_path(tab: "concierge"), style: "padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; background: #{@active_tab == 'concierge' ? 'var(--complex-primary, #2563eb)' : '#1e293b'}; color: #{@active_tab == 'concierge' ? '#fff' : '#94a3b8'};" do %>
+      🛎️ VIP 컨시어지 케어
+    <% end %>
+  </div>
+
+  <!-- SECTION 1: 3D Atelier & Space Fitting -->
+  <% if @active_tab == "all" || @active_tab == "atelier" %>
+    <section style="margin-bottom: 36px; background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 20px; font-weight: 700; color: #38bdf8;">🛋️ 1. 3D 평면도 공간 규격 & 가구 배치 아뜰리에</h2>
+        <span style="color: #64748b; font-size: 13px;"><%= current_user.complex_name %> 84A 타입 실측 데이터</span>
+      </div>
+
+      <!-- Room Dimensions Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 20px;">
+        <% (@space_measurements || []).each do |room| %>
+          <div style="background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 14px;">
+            <h4 style="color: #fbbf24; font-size: 14px; font-weight: 700;"><%= room[:name] %></h4>
+            <p style="color: #fff; font-size: 15px; font-weight: 800; margin-top: 4px;"><%= room[:dimensions] %></p>
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 2px;">권장 설치: <%= room[:max_furniture_size] %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Simulation Result Alert -->
+      <% if @simulation_result.present? %>
+        <div style="background: rgba(234, 179, 8, 0.15); border: 1px solid #eab308; padding: 14px; margin-bottom: 20px; border-radius: 8px;">
+          <p style="color: #fef08a; font-weight: 700;">🎉 3D 배치 완료! 시뮬레이션 ID: <%= @simulation_result[:simulation_id] %></p>
+        </div>
+      <% end %>
+
+      <!-- Furniture Catalog Items -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+        <% (@furniture_catalog || []).each do |item| %>
+          <div style="border: 1px solid #334155; border-radius: 10px; padding: 16px; background: #020617;">
+            <span style="font-size: 12px; font-weight: 700; color: #a855f7;"><%= item.brand %></span>
+            <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin: 4px 0 6px 0;"><%= item.name %></h3>
+            <p style="color: #38bdf8; font-weight: 800; font-size: 16px; margin-bottom: 12px;"><%= number_with_delimiter(item.price) %>원</p>
+
+            <%= form_with url: simulate_atelier_curation_path, method: :post, local: true do |f| %>
+              <%= f.hidden_field :flat_map_id, value: "flat_84a" %>
+              <%= f.hidden_field :furniture_id, value: item.furniture_id %>
+              <%= f.submit "🛋️ 3D 공간에 배치해보기", style: "width: 100%; padding: 10px; background: #2563eb; color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 13px;" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <!-- SECTION 2: VVIP Club Deal Procurement -->
+  <% if @active_tab == "all" || @active_tab == "club_deal" %>
+    <section style="margin-bottom: 36px; background: #0f172a; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 14px; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 20px; font-weight: 700; color: #fbbf24;">🏷️ 2. VVIP 클럽 딜 특가 구매 (포인트 할인 연동)</h2>
+        <span style="color: #64748b; font-size: 13px;">입주민 단독 전용 최저가 공구</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
+        <% (@club_deals || []).each do |deal| %>
+          <div style="background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 20px;">
+            <span style="background: #d4af37; color: #000; font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">CLUB DEAL</span>
+            <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin: 6px 0 8px 0;"><%= deal.item_name %></h3>
+            <p style="color: #64748b; font-size: 13px; text-decoration: line-through;">시중에가: <%= number_with_delimiter(deal.original_price) %>원</p>
+            <p style="color: #fbbf24; font-size: 20px; font-weight: 900; margin-bottom: 12px;">입주민 공구가: <%= number_with_delimiter(deal.deal_price) %>원</p>
+
+            <%= form_with url: order_club_deal_curation_path, method: :post, local: true do |f| %>
+              <%= f.hidden_field :deal_id, value: deal.deal_id %>
+              <div style="margin-bottom: 8px;">
+                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 2px;">사용 포인트 (P)</label>
+                <%= f.number_field :used_points, value: 500000, max: deal.point_discount_limit, style: "width: 100%; padding: 8px; background: #090d16; border: 1px solid #334155; border-radius: 6px; color: #fff; box-sizing: border-box;" %>
+              </div>
+              <div style="margin-bottom: 14px;">
+                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 2px;">최종 결제액 (원)</label>
+                <%= f.number_field :cash_amount, value: deal.deal_price - 500000, style: "width: 100%; padding: 8px; background: #090d16; border: 1px solid #334155; border-radius: 6px; color: #fff; box-sizing: border-box;" %>
+              </div>
+              <%= f.submit "💳 클럽 딜 특가 결제하기", style: "width: 100%; padding: 12px; background: #d4af37; color: #000; border: none; border-radius: 6px; font-weight: 800; cursor: pointer;" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <!-- SECTION 3: VIP Concierge Services -->
+  <% if @active_tab == "all" || @active_tab == "concierge" %>
+    <section style="background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; padding: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 style="font-size: 20px; font-weight: 700; color: #a855f7;">🛎️ 3. VIP 컨시어지 뱅킹 & 럭셔리 케어 서비스</h2>
+        <span style="color: #64748b; font-size: 13px;">WOORI TWO CHAIRS & 전담 1:1 서비스</span>
+      </div>
+
+      <!-- Service Selection & Reservation Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px;">
+        <% (@concierge_services || []).each do |svc| %>
+          <div style="background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px;"><%= svc[:name] %></h3>
+              <p style="color: #94a3b8; font-size: 13px; margin-bottom: 14px;"><%= svc[:desc] %></p>
+            </div>
+
+            <%= form_with url: reserve_concierge_curation_path, method: :post, local: true do |f| %>
+              <%= f.hidden_field :service_type, value: svc[:id] %>
+              <div style="margin-bottom: 8px;">
+                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 2px;">희망 일자</label>
+                <%= f.date_field :preferred_date, value: Date.today.to_s, style: "width: 100%; padding: 8px; background: #090d16; border: 1px solid #334155; border-radius: 6px; color: #fff; box-sizing: border-box;" %>
+              </div>
+              <div style="margin-bottom: 12px;">
+                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 2px;">상담/요청 메모</label>
+                <%= f.text_field :notes, placeholder: "요청사항 입력", style: "width: 100%; padding: 8px; background: #090d16; border: 1px solid #334155; border-radius: 6px; color: #fff; box-sizing: border-box;" %>
+              </div>
+              <%= f.submit "🛎️ 컨시어지 1:1 예약 신청", style: "width: 100%; padding: 10px; background: #a855f7; color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer;" %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Reservations History List -->
+      <% if @reservations.present? %>
+        <div style="background: #020617; border: 1px solid #334155; border-radius: 10px; padding: 16px;">
+          <h4 style="color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 12px;">📋 나의 VIP 컨시어지 예약 접수 현황</h4>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <% @reservations.each do |res| %>
+              <div style="background: #0f172a; padding: 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span style="color: #fbbf24; font-weight: 700; font-size: 14px;"><%= res.service_type %></span>
+                  <span style="color: #94a3b8; font-size: 13px; margin-left: 10px;">희망일자: <%= res.preferred_date %></span>
+                </div>
+                <span style="background: #166534; color: #86efac; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 4px;"><%= res.status %> (<%= res.assigned_consultant %>)</span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+</div>

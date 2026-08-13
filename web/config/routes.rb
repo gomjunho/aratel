@@ -69,6 +69,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :curation, only: [:show] do
+    post :simulate_atelier
+    post :order_club_deal
+    post :reserve_concierge
+  end
+
   resource :home, only: [:show] do
     post :agent_dialogue
   end
