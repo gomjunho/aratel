@@ -118,8 +118,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _isPlayingDocent = false;
+  double _audioProgress = 0.35;
 
   @override
   Widget build(BuildContext context) {
@@ -184,8 +192,126 @@ class HomeScreen extends StatelessWidget {
                 _buildQuickCard('VVIP 큐레이션', Icons.diamond, const Color(0xFF9C27B0)),
               ],
             ),
+            const SizedBox(height: 24),
+
+            // Smart Home Facility Operating Hours & Fallback UI
+            const Text('단지 커뮤니티 시설 운영 현황', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF161920),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  _buildFacilityRow('스카이라운지', '06:00 ~ 23:00', 'NORMAL', '정상 운영중', Colors.greenAccent),
+                  const Divider(color: Colors.white10),
+                  _buildFacilityRow('피트니스 센터', '06:00 ~ 22:00', 'CROWDED', '혼잡 (85%)', Colors.orangeAccent),
+                  const Divider(color: Colors.white10),
+                  _buildFacilityRow('프라이빗 사우나', '22:00 ~ 06:00', 'OFF_HOURS', '운영 점검 중 (06시 오픈)', Colors.redAccent),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Audio Docent Player Card / Trigger
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF161920),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.4)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.headphones_rounded, color: Color(0xFFD4AF37), size: 32),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('더샵 갤러리 "조경과 빛" 아트 도슨트', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+                        SizedBox(height: 2),
+                        Text('고해상도 AAC/WebP 고음질 오디오 가이드', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    key: const Key('toggle_audio_docent_button'),
+                    icon: Icon(_isPlayingDocent ? Icons.pause_circle_filled : Icons.play_circle_fill, color: const Color(0xFFD4AF37), size: 36),
+                    onPressed: () {
+                      setState(() {
+                        _isPlayingDocent = !_isPlayingDocent;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            if (_isPlayingDocent) ...[
+              const SizedBox(height: 12),
+              // Floating Mini Player Bar
+              Container(
+                key: const Key('floating_audio_player_widget'),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF222630),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xFFD4AF37)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.graphic_eq_rounded, color: Color(0xFFD4AF37), size: 20),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text('再生中: 조경과 빛 아트 도슨트 (01:45 / 04:30)', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: LinearProgressIndicator(
+                        value: _audioProgress,
+                        backgroundColor: Colors.black26,
+                        color: const Color(0xFFD4AF37),
+                        minHeight: 4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            const SizedBox(height: 40),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFacilityRow(String name, String hours, String statusKey, String statusText, Color color) {
+    final isOffHours = statusKey == 'OFF_HOURS';
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.between,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(name, style: TextStyle(color: isOffHours ? Colors.grey : Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+              Text('운영시간: $hours', style: const TextStyle(color: Colors.grey, fontSize: 11)),
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: color.withOpacity(0.5)),
+            ),
+            child: Text(statusText, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
+          ),
+        ],
       ),
     );
   }
