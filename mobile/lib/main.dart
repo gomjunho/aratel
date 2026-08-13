@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'screens/verification_screen.dart';
 import 'screens/lounge_screen.dart';
-import 'screens/atelier_screen.dart';
-import 'screens/concierge_screen.dart';
+import 'screens/curation_screen.dart';
 import 'screens/insights_screen.dart';
+import 'screens/profile_screen.dart';
 import 'screens/ai_agent_dialogue_overlay.dart';
 
 void main() {
@@ -47,11 +46,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   final List<Widget> _screens = const [
     HomeScreen(),
-    VerificationScreen(),
     LoungeScreen(),
-    AtelierScreen(),
-    ConciergeScreen(),
+    CurationScreen(),
     InsightsScreen(),
+    ProfileScreen(),
   ];
 
   void _openAiAgentOverlay() {
@@ -90,12 +88,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         selectedItemColor: const Color(0xFFD4AF37),
         unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: '홈'),
-          BottomNavigationBarItem(icon: Icon(Icons.verified_user_rounded), label: '인증'),
-          BottomNavigationBarItem(icon: Icon(Icons.forum_rounded), label: '라운지'),
-          BottomNavigationBarItem(icon: Icon(Icons.view_in_ar_rounded), label: 'AI아뜰리에'),
-          BottomNavigationBarItem(icon: Icon(Icons.room_service_rounded), label: '컨시어지'),
-          BottomNavigationBarItem(icon: Icon(Icons.analytics_rounded), label: '인사이트'),
+          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: '웰컴 홈'),
+          BottomNavigationBarItem(icon: Icon(Icons.forum_rounded), label: '커뮤니티'),
+          BottomNavigationBarItem(icon: Icon(Icons.diamond_rounded), label: 'VVIP큐레이션'),
+          BottomNavigationBarItem(icon: Icon(Icons.analytics_rounded), label: '자산증식인사이트'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: '내 정보'),
         ],
       ),
     );
@@ -161,11 +158,11 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                _buildQuickCard('1분 자동 인증', Icons.verified, const Color(0xFF4CAF50)),
+                _buildQuickCard('자산 인증', Icons.verified, const Color(0xFF4CAF50)),
                 const SizedBox(width: 12),
                 _buildQuickCard('암호화 라운지', Icons.lock, const Color(0xFF2196F3)),
                 const SizedBox(width: 12),
-                _buildQuickCard('AI 3D 아뜰리에', Icons.space_dashboard, const Color(0xFF9C27B0)),
+                _buildQuickCard('VVIP 큐레이션', Icons.diamond, const Color(0xFF9C27B0)),
               ],
             ),
           ],
