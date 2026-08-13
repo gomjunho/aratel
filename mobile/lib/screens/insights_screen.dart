@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../models/insights_models.dart';
 import '../services/insights_service.dart';
+import 'concierge_screen.dart';
 
 class InsightsScreen extends StatefulWidget {
   final InsightsService? insightsService;
@@ -77,6 +78,25 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
     }
   }
 
+  void _navigateToConcierge({String? riskLevel}) {
+    final complexName = _data?.complexName ?? '디에이치 방배';
+    final areaLabel = _selectedArea == 'ALL' ? null : _selectedArea;
+    final contextNote = riskLevel != null
+        ? '[인사이트 연동] $complexName${areaLabel != null ? " $areaLabel" : ""} · 입주물량 독성 위험 단계: $riskLevel · 자산 리밸런싱 콘스 상담 요청'
+        : '[인사이트 연동] $complexName${areaLabel != null ? " $areaLabel" : ""} 실거래 데이터 기반 VIP 자산관리 상담 요청';
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ConciergeScreen(
+          insightComplexName: complexName,
+          insightAreaType: areaLabel,
+          insightContext: contextNote,
+        ),
+      ),
+    );
+  }
+
   void _showSupplyGasDetailSheet() {
     final data = _data?.supplyGasIndex;
     if (data == null) return;
@@ -124,6 +144,29 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
                       ),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Direct Action CTA — navigate to concierge with context
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  key: const Key('supply_gas_concierge_cta'),
+                  icon: const Icon(Icons.support_agent_rounded, color: Colors.black, size: 18),
+                  label: const Text(
+                    'VIP 패밀리오피스 1:1 상담 예약',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFD4AF37),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    elevation: 0,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    _navigateToConcierge(riskLevel: data.riskLevel);
+                  },
                 ),
               ),
             ],
@@ -413,6 +456,77 @@ class _InsightsScreenState extends State<InsightsScreen> with SingleTickerProvid
               ),
             );
           }),
+          const SizedBox(height: 24),
+
+          // ─── Direct Action CTA at bottom of screen ───
+          Container(
+            key: const Key('insights_concierge_cta_card'),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color(0xFF222630),
+                  const Color(0xFF161920),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.4)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD4AF37).withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.support_agent_rounded, color: Color(0xFFD4AF37), size: 22),
+                    ),
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('VIP 패밀리오피스 콘시어지', style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, fontSize: 14)),
+                          Text('자산의 리밸런싱이 필요하신가요?', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  '실거래 데이터와 코드 인사이트를 토대로 우리은행 수석 자산관리사가 증여·절세·매매 전략을 1:1로 설계해 드립니다.',
+                  style: TextStyle(color: Colors.white60, fontSize: 12, height: 1.5),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    key: const Key('insights_concierge_cta_button'),
+                    icon: const Icon(Icons.arrow_forward_rounded, color: Colors.black, size: 18),
+                    label: const Text(
+                      '1:1 자산관리 상담 예약하기',
+                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD4AF37),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      elevation: 0,
+                    ),
+                    onPressed: _navigateToConcierge,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
         ],
       ),
     );

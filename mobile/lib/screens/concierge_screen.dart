@@ -4,8 +4,17 @@ import '../services/concierge_service.dart';
 
 class ConciergeScreen extends StatefulWidget {
   final ConciergeService? conciergeService;
+  final String? insightComplexName;
+  final String? insightAreaType;
+  final String? insightContext;
 
-  const ConciergeScreen({super.key, this.conciergeService});
+  const ConciergeScreen({
+    super.key,
+    this.conciergeService,
+    this.insightComplexName,
+    this.insightAreaType,
+    this.insightContext,
+  });
 
   @override
   State<ConciergeScreen> createState() => _ConciergeScreenState();
@@ -15,7 +24,7 @@ class _ConciergeScreenState extends State<ConciergeScreen> {
   late final ConciergeService _service;
   String _selectedServiceType = 'WOORI_TWO_CHAIRS';
   final TextEditingController _dateController = TextEditingController(text: '2026-08-20');
-  final TextEditingController _notesController = TextEditingController();
+  late final TextEditingController _notesController;
   bool _isSubmitting = false;
   ConciergeReservationResponse? _reservationResult;
 
@@ -46,6 +55,18 @@ class _ConciergeScreenState extends State<ConciergeScreen> {
   void initState() {
     super.initState();
     _service = widget.conciergeService ?? ConciergeService();
+    // Pre-fill notes from insights context if available
+    final prefilledNote = widget.insightContext != null
+        ? widget.insightContext!
+        : '';
+    _notesController = TextEditingController(text: prefilledNote);
+  }
+
+  @override
+  void dispose() {
+    _dateController.dispose();
+    _notesController.dispose();
+    super.dispose();
   }
 
   Future<void> _submitReservation() async {
@@ -97,6 +118,42 @@ class _ConciergeScreenState extends State<ConciergeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Insight context banner — shown when launched from InsightsScreen
+            if (widget.insightComplexName != null) ...[
+              Container(
+                key: const Key('insight_context_banner'),
+                padding: const EdgeInsets.all(14),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xFFD4AF37).withOpacity(0.12),
+                      const Color(0xFFD4AF37).withOpacity(0.04),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.35)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.analytics_rounded, color: Color(0xFFD4AF37), size: 22),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('인사이트 연동 상담 요청', style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, fontSize: 12)),
+                          Text(
+                            '${widget.insightComplexName}${widget.insightAreaType != null ? " · ${widget.insightAreaType}" : ""}',
+                            style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const Text('프라이빗 웰니스 & 컨시어지 선택', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             ..._serviceOptions.entries.map((entry) {
