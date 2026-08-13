@@ -482,7 +482,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
           const Text('1분 자동 등기부 연동', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           const Text('대법원 등기소 Trust API 기반 실소유주 검증', style: TextStyle(color: Colors.grey, fontSize: 12)),
+          const SizedBox(height: 12),
+          _buildLiveProgressTracker(),
           const SizedBox(height: 16),
+
           TextField(
             key: const Key('input_complex_name'),
             controller: _complexController,
@@ -552,7 +555,64 @@ class _VerificationScreenState extends State<VerificationScreen> {
     );
   }
 
+  Widget _buildLiveProgressTracker() {
+    final step1Done = _identityResult != null;
+    final step2Done = _trustResult != null;
+    final step3Done = _trustResult?.status == 'VERIFIED';
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E222B),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.radar_rounded, color: Color(0xFFD4AF37), size: 16),
+              SizedBox(width: 6),
+              Text('Trust API 라이브 스캐닝 3단계', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 12, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              _buildProgressStepItem(1, '1. 본인인증', step1Done, step1Done ? '완료' : '진행중'),
+              _buildProgressStepItem(2, '2. 등기부 조회', step2Done, step2Done ? '완료' : (_isLoading ? '스캐닝...' : '대기')),
+              _buildProgressStepItem(3, '3. 소유권 검증', step3Done, step3Done ? '완료' : '대기'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgressStepItem(int step, String label, bool isDone, String statusText) {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 2),
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        decoration: BoxDecoration(
+          color: isDone ? const Color(0xFF4CAF50).withOpacity(0.15) : const Color(0xFF161920),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: isDone ? Colors.greenAccent : Colors.white12),
+        ),
+        child: Column(
+          children: [
+            Text(label, style: TextStyle(color: isDone ? Colors.greenAccent : Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 2),
+            Text(statusText, style: TextStyle(color: isDone ? Colors.greenAccent : (statusText.contains('스캐닝') ? const Color(0xFFD4AF37) : Colors.grey), fontSize: 9)),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildStep3EvidenceAndDelegation() {
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
