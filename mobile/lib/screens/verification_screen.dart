@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/verification_models.dart';
 import '../services/verification_service.dart';
 import '../services/security_service.dart';
+import '../widgets/security_glow_frame.dart';
 
 class VerificationScreen extends StatefulWidget {
   final VerificationService? verificationService;
@@ -224,38 +225,66 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0F1115),
-      appBar: AppBar(
-        title: const Text(
-          '자산 인증 센터',
-          style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color(0xFF161920),
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSecurityHeader(),
-            const SizedBox(height: 16),
-            _buildStepTabs(),
-            const SizedBox(height: 16),
-            if (_isLoading) ...[
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(24.0),
-                  child: CircularProgressIndicator(color: Color(0xFFD4AF37)),
-                ),
+    final isSecure = _security.isScreenCapturePrevented || _security.isPrivacyMasked;
+
+    return SecurityGlowFrame(
+      isSecure: isSecure,
+      child: Scaffold(
+        backgroundColor: const Color(0xFF0F1115),
+        appBar: AppBar(
+          title: Row(
+            children: [
+              const Text(
+                '자산 인증 센터',
+                style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold),
               ),
-            ] else ...[
-              if (_currentStep == 0) _buildStep1IdentityAuth(),
-              if (_currentStep == 1) _buildStep2RegistrySync(),
-              if (_currentStep == 2) _buildStep3EvidenceAndDelegation(),
+              if (isSecure) ...[
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD4AF37).withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: const Color(0xFFD4AF37).withOpacity(0.5)),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.shield_rounded, color: Color(0xFFD4AF37), size: 11),
+                      SizedBox(width: 3),
+                      Text('보안모드', style: TextStyle(color: Color(0xFFD4AF37), fontSize: 10, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
+          backgroundColor: const Color(0xFF161920),
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSecurityHeader(),
+              const SizedBox(height: 16),
+              _buildStepTabs(),
+              const SizedBox(height: 16),
+              if (_isLoading) ...[
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(24.0),
+                    child: CircularProgressIndicator(color: Color(0xFFD4AF37)),
+                  ),
+                ),
+              ] else ...[
+                if (_currentStep == 0) _buildStep1IdentityAuth(),
+                if (_currentStep == 1) _buildStep2RegistrySync(),
+                if (_currentStep == 2) _buildStep3EvidenceAndDelegation(),
+              ],
+            ],
+          ),
         ),
       ),
     );

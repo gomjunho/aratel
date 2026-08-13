@@ -29,11 +29,14 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
   }
 
+  /// Use pump(duration) instead of pumpAndSettle() to avoid timeout from
+  /// SecurityGlowFrame's AnimationController.repeat() infinite animation.
   Future<void> tapAndSettle(WidgetTester tester, Finder finder) async {
     await tester.ensureVisible(finder);
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 300));
     await tester.tap(finder);
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 300));
   }
 
   group('VerificationScreen Widget Tests', () {
@@ -69,7 +72,8 @@ void main() {
         verificationService: service,
         securityService: securityService,
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 300));
 
       expect(find.text('자산 인증 센터'), findsOneWidget);
       expect(find.text('휴대폰 본인확인'), findsWidgets);
@@ -113,7 +117,8 @@ void main() {
         verificationService: service,
         securityService: securityService,
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 300));
 
       await tester.enterText(find.byKey(const Key('input_name')), '홍길동');
       await tester.enterText(find.byKey(const Key('input_phone')), '01012345678');
@@ -178,7 +183,8 @@ void main() {
         verificationService: service,
         securityService: securityService,
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 300));
 
       await tester.enterText(find.byKey(const Key('input_name')), '홍길동');
       await tester.enterText(find.byKey(const Key('input_phone')), '01012345678');
@@ -217,7 +223,8 @@ void main() {
         verificationService: service,
         securityService: securityService,
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 300));
 
       await tester.enterText(find.byKey(const Key('input_name')), '홍길동');
       await tapAndSettle(tester, find.byKey(const Key('btn_identity_verify')));
@@ -266,7 +273,8 @@ void main() {
         verificationService: service,
         securityService: securityService,
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 300));
 
       await tapAndSettle(tester, find.text('증빙 제출'));
 
@@ -320,7 +328,8 @@ void main() {
         verificationService: service,
         securityService: securityService,
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 300));
 
       await tapAndSettle(tester, find.text('증빙 제출'));
       await tapAndSettle(tester, find.byKey(const Key('tab_delegated_access')));
@@ -377,7 +386,8 @@ void main() {
         verificationService: service,
         securityService: securityService,
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 300));
 
       await tapAndSettle(tester, find.text('증빙 제출'));
       await tapAndSettle(tester, find.byKey(const Key('tab_owner_approval')));
@@ -419,7 +429,8 @@ void main() {
         verificationService: service,
         securityService: securityService,
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 300));
 
       expect(find.byKey(const Key('switch_screen_capture')), findsOneWidget);
       expect(find.byKey(const Key('switch_privacy_masking')), findsOneWidget);
@@ -468,7 +479,8 @@ void main() {
         verificationService: service,
         securityService: securityService,
       ));
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 300));
 
       await tapAndSettle(tester, find.text('2. 등기부 연동'));
       expect(find.byKey(const Key('btn_1tap_retry')), findsOneWidget);
