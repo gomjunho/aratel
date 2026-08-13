@@ -34,6 +34,9 @@ class ClubDealsControllerTest < ActionDispatch::IntegrationTest
   test "should get show view" do
     get club_deal_path(@deal.deal_id)
     assert_response :success
+    assert_select ".order-lifecycle-stepper"
+    assert_select ".point-calculator-slider"
+    assert_select ".live-countdown-banner"
     assert_select "h2", text: /Camaleonda Sofa VVIP Club Deal/
   end
 
